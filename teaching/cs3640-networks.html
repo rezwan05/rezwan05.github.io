@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CS:3640 Intro to Networks and Their Applications — Sikder Huq</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../courses/course-style.css?v=20260720-2">
+<script src="../assets/site-nav.js?v=20260720-2" defer></script>
+</head>
+<body class="skin-a">
+<script>
+  document.body.className = 'skin-a ' + (localStorage.getItem('v2theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+</script>
+
+<header class="course-top">
+  <div class="inner">
+    <a class="back" href="../">Sikder Huq</a>
+    <nav class="subnav">
+      <a href="../">Home</a>
+      <a href="../blog/">Blog</a>
+      <a href="../research/">Research</a>
+      <a href="../projects/">Projects</a>
+      <a href="../teaching/">Teaching</a>
+    </nav>
+    <span class="right">
+      <button class="theme-btn" id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme">
+        <svg id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+        <svg id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+      </button>
+    </span>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="course-head">
+    <div class="code">CS:3640 · University of Iowa</div>
+    <h1>CS:3640 Intro to Networks and Their Applications</h1>
+  </div>
+
+  <p class="orig-note">This page was migrated from my old website - here is the <a href="https://sites.google.com/site/saikatcit05/teaching_1/cs3640-intro-to-networks-and-their-applications" target="_blank" rel="noopener">original page ↗</a>.</p>
+
+  <main class="course-body">
+    <h2>Semester: Fall 2017</h2>
+    <p>Instructor: Sikder Huq, 101A MLH, sikderrezwanul-huq AT uiowa.edu</p>
+    <p>Class meeting time: MWF 12:30-1:20P in 105 EPB</p>
+    <p>Office Hours: W 2:00-3:00P, Th 2:00-4:00P in 101A MLH, and by appointment</p>
+    <p>Teaching Assistant: Huyen Le, 101N MLH, huyen-t-le AT uiowa.edu</p>
+    <p>TA office hours: MF 9:00-10:30A in 101N MLH</p>
+
+    <h2>Textbook</h2>
+    <p>Computer Networking: A Top-Down Approach (7th Edition)<br/>Kurose and Ross</p>
+
+    <h2>Course objectives</h2>
+    <p>Upon successful completion of this course, students are expected to:</p>
+    <ul>
+      <li>Become familiar with the organization of networking protocols within the layer architecture (OSI, TCP/IP)</li>
+      <li>Understand the client/server model and key application layer protocols such as HTTP.</li>
+      <li>Learn sockets programming.</li>
+      <li>Understand the concepts of reliable data transfer and how TCP implements these concepts.</li>
+      <li>Know the principles of congestion control and trade-offs in fairness and efficiency.</li>
+      <li>Learn the principles of routing and Internet's IP protocol.</li>
+      <li>Understand the basics of error detection including parity, checksums, and CRC.</li>
+      <li>Understand the key concepts of wireless networks, and especially mobility support.</li>
+      <li>Learn the importance and mechanisms of network management.</li>
+    </ul>
+
+    <h2>Grading</h2>
+    <p>Final grade will be determined by the following components:</p>
+    <p>Homework assignments (50%): There will be five/six homework assignments during the semester. The assignments will include both theoretical and programming problems.</p>
+    <p>Exams (45%): There will be one mid-term and one final exam. The mid-term exam will cover 20% and final exam will cover 25% of the total grade.</p>
+    <p>Participation (5%): You are expected to actively peripatetic in the class discussions. You are also encouraged to answer your peers' questions on the ICON discussion forum. There might be be in-class short quizzes. Quizzes will be preannounced unless overall attendance rate drops below an acceptable threshold.</p>
+    <p>Grades will be curved. CLAS expects that senior level undergraduate classes to have the following approximate distribution: 22% A, 38% B, 36% C, 3% D and 1% F.</p>
+
+    <h2>Late policy</h2>
+    <p>You may use a quota of three days for the entire semester for late submissions. When you submit an assignment X days late, your quota gets decreased by X irrevocably. You can only be late by an integer number of days. For example, if you submit 5 hours after the deadline, your quota is depleted by one day. Once you use up your quota of three days, any assignment submitted late will not be accepted and you will get 0 points for that assignment.</p>
+
+    <h2>Exams</h2>
+    <ul>
+      <li>The midterm exam will take place in class on Monday, October 23rd. The exam will include various topics covered in class until October 16th, and may include the materials covered on October 16th. More details will be announced a week before the exam.</li>
+      <li>The final exam is scheduled on Monday, Dec 11th, from 8 pm to 10 pm in 105 EPB. More details will be announced later.</li>
+    </ul>
+
+    <h2>Announcements</h2>
+    <ul class="ann-list">
+      <li><span class="d">8/22</span><span>TA office hours announced.</span></li>
+      <li><span class="d">8/28</span><span>Homework 1 is posted.</span></li>
+      <li><span class="d">9/4</span><span>Office hour from 2:30-3:30 pm, applicable only for this Wednesday (9/6).</span></li>
+      <li><span class="d">9/10</span><span>Extra office hours on Monday (9/11) after class.</span></li>
+      <li><span class="d">9/10</span><span>Homework 2 is posted.</span></li>
+      <li><span class="d">9/27</span><span>There will be an in-class quiz on Monday, Oct 9th. The quiz will be based on chapter 3. Check chapter 3 slides for more details about the quiz.</span></li>
+      <li><span class="d">10/2</span><span>Office hour from 2:30-3:30 pm, applicable only for this Wednesday (10/4).</span></li>
+      <li><span class="d">10/11</span><span>Homework 3 is posted.</span></li>
+      <li><span class="d">11/3</span><span>Homework 4 is posted.</span></li>
+      <li><span class="d">11/9</span><span>Quiz 2 (take-home) is posted.</span></li>
+      <li><span class="d">11/21</span><span>Homework 5 is posted.</span></li>
+      <li><span class="d">12/1</span><span>Quiz 3 (take-home) is posted.</span></li>
+    </ul>
+
+    <h2>Lecture summaries</h2>
+    <div class="week"><h3>Week 1</h3><p>Course introduction, history of networks before and after the inception of the Internet, end systems, access networks, links, packet and circuit switching, network structure, different types of delays, discrete event simulation.</p></div>
+    <div class="week"><h3>Week 2</h3><p>Introduction to protocol layers and service model, network security basics, application layer, TCP and UDP services, web and HTTP, web caches, discussion on homework.</p></div>
+    <div class="week"><h3>Week 3</h3><p>SMTP, POP3, IMAP, DNS, introduction to socket programming with UDP and TCP.</p></div>
+    <div class="week"><h3>Week 4</h3><p>An introduction to multithreaded socket programming, P2P applications (e.g. BitTorrent), video streaming, DASH, CDN, transport layer overview.</p></div>
+    <div class="week"><h3>Week 5</h3><p>Multiplexing and demultiplexing, connectionless transport: UDP, principles of reliable data transfer, connection-oriented transport, TCP segment structure.</p></div>
+    <div class="week"><h3>Week 6</h3><p>TCP reliable data transfer, TCP flow control, TCP connection management, principles of congestion control, TCP congestion control, an introduction to the network layer.</p></div>
+    <div class="week"><h3>Week 7</h3><p>An overview of data plane and control plane in the network layer, router architecture overview, router scheduling mechanisms, IP datagram format, IP fragmentation, IPv4 addressing, IP subnetting.</p></div>
+    <div class="week"><h3>Week 8</h3><p>Variable length subnet mask (VLSM), DHCP, network address translation (NAT), IPv6, generalized forward and SDN. We also had an in-class quiz on the transport layer this week.</p></div>
+    <div class="week"><h3>Week 9</h3><p>Midterm exam review, link state and distance vector routing, intra-AS routing in the Internet: OSPF.</p></div>
+    <div class="week"><h3>Week 10</h3><p>Midterm exam in class, routing among the ISPs: BGP, the SDN control plane.</p></div>
+    <div class="week"><h3>Week 11</h3><p>Continuation of discussion on SDN control plane, OpenFlow, ODL and ONOS controllers, ICMP, network management and SNMP, introduction to the link layer, error detection and correction, parity checking, checksum, cyclic redundancy check, multiple access protocols, TDMA, FDMA, random access, slotted ALOHA, pure ALOHA, CSMA.</p></div>
+    <div class="week"><h3>Week 12</h3><p>CSMA/CD, CSMA/CA, polling and token passing, cable access network, DOCSIS, MAC addresses, ARP, link layer addressing for routing to another LAN, Ethernet, Ethernet switches, interconnecting switches, switches vs. routers, VLANs, link virtualization: MPLS, data center networking, a day in the life of a web request, an introduction to wireless and mobile networks.</p></div>
+    <div class="week"><h3>Week 13</h3><p>Wireless links and their characteristics, CDMA, IEEE 802.11 wireless LANs ("Wi-Fi"), Cellular networks architecture and standards (e.g., 3G, LTE), mobility principals: addressing and routing to mobile users, mobile IP, handling mobility in cellular networks.</p><p>Nov 20-25: Thanksgiving recess.</p></div>
+    <div class="week"><h3>Week 14</h3><p>Socket programming using select, GSM: handoff with common MSC, handoff between MSCs, handling mobility in LTE, mobility in cellular vs Mobile IP, impact of mobility on higher layer protocols, introduction to network security, principals of cryptography, message integrity.</p></div>
+    <div class="week"><h3>Week 15</h3><p>Securing e-mail. security in TCP connnections:SSL, securing wireless LANs, firewalls and IDS, multimedia networking applications, streaming stored video.</p></div>
+
+    <h2>Materials</h2>
+    <p>All lecture slides, assignments, and solutions will be posted on ICON. You must submit your assignments electronically through ICON.</p>
+
+    <h2>Course files</h2>
+    <div class="cabinet" style="border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#fff;">
+      <iframe src="https://drive.google.com/embeddedfolderview?id=1Cc7FeV2khSnaKA33_i3haKnXJAqAiQfF#list" style="width:100%;height:620px;border:0;display:block;" loading="lazy" title="Course files (Google Drive)"></iframe>
+    </div>
+    <p style="margin-top:12px;"><a href="https://drive.google.com/folderview?id=1Cc7FeV2khSnaKA33_i3haKnXJAqAiQfF" target="_blank" rel="noopener">Open the folder in Google Drive ↗</a></p>
+  </main>
+</div>
+
+<footer class="course-foot">
+  <div class="inner">
+    <span>srezwan.huq [at] gmail [dot] com</span>
+    <span><a href="https://sites.google.com/site/saikatcit05/teaching_1/cs3640-intro-to-networks-and-their-applications" target="_blank" rel="noopener">view original page ↗</a></span>
+  </div>
+</footer>
+<script>
+  (function(){
+    const btn = document.getElementById('themeBtn');
+    const moon = document.getElementById('iconMoon');
+    const sun = document.getElementById('iconSun');
+    const systemThemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    function apply(t, persist){
+      document.body.classList.remove('light','dark');
+      document.body.classList.add(t);
+      moon.style.display = t === 'light' ? '' : 'none';
+      sun.style.display = t === 'dark' ? '' : 'none';
+      if (persist) localStorage.setItem('v2theme', t);
+    }
+    apply(document.body.classList.contains('dark') ? 'dark' : 'light', false);
+    btn.addEventListener('click', () => apply(document.body.classList.contains('light') ? 'dark' : 'light', true));
+    systemThemeQuery.addEventListener('change', (event) => {
+      if (!localStorage.getItem('v2theme')) apply(event.matches ? 'dark' : 'light', false);
+    });
+  })();
+</script>
+</body>
+</html>

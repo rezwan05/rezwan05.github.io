@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>From 38 GB of NQ Ticks to Backtests in Minutes | Sikder Huq</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700&amp;family=Inter:wght@300;400;500;600&amp;family=Space+Grotesk:wght@300;400;500&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../courses/course-style.css?v=20260720-3">
+<script src="../assets/site-nav.js?v=20260720-2" defer></script>
+<style>
+  article.post table { border-collapse: collapse; margin: 18px 0; font-size: 14px; width: 100%; max-width: 480px; }
+  article.post th { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 8px 14px 8px 0; border-bottom: 1px solid var(--line); font-weight: 500; }
+  article.post td { padding: 8px 14px 8px 0; border-bottom: 1px solid var(--line); color: var(--ink-2); }
+  article.post td code { font-size: 12.5px; }
+  article.post td.num, article.post th.num { text-align: right; }
+</style>
+</head>
+<body class="skin-a">
+<script>
+  document.body.className = 'skin-a ' + (localStorage.getItem('v2theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+</script>
+
+<header class="course-top">
+  <div class="inner">
+    <a class="back" href="../">Sikder Huq</a>
+    <nav class="subnav">
+      <a href="../">Home</a>
+      <a href="../blog/">Blog</a>
+      <a href="../research/">Research</a>
+      <a href="../projects/">Projects</a>
+      <a href="../teaching/">Teaching</a>
+    </nav>
+    <span class="right">
+      <button class="theme-btn" id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme">
+        <svg id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+        <svg id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+      </button>
+    </span>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="article-head">
+    <div class="kicker">quant · data engineering · series part 2</div>
+    <h1>From 38 GB of NQ Ticks to Backtests in Minutes</h1>
+    <p class="dek">Part 2 of my quant research series. This post explains how I convert raw NQ ticks into Parquet datasets and make repeated backtests fast.</p>
+    <div class="meta">Dec 12, 2025 · 10 min read</div>
+  </div>
+
+  <article class="post">
+    <aside class="in-brief" aria-labelledby="parquet-brief">
+      <h2 id="parquet-brief">In brief</h2>
+      <ul>
+        <li>Every experiment ran against two years of raw market data, 38 GB holding roughly 100 billion values, and the runtime made testing a single idea a commitment. My research velocity was capped by I/O.</li>
+        <li>I rebuilt the pipeline around one rule: touch the raw data once, then serve every experiment from a 103 MB cache that loads in seconds. Full-history experiments now run in minutes, which is fast enough for AI agents to test dozens of ideas a day.</li>
+        <li>Targeted compilation made the hot paths 8x to 789x faster, but I kept the code that decides correctness in plain, auditable Python. Speed went where it was safe, and readability stayed where mistakes are expensive.</li>
+      </ul>
+    </aside>
+    <p>Coding agents run most of the backtests in my research loop. On a busy afternoon they'll test 29 strategy variants across nine short windows and the full 24-month history.</p>
+    <p>That only works because a backtest costs minutes rather than hours. Runtime is effectively a budget on how many ideas I get to test: an hour-long run buys a handful of trials per day, while a run that finishes in minutes buys a real search.</p>
+    <p>Almost all of that speed lives in the data pipeline.</p>
+
+    <h2>The raw material</h2>
+    <p>This example uses <strong>24 months of NQ futures data</strong>, covering every trade plus L1/L2 order-book updates, licensed and delivered as daily zip archives of semicolon-delimited CSV. It's <strong>38 GB compressed and contains about 100 billion values.</strong></p>
+    <p>A raw row looks like this:</p>
+    <pre><code>YYYYMMDD040000020187;1;2;20145.25;2;0;0
+└─ timestamp ──────┘ │ │  price  qty
+   YYYYMMDDhhmmss+µs │ └ type (2 = trade)
+                     └── level (1 = top of book)</code></pre>
+    <p>Timestamps are 20-digit strings with microseconds and no separators. Order-book updates and trades share the same files. Bar construction needs only the trades (<code>level=1, type=2</code>). Parsing the raw CSV files for every backtest would be far too slow.</p>
+
+    <h2>Rule #1: read the raw ticks once</h2>
+    <p><strong>I read the raw ticks during ingestion and never during a backtest.</strong></p>
+    <p>A daily processing script unpacks each day's archive, filters trade prints, parses the timestamp strings, and aggregates into OHLCV bars at multiple resolutions, each written as its own per-day Parquet file:</p>
+    <pre><code>markettick_archives/Future_NQ_T2_YYYYMMDD.zip   ← 38 GB total, touched once
+mt_ohlcv/NQ_5S_YYYYMMDD.parquet                 ← 5-second bars
+mt_ohlcv/NQ_1M_YYYYMMDD.parquet                 ← 1-minute bars
+mt_ohlcv/NQ_5M_YYYYMMDD.parquet                 ← 5-minute bars
+mt_ohlcv/NQ_100T_YYYYMM.parquet                 ← 100-tick bars (for microstructure work)</code></pre>
+    <p>Each day produces one file per resolution, or about 2,200 files for this 24-month dataset. This makes ingestion <strong>incremental and idempotent</strong>. I can add a new day or rebuild a bad day without processing the full history. A <code>--rebuild-all</code> command combines the daily files into the datasets used by backtests:</p>
+    <table>
+      <thead><tr><th>Working file</th><th class="num">Rows</th><th class="num">Size</th></tr></thead>
+      <tbody>
+        <tr><td><code>NQ_5S_all.parquet</code></td><td class="num">7.8M</td><td class="num">103 MB</td></tr>
+        <tr><td><code>NQ_15S_all.parquet</code></td><td class="num">2.9M</td><td class="num">44 MB</td></tr>
+        <tr><td><code>NQ_1M_all.parquet</code></td><td class="num">733K</td><td class="num">11 MB</td></tr>
+        <tr><td><code>NQ_5M_all.parquet</code></td><td class="num">145K</td><td class="num">3 MB</td></tr>
+      </tbody>
+    </table>
+    <p>The 38 GB raw dataset becomes a <strong>103 MB working dataset</strong> at 5-second resolution, and that ratio is most of the trick: everything downstream is fast because the input got small. The file loads in a few seconds, so each experiment loads its own copy instead of sharing mutable state.</p>
+
+    <h2>Rule #2: store several useful resolutions</h2>
+    <p>Finer data requires more work. The 24-month dataset has 145K bars at 5 minutes, 2.9M bars at 15 seconds, and 7.8M bars at 5 seconds. A loop that is fast on 5-minute data can be expensive on 5-second data.</p>
+    <p>Each experiment loads the coarsest resolution that can answer its question. The strategy's execution timeframe determines the file.</p>
+    <p>I don't store every higher timeframe. When a strategy needs 15-minute or 20-minute bars, I resample them from 1-minute bars in milliseconds. All bars use <code>label='left', closed='left'</code> and are stamped with their <strong>open time</strong>. My loaders assert this rule, and not as decoration. The bug that forced the assertion cost me two years of subtly wrong bars, and it gets <a href="timestamp-bug.html">its own post</a>.</p>
+    <p>Parquet also supports column selection, preserves data types, and makes it easy to load one day while debugging. For example, a test can read only <code>time</code> and <code>close</code> instead of the full table.</p>
+
+    <h2>Rule #3: use NumPy first, then Numba</h2>
+    <p>After data loading, the main costs are indicator calculation and the event loop. I optimize them in this order:</p>
+    <p><strong>Tier 1: don't compute it.</strong> Indicator frames are computed once per dataset and reused across every strategy variant in a sweep. The prepare step (resample, indicators, multi-timeframe alignment) might take 60 seconds; the 29 variants that follow share it. This is the highest-leverage "optimization" in the codebase and it's just caching.</p>
+    <p><strong>Tier 2: NumPy vectorization.</strong> NumPy handles most rolling means, ATR calculations, efficiency ratios, band arithmetic, and boolean masks without a Python loop.</p>
+    <p><strong>Tier 3: Numba for sequential loops.</strong> Some calculations depend on the previous bar. Examples include ratcheting stops, trend state machines, and rolling structural fits. These loops may process millions of bars, so I compile them with <code>@numba.njit</code>.</p>
+    <p>The measured speedups ranged from <strong>8x to 789x</strong>:</p>
+    <ul>
+      <li>The 8x cases are simple sequential loops such as band ratchets and state machines. Their main cost is Python interpreter overhead.</li>
+      <li>The 789x case is a rolling structural fit. The original code called <code>np.nanquantile</code> and <code>np.polyfit</code> for every bar. The Numba version reuses a buffer and computes the fit from running sums. Same math, three orders of magnitude less per-call machinery.</li>
+    </ul>
+    <p>Two habits keep this honest. <strong>Profile before reaching for Numba</strong>, because compilation adds cost and debugging compiled code is miserable. And every Numba kernel keeps a NumPy reference implementation beside it, which defines the expected output.</p>
+    <p><strong>Tier 4: keep the event loop readable.</strong> My backtest engine uses a plain Python loop for fills, orders, positions, and equity. It processes about 5K to 6K bars per second. A full 15-second backtest finishes in under ten minutes; a 5-minute backtest takes seconds. I could make the loop faster, but fill timing, costs, and lookahead rules are exactly where backtests go quietly wrong, and I want that code readable in one sitting. Optimization stops where auditability starts.</p>
+
+    <h2>The workflow this enables</h2>
+    <p>A typical run looks like this:</p>
+    <pre><code>load 24 months of 15s bars ........ ~2 s     (44 MB Parquet)
+indicator prep, all timeframes .... ~60 s    (once per dataset)
+one full-history backtest ......... ~2-9 min (resolution-dependent)
+one 10-day window backtest ........ ~30-60 s</code></pre>
+    <p>An agent can test a new idea on a short window in about a minute. It can then run 20 to 30 variants in the background and send the strongest results through the full history. I review the results that pass those initial checks.</p>
+    <p>A few habits keep this workflow reliable:</p>
+    <ul>
+      <li><strong>Deterministic, rebuildable caches.</strong> One command can recreate every derived file from the raw data.</li>
+      <li><strong>The same code path for short and long tests.</strong> A date filter changes the window. The backtest logic stays the same.</li>
+      <li><strong>Fast verification runs.</strong> After a data or engine change, I rerun the main backtests and compare the results. A large change often reveals that a strategy is sensitive to implementation details.</li>
+    </ul>
+
+    <h2>Takeaways</h2>
+    <ul>
+      <li>Convert ticks to bars <strong>once</strong>. Store several resolutions in Parquet. In this case, 38 GB becomes 103 MB at 5-second resolution.</li>
+      <li>Match backtest resolution to the strategy, not to the finest data you own.</li>
+      <li>Cache indicator frames across variant sweeps to avoid repeated work.</li>
+      <li>Vectorize with NumPy, and reserve Numba for the genuinely sequential hot loops, where speedups ranged from 8x on simple state machines to orders of magnitude on per-bar re-fits.</li>
+      <li>Keep the execution engine readable so fill timing and costs stay easy to audit.</li>
+      <li>Assert your timestamp conventions in code. A two-character bug made that lesson expensive for me.</li>
+    </ul>
+
+    <nav class="post-pagination" aria-label="Post navigation">
+      <a class="post-pagination-link previous" href="backtest-charts.html">
+        <span class="post-pagination-label">← Previous post</span>
+        <span class="post-pagination-title">A Small Charting Tool for Inspecting Backtests</span>
+      </a>
+      <a class="post-pagination-link next" href="timestamp-bug.html">
+        <span class="post-pagination-label">Next post →</span>
+        <span class="post-pagination-title">How a 15-Second Bar-Labeling Bug Changed Two Years of Backtests</span>
+      </a>
+    </nav>
+  </article>
+</div>
+
+<footer class="course-foot">
+  <div class="inner">
+    <span>srezwan.huq [at] gmail [dot] com</span>
+    <span><a href="../">sikderhuq.com</a></span>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    const btn = document.getElementById('themeBtn');
+    const moon = document.getElementById('iconMoon');
+    const sun = document.getElementById('iconSun');
+    const systemThemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    function apply(t, persist){
+      document.body.classList.remove('light','dark');
+      document.body.classList.add(t);
+      moon.style.display = t === 'light' ? '' : 'none';
+      sun.style.display = t === 'dark' ? '' : 'none';
+      if (persist) localStorage.setItem('v2theme', t);
+    }
+    apply(document.body.classList.contains('dark') ? 'dark' : 'light', false);
+    btn.addEventListener('click', () => apply(document.body.classList.contains('light') ? 'dark' : 'light', true));
+    systemThemeQuery.addEventListener('change', (event) => {
+      if (!localStorage.getItem('v2theme')) apply(event.matches ? 'dark' : 'light', false);
+    });
+  })();
+</script>
+</body>
+</html>

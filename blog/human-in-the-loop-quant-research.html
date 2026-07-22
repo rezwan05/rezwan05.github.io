@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>A Self-Improving Quant Research Harness with a Human in the Loop | Sikder Huq</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700&amp;family=Inter:wght@300;400;500;600&amp;family=Space+Grotesk:wght@300;400;500&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../courses/course-style.css?v=20260720-3">
+<script src="../assets/site-nav.js?v=20260720-2" defer></script>
+<style>
+  .loop-map {
+    counter-reset: loop-step; list-style: none; padding: 0; margin: 24px 0 30px;
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;
+  }
+  article.post .loop-map li {
+    counter-increment: loop-step; position: relative; margin: 0; min-height: 86px;
+    padding: 15px 16px 14px 48px; border: 1px solid var(--line); border-radius: 9px;
+    background: var(--bg-soft); color: var(--ink-2); font-size: 14px; line-height: 1.5;
+  }
+  .loop-map li::before {
+    content: counter(loop-step); position: absolute; left: 15px; top: 15px;
+    width: 22px; height: 22px; display: grid; place-items: center;
+    border: 1px solid var(--accent); border-radius: 50%; color: var(--accent);
+    font-family: var(--mono); font-size: 10px; font-weight: 500;
+  }
+  article.post .loop-map li.human-step { background: var(--accent-soft); color: var(--ink); }
+  .loop-caption {
+    margin: -13px 0 30px; font-family: var(--mono); font-size: 10.5px;
+    letter-spacing: .02em; color: var(--muted); text-align: right;
+  }
+  .gate-table-wrap { width: 100%; overflow-x: auto; margin: 20px 0 26px; }
+  article.post table.gates { width: 100%; min-width: 620px; border-collapse: collapse; font-size: 13px; }
+  article.post table.gates th {
+    padding: 9px 14px 9px 0; border-bottom: 1px solid var(--line);
+    color: var(--muted); font-family: var(--mono); font-size: 10px; font-weight: 500;
+    letter-spacing: .06em; text-align: left; text-transform: uppercase;
+  }
+  article.post table.gates td {
+    padding: 11px 14px 11px 0; border-bottom: 1px solid var(--line);
+    color: var(--ink-2); line-height: 1.45; vertical-align: top;
+  }
+  article.post table.gates td:first-child { color: var(--ink); font-weight: 600; white-space: nowrap; }
+  .disclaimer { margin-top: 42px !important; color: var(--muted) !important; font-size: 12.5px !important; font-style: italic; }
+  @media (max-width: 620px) {
+    .loop-map { grid-template-columns: 1fr; }
+    article.post .loop-map li { min-height: 0; }
+    .loop-caption { text-align: left; }
+    .gate-table-wrap { overflow: visible; }
+    article.post table.gates { min-width: 0; }
+    article.post table.gates thead { display: none; }
+    article.post table.gates,
+    article.post table.gates tbody,
+    article.post table.gates tr,
+    article.post table.gates td { display: block; width: 100%; }
+    article.post table.gates tr {
+      margin-bottom: 10px; padding: 13px 15px 12px;
+      border: 1px solid var(--line); border-radius: 8px; background: var(--bg-soft);
+    }
+    article.post table.gates td { padding: 0; border: 0; white-space: normal; }
+    article.post table.gates td:first-child { margin-bottom: 7px; color: var(--accent); }
+    article.post table.gates td + td { margin-top: 8px; font-size: 13px; }
+    article.post table.gates td:nth-child(n+2)::before {
+      display: block; margin-bottom: 2px; color: var(--muted);
+      font-family: var(--mono); font-size: 9px; font-weight: 500;
+      letter-spacing: .06em; text-transform: uppercase;
+    }
+    article.post table.gates td:nth-child(2)::before { content: "Question"; }
+    article.post table.gates td:nth-child(3)::before { content: "Artifact"; }
+  }
+</style>
+</head>
+<body class="skin-a">
+<script>
+  document.body.className = 'skin-a ' + (localStorage.getItem('v2theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+</script>
+
+<header class="course-top">
+  <div class="inner">
+    <a class="back" href="../">Sikder Huq</a>
+    <nav class="subnav">
+      <a href="../">Home</a>
+      <a href="../blog/">Blog</a>
+      <a href="../research/">Research</a>
+      <a href="../projects/">Projects</a>
+      <a href="../teaching/">Teaching</a>
+    </nav>
+    <span class="right">
+      <button class="theme-btn" id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme">
+        <svg id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+        <svg id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+      </button>
+    </span>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="article-head">
+    <div class="kicker">quant · AI engineering · research systems</div>
+    <h1>A Self-Improving Quant Research Harness with a Human in the Loop</h1>
+    <p class="dek">A self-improving multi-agent workflow built for correctness: agents reason about what's holding a strategy back, test alternative fixes, and validate behavior with chart evidence across market regimes, while the human keeps direction and final judgment.</p>
+    <div class="meta">Feb 2, 2026 · 10 min read</div>
+  </div>
+
+  <article class="post">
+    <aside class="in-brief" aria-labelledby="research-harness-brief">
+      <h2 id="research-harness-brief">In brief</h2>
+      <ul>
+        <li>AI coding agents made my research dramatically faster, including at producing convincing wrong answers. One early result reported more than eight times the real figure because of a subtle timing bug that crashed nothing.</li>
+        <li>My fix borrows from safety-critical engineering: two agents implement every hypothesis independently and must agree at the level of individual decisions, and I audit the behavior visually before believing any number.</li>
+        <li>The loop is self-improving. When a strategy underperforms, agents reason about why, propose alternative paths, and bring me chart evidence selected across market regimes, while the decisions that matter stay with me behind explicit evidence gates.</li>
+      </ul>
+    </aside>
+    <p>An early version of one strategy reported $2.23 million in profit over two years. After I corrected its fill timing, the result fell to $265,000.</p>
+    <p>Nothing crashed, and the equity curve looked great. The strategy had simply decided at each bar's close and filled at that same bar's open, which means it was trading on a price from five minutes before its decision existed.</p>
+    <p>That 88% haircut changed how I use coding agents for research. Implementation used to be the bottleneck, but an agent can now write a strategy faster than I can check it, so the real work has become deciding which results to believe.</p>
+    <p>The harness I ended up with spends most of its machinery on checking results rather than producing them. I define the hypothesis and the evidence that would settle it, Claude Code and Codex implement and analyze it, and deterministic code computes every number along the way. A candidate advances only when its code, its trades, and its behavior all pass.</p>
+    <p>The same machinery is what makes the loop self-improving. Each iteration diagnoses what isn't working, proposes alternative paths to fix it, and carries what it learned into the next attempt, so the harness gets smarter about a strategy the longer it works on it.</p>
+
+    <ol class="loop-map" aria-label="Human-in-the-loop quant research workflow">
+      <li class="human-step"><strong>Frame.</strong> I write a testable market hypothesis and its failure condition.</li>
+      <li><strong>Build.</strong> Two agents implement it independently in separate sandboxes.</li>
+      <li><strong>Review.</strong> Each agent reviews the other once; both address the findings.</li>
+      <li><strong>Measure.</strong> Deterministic backtests produce trade-level artifacts.</li>
+      <li class="human-step"><strong>Inspect.</strong> An agent selects representative charts, and I review the behavior.</li>
+      <li><strong>Diagnose.</strong> A regime-analysis agent reasons about where the idea works, where it fails, and why.</li>
+      <li><strong>Reproduce.</strong> Candidates that pass run in independent backtest engines and data paths.</li>
+      <li class="human-step"><strong>Improve.</strong> The agents propose paths to fix the weakest part, and I decide which to pursue.</li>
+    </ol>
+    <div class="loop-caption">The decision returns to the human before the next iteration.</div>
+
+    <p>I have written about pieces of this system before: the <a href="backtest-charts.html">interactive chart tool</a>, the <a href="parquet-data-engineering.html">data pipeline</a> that turns 38 GB of ticks into backtests that run in minutes, and the <a href="timestamp-bug.html">15-second timestamp bug</a> that an independent data comparison exposed. This post is how the pieces fit together.</p>
+
+    <h2>Start with a specific hypothesis</h2>
+    <p>I don't start an agent with “find me a profitable strategy.” That prompt gives it too much freedom to change the question after seeing the answer.</p>
+    <p>Instead, I start with a mechanism. For example:</p>
+    <blockquote><p>A trend-following strategy is vulnerable when its direction flips repeatedly in a short window. Block new entries after four flips in the trailing 30 signal bars, then compare it with the ungated strategy on the same periods.</p></blockquote>
+    <p>Before implementation, I define what counts as a flip, when it becomes observable, when the next order can fill, the transaction costs, position limits, data windows, baseline, and pass criteria.</p>
+    <p>None of that is negotiable after the results come in. If a variant fails with one tick of slippage, the answer is that it failed, not that we should revisit the slippage model.</p>
+
+    <h2>Implement it twice, independently</h2>
+    <p>Claude Code and Codex collaborate through Codex MCP, but the first phase is deliberately non-collaborative. Each receives the same specification, data contract, and baseline. Each works in its own sandbox and cannot read the other's implementation until both have produced code, a result summary, and a trade log.</p>
+    <p>It's a small version of N-version programming. Agreement doesn't prove correctness, since both versions can share a wrong assumption, but disagreement is always informative. It means the spec was ambiguous, the data differs, or one of them has a bug.</p>
+    <p>In one experiment, both agents reproduced the baseline result to the cent: a loss of $38,761.24. Then their entries for the new strategy overlapped by only 23%, even though both implementations came from the same English spec on the same data.</p>
+    <p>Review found the difference in an afternoon. One version treated the trigger as a level and kept entering as long as the condition stayed true, which fired on 54.5% of eligible bars. The intended rule was an edge: enter only when the condition turns from false to true, which fired on 0.6%. A cross above a line is an event, not a state.</p>
+    <p>The identical baselines did real work here. They proved the engine, data window, and fill model were fine, so the hunt could skip all of that and go straight to strategy logic.</p>
+
+    <h2>One review pass, then evidence</h2>
+    <p>After both implementations are complete, each agent reviews the other once. The checklist is specific:</p>
+    <ul>
+      <li>Is every feature based only on information available at that timestamp?</li>
+      <li>Are higher-timeframe values exposed only after the bar closes?</li>
+      <li>Are orders filled at prices that could have been traded?</li>
+      <li>Are commission, slippage, sizing, and session rules identical?</li>
+      <li>Does the code implement the written trigger, including its state transitions?</li>
+      <li>Can the headline result be recomputed from the raw trade log?</li>
+    </ul>
+    <p>I cap this at one structured pass each. I've tried more, and the second pass mostly argues about style or reopens decisions the first pass already settled. So both agents do one pass, fix the findings, and rerun, after which I compare entry times, indicator values, fills, and independently recomputed P/L. If a difference stays unexplained, I mark the experiment inconclusive instead of arguing it to a verdict.</p>
+    <p>The process earns its keep on negative results too. In one review, an agent re-aggregated all 1,628 trades from the other implementation's raw trade log: identical timestamps, zero P/L difference. The idea genuinely didn't work. That's worth establishing carefully, because a false negative quietly buries a good idea.</p>
+
+    <h2>Review the trades on charts</h2>
+    <p>A summary can tell me a strategy made money. It can't tell me the strategy did what I meant.</p>
+    <p>After a run, an agent uses my <a href="backtest-charts.html">backtest chart tool</a> to produce a small audit set: strong winners, large losses, unusual holding periods, regime boundaries, and examples around the exact rule being tested. The selection is deliberate across market conditions, so I'm not just admiring trades from the periods that flattered the strategy. Each chart includes candles, entries, exits, stops, indicator values, volume, and hover details from the trade log.</p>
+    <p>I review those examples and ask plain questions. Did the stop move for the reason we intended? Did a higher-timeframe signal appear too early? Did a filter stay active through a trend, or switch on and off every few bars? Are repeated entries genuine opportunities or the same signal firing continuously?</p>
+    <figure class="post-figure">
+      <img src="../assets/backtest-charts-candle-hover.jpg" alt="Interactive NQ backtest chart showing candles, indicator values, trades, stops, and hover details" loading="lazy" />
+      <figcaption><strong>Behavioral review.</strong> The chart joins market context, strategy state, and the saved trade log in one audit view.</figcaption>
+    </figure>
+    <p>Charts often expose rules that are mathematically valid but behave poorly. A chart may also suggest a new test. For example, I can compare an initial stop fitted to the current trend with the tightest available stop line. I test that as a new hypothesis instead of changing the current result by hand.</p>
+
+    <h2>Analyze results by market condition</h2>
+    <p>After the implementation passes review, a second agent groups the trades by session, volatility, trend strength, direction, holding time, and strategy state. It answers three questions:</p>
+    <ol>
+      <li>Where does the strategy earn its return?</li>
+      <li>Where does it fail consistently?</li>
+      <li>What is the smallest next experiment that could separate the two?</li>
+    </ol>
+    <p>This table has changed my mind more often than any backtest summary. In one study, a trend strategy earned 84% of its P/L outside regular market hours even though its win rate was <em>lower</em> there. The overnight winners simply ran further. The same strategy, between 11:00 and 12:00 Pacific, had a profit factor of 0.42 and lost about $98,000 in the sample.</p>
+    <p>These results suggest new tests. They do not justify adding a time filter without walk-forward validation.</p>
+    <p>I use the same process for market regimes. In one study, ADX, Choppiness Index, and ATR percentile did not separate winners from losers. The number of recent strategy flips was more useful. That result led to a new controlled test of the churn gate.</p>
+
+    <h2>Test the result in another engine</h2>
+    <p>Two implementations can still share one engine's bug, so stronger candidates get rerun in independent systems:</p>
+    <ul>
+      <li>a readable Python backtester is the research reference;</li>
+      <li>LEAN runs the same strategy against the same local market data;</li>
+      <li>QuantConnect cloud runs it on an independent data path;</li>
+      <li>TradingView and Pine Script provide an additional visual and execution-semantics check when appropriate.</li>
+    </ul>
+    <p>I compare trade counts, timestamps, prices, costs, and P/L. Some differences are expected near contract rolls, session boundaries, and ambiguous intrabar fills. I investigate every unexplained difference.</p>
+    <p>For one combined strategy, the Python backtest produced $1.196 million. LEAN reproduced 96.5% of that result, and QuantConnect produced 102.4%, with trade counts within 4% across the three systems. That's the passing grade: the implementation transferred across engines and data paths. It did not prove profitability, because walk-forward evaluation was still pending. Correct implementation and a good strategy are separate questions.</p>
+    <p>Agreement has limits, though. One of the inflated early results had also been cross-checked, and an independent LEAN reimplementation matched it within 3% because both versions had faithfully implemented the same wrong fill assumption. Cross-engine agreement validates the implementation but not the assumptions behind it, which is why fill realism gets audited separately.</p>
+
+    <h2>Use explicit promotion gates</h2>
+    <p>Agents can test many ideas quickly. More tests also create more false positives, so each candidate must pass a fixed set of checks:</p>
+    <div class="gate-table-wrap">
+      <table class="gates">
+        <thead>
+          <tr><th>Gate</th><th>Question</th><th>Required artifact</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Baseline</td><td>Did the unchanged strategy reproduce on the same data and costs?</td><td>Baseline summary and trade log</td></tr>
+          <tr><td>Implementation</td><td>Do the two implementations agree on the rule and its events?</td><td>Code review, timestamp comparison, independent P/L aggregation</td></tr>
+          <tr><td>Behavior</td><td>Does it act as intended on real market examples?</td><td>Chart audit and regime report</td></tr>
+          <tr><td>Generalization</td><td>Does the improvement survive rolling out-of-sample windows after costs?</td><td>Paired walk-forward results and trial count</td></tr>
+          <tr><td>Portability</td><td>Does it survive another engine or data source?</td><td>LEAN, QuantConnect, or Pine reconciliation</td></tr>
+          <tr><td>Promotion</td><td>Does prospective behavior justify any exposure?</td><td>Shadow results, limits, monitoring, and a human decision</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>These checks are the research-side view of a longer deployment ladder, which runs from static validity to tightly limited capital and gets its own post: <a href="seven-gates-between-idea-and-live-money.html">Seven Gates Between an Idea and Live Money</a>.</p>
+    <p>An experiment registry records the parent hypothesis, configuration, data snapshot, baseline, costs, result, and verdict for every run. Failed tests stay in the registry on purpose. They keep the total trial count visible, and they stop an agent from proposing the same idea again under a new name.</p>
+    <p>One strategy family went through about 250 configurations without producing a robust full-history result. That record is a useful output in itself: it tells me to spend research time elsewhere, and there is no configuration #251.</p>
+
+    <h2>Keep key decisions with the human</h2>
+    <p>At the end of an iteration, the agents return a short research summary:</p>
+    <ul>
+      <li>what changed</li>
+      <li>what stayed identical to the baseline</li>
+      <li>where the result was strongest and weakest</li>
+      <li>which charts deserve review</li>
+      <li>what failed, and why</li>
+      <li>the smallest next hypothesis worth testing</li>
+    </ul>
+    <p>The proposals are where the self-improvement lives. When a result disappoints, the agents don't just report the failure. They reason about why: which regime bled, which exits gave back profit, which signal fired too often. Each explanation becomes a candidate path framed as a testable hypothesis, and the registry stops them from re-proposing something that already failed under a new name.</p>
+    <p>I can approve the next test, change the question after reviewing a chart, or stop the work. My decision goes into the same registry as the agents' experiments, because a human cherry-picking results is still cherry-picking.</p>
+    <p>Inside a sandbox, an agent can write code, run tests, inspect trades, and prepare a proposal. It cannot change the cost model, redefine the baseline, access a sealed test window, promote its own result, or allocate capital.</p>
+    <p>This is a research system, not an autonomous trading bot.</p>
+
+    <h2>What I learned</h2>
+    <p>The main value comes from the checks around the agents:</p>
+    <ul>
+      <li>Independent implementations make ambiguity visible.</li>
+      <li>One focused cross-review finds the real implementation issues.</li>
+      <li>Trade-level artifacts make every summary auditable.</li>
+      <li>Charts connect numbers to intended behavior.</li>
+      <li>Regime analysis turns surprises into testable follow-up questions.</li>
+      <li>Independent engines expose shared assumptions.</li>
+      <li>Promotion gates and a complete experiment log limit overfitting.</li>
+    </ul>
+    <p>Agents changed the speed of the loop, but they didn't change the standard of evidence. If anything, the speed is exactly why the standard now has to be enforced by structure instead of willpower.</p>
+    <p class="disclaimer">This describes an independent research workflow, not investment advice or a claim of live trading performance.</p>
+
+    <p class="related-posts">Related: <a href="backtest-charts.html">the chart tool for inspecting backtests</a> and <a href="parquet-data-engineering.html">the data engineering behind the research loop</a>.</p>
+    <nav class="post-pagination" aria-label="Post navigation">
+      <a class="post-pagination-link previous" href="timestamp-bug.html">
+        <span class="post-pagination-label">← Previous post</span>
+        <span class="post-pagination-title">How a 15-Second Bar-Labeling Bug Changed Two Years of Backtests</span>
+      </a>
+      <a class="post-pagination-link next" href="seven-gates-between-idea-and-live-money.html">
+        <span class="post-pagination-label">Next post →</span>
+        <span class="post-pagination-title">Seven Gates Between an Idea and Live Money</span>
+      </a>
+    </nav>
+  </article>
+</div>
+
+<footer class="course-foot">
+  <div class="inner">
+    <span>srezwan.huq [at] gmail [dot] com</span>
+    <span><a href="../">sikderhuq.com</a></span>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    const btn = document.getElementById('themeBtn');
+    const moon = document.getElementById('iconMoon');
+    const sun = document.getElementById('iconSun');
+    const systemThemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    function apply(t, persist){
+      document.body.classList.remove('light','dark');
+      document.body.classList.add(t);
+      moon.style.display = t === 'light' ? '' : 'none';
+      sun.style.display = t === 'dark' ? '' : 'none';
+      if (persist) localStorage.setItem('v2theme', t);
+    }
+    apply(document.body.classList.contains('dark') ? 'dark' : 'light', false);
+    btn.addEventListener('click', () => apply(document.body.classList.contains('light') ? 'dark' : 'light', true));
+    systemThemeQuery.addEventListener('change', (event) => {
+      if (!localStorage.getItem('v2theme')) apply(event.matches ? 'dark' : 'light', false);
+    });
+  })();
+</script>
+</body>
+</html>

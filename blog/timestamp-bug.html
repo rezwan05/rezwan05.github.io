@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>How a 15-Second Bar-Labeling Bug Changed Two Years of Backtests | Sikder Huq</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700&amp;family=Inter:wght@300;400;500;600&amp;family=Space+Grotesk:wght@300;400;500&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../courses/course-style.css?v=20260720-3">
+<script src="../assets/site-nav.js?v=20260720-2" defer></script>
+</head>
+<body class="skin-a">
+<script>
+  document.body.className = 'skin-a ' + (localStorage.getItem('v2theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+</script>
+
+<header class="course-top">
+  <div class="inner">
+    <a class="back" href="../">Sikder Huq</a>
+    <nav class="subnav">
+      <a href="../">Home</a>
+      <a href="../blog/">Blog</a>
+      <a href="../research/">Research</a>
+      <a href="../projects/">Projects</a>
+      <a href="../teaching/">Teaching</a>
+    </nav>
+    <span class="right">
+      <button class="theme-btn" id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme">
+        <svg id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+        <svg id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+      </button>
+    </span>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="article-head">
+    <div class="kicker">quant · data engineering · series part 3</div>
+    <h1>How a 15-Second Bar-Labeling Bug Changed Two Years of Backtests</h1>
+    <p class="dek">A pandas resampling error shifted every 15-second bar. Lag correlation exposed the problem.</p>
+    <div class="meta">Jan 3, 2026 · 9 min read</div>
+  </div>
+
+  <article class="post">
+    <aside class="in-brief" aria-labelledby="timestamp-brief">
+      <h2 id="timestamp-brief">In brief</h2>
+      <ul>
+        <li>For two years, a two-flag configuration bug quietly corrupted every record in my market-data cache. Nothing crashed, and everything built on top of it looked completely plausible.</li>
+        <li>I caught it by finally testing an assumption I'd been taking on faith: comparing my data against an independent source, where a few lines of correlation code showed my records were shifted by exactly one time step.</li>
+        <li>Rebuilding the cache swung two years of results by six figures, and it left me a rule I now assert in code: a fast pipeline is not the same thing as a validated one.</li>
+      </ul>
+    </aside>
+    <p>My research runs on raw NQ futures trades and L1/L2 order-book updates, about <strong>37 GB</strong> compressed. I had spent real effort making that pipeline fast, and much less validating what it produced.</p>
+
+    <h2>Part 1: A fast cache, assumed correct</h2>
+    <p>The pipeline is straightforward: unpack the raw archives once, build OHLCV bars at several resolutions, and store each derived dataset in Parquet. Backtests read the compact bar files, never the tick archives. Every cache can be rebuilt from immutable raw data.</p>
+    <p>Rebuildability matters because a fast cache can still be wrong. I describe the pipeline and its performance in <a href="parquet-data-engineering.html">the data-engineering post</a>. This post focuses on a correctness bug in that cache.</p>
+
+    <h2>Part 2: The $31K discrepancy</h2>
+    <p>I validate everything against a second, independent source: TradingView exports of the same instrument. The same market should produce the same bars.</p>
+    <p>The first comparison looked reasonable. The median close difference was about 2 points on a 20,000-point index, and bar-to-bar return correlation was 0.36. I told myself the feeds just differed slightly. That explanation was convenient, and I never tested it.</p>
+    <p>Then the same strategy, on the same 10-day window, made <strong>+$28.9K</strong> on TradingView data and lost <strong>$2.3K</strong> on mine. Feeds differ. They don't differ by $31K.</p>
+
+    <h3>Lag correlation found the shift</h3>
+    <p>I compared returns at several time offsets:</p>
+    <pre><code>a = mt_bars["close"].diff()      # my tick-derived 15s bars
+b = tv_bars["close"].diff()      # TradingView 15s bars, same timestamps
+for lag in (-2, -1, 0, 1, 2):
+    print(lag, a.corr(b.shift(lag)))</code></pre>
+    <p>Output: correlation at lag 0 was <strong>0.36</strong>. At lag +1 it was <strong>0.60</strong>.</p>
+    <p>A jump from 0.36 to 0.60 at lag +1 meant my bars were <strong>shifted by exactly one bar</strong>: the bar labeled 10:00:15 held the trades TradingView put at 10:00:00.</p>
+    <p>The cause was a single resample argument. My 15-second bars had been built from 5-second bars with pandas' <code>label='right'</code>, meaning each bar was stamped with its <em>close</em> time. The entire downstream pipeline (and TradingView) assumes bars are stamped with their <em>open</em> time. Every 15-second bar, and every higher-timeframe bar built on top of them, was mis-aligned by one bar.</p>
+    <p>I shifted the labels back 15 seconds and reran the comparison. The result changed from <strong>-$2.3K to +$28.7K</strong>, close to TradingView's +$28.9K. A smaller mismatch remained.</p>
+
+    <h3>A second resampling error</h3>
+    <p>After the label fix, the feeds still differed by about 1.5 points at the median. I rebuilt the bars from the 5-second source with each binning convention and compared every result with TradingView:</p>
+    <pre><code>bars = ticks_5s.resample("15s", label="left", closed="left").agg(
+    {"open": "first", "high": "max", "low": "min", "close": "last", "volume": "sum"}
+)</code></pre>
+    <p>With <code>label='left', closed='left'</code>, the result against TradingView over a 44,000-bar window was:</p>
+    <blockquote><p><strong>median |close difference| = 0.00 points. 95th percentile = 0.00 points. Return correlation = 0.999.</strong></p></blockquote>
+    <p>The rebuilt bars matched the reference. The original cache had a second bug: <code>closed='right'</code> assigned each boundary 5-second bar to the previous 15-second interval. Changing the label fixed the timestamps but not the interval contents.</p>
+    <p>Two arguments were wrong. <code>label=</code> controls the timestamp, while <code>closed=</code> controls which observations belong to the interval. Both must match the downstream convention.</p>
+
+    <h2>Part 3: What two years of results were worth</h2>
+    <p>After rebuilding the cache correctly, I re-ran the full two-year history for several strategy configurations:</p>
+    <ul>
+      <li>A <strong>high-frequency trend config</strong> (thousands of trades on 15s bars): its 25-month P/L moved by <strong>~$80K</strong> with the fix. Another moved <strong>~$175K</strong>. Both got <em>worse</em> on correct data. Some of what looked like edge was bar-construction artifact.</li>
+      <li>A <strong>low-frequency structural config</strong> (~1.3 trades/day, entries at range-breakout levels): its P/L changed by only <strong>$1.2K</strong>, and its drawdown <em>improved</em>.</li>
+    </ul>
+    <p>The market, engine, and costs were unchanged. Only bar construction changed. I now read the size of the move as a stress test: if a strategy's result depends on which side of a bar boundary a timestamp lands, its edge may be below the noise floor. The structural strategy barely noticed the fix, while the high-frequency variants moved by two orders of magnitude more.</p>
+    <p>The audit also answered two other questions:</p>
+    <ul>
+      <li><strong>Contract rolls had little effect.</strong> Of about 16,000 trades, only 57 crossed a roll boundary. Their combined P/L was about $2K.</li>
+      <li><strong>General data quality was stable.</strong> Missing bars, flat bars, and price spikes did not increase in the weaker periods. The performance difference was more likely related to market conditions.</li>
+    </ul>
+
+    <h2>The checklist I now run on every bar cache</h2>
+    <ul>
+      <li><strong>Check lag correlation against an independent source.</strong> Run <code>corr(diff(a), diff(b).shift(k))</code> for k ∈ [-2, 2]. The peak should occur at k=0.</li>
+      <li><strong>Compare exact values after alignment.</strong> Measure the median and 95th percentile of the absolute close difference.</li>
+      <li><strong>Define the label convention once.</strong> My loaders assert <code>label='left'</code>, which stamps bars by open time.</li>
+      <li><strong>Rebuild caches from raw data.</strong> Patching the old timestamps did not fix the interval contents.</li>
+      <li><strong>Rerun the main backtests after a data fix.</strong> Large changes identify strategies that depend on small construction details.</li>
+    </ul>
+    <p>The two bugs cost days of rework and invalidated conclusions I had already written down. The diagnostic that finally caught them was a handful of lines of code. I should have run it two years earlier.</p>
+
+    <nav class="post-pagination" aria-label="Post navigation">
+      <a class="post-pagination-link previous" href="parquet-data-engineering.html">
+        <span class="post-pagination-label">← Previous post</span>
+        <span class="post-pagination-title">From 38 GB of NQ Ticks to Backtests in Minutes</span>
+      </a>
+      <a class="post-pagination-link next" href="human-in-the-loop-quant-research.html">
+        <span class="post-pagination-label">Next post →</span>
+        <span class="post-pagination-title">A Self-Improving Quant Research Harness with a Human in the Loop</span>
+      </a>
+    </nav>
+  </article>
+</div>
+
+<footer class="course-foot">
+  <div class="inner">
+    <span>srezwan.huq [at] gmail [dot] com</span>
+    <span><a href="../">sikderhuq.com</a></span>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    const btn = document.getElementById('themeBtn');
+    const moon = document.getElementById('iconMoon');
+    const sun = document.getElementById('iconSun');
+    const systemThemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    function apply(t, persist){
+      document.body.classList.remove('light','dark');
+      document.body.classList.add(t);
+      moon.style.display = t === 'light' ? '' : 'none';
+      sun.style.display = t === 'dark' ? '' : 'none';
+      if (persist) localStorage.setItem('v2theme', t);
+    }
+    apply(document.body.classList.contains('dark') ? 'dark' : 'light', false);
+    btn.addEventListener('click', () => apply(document.body.classList.contains('light') ? 'dark' : 'light', true));
+    systemThemeQuery.addEventListener('change', (event) => {
+      if (!localStorage.getItem('v2theme')) apply(event.matches ? 'dark' : 'light', false);
+    });
+  })();
+</script>
+</body>
+</html>

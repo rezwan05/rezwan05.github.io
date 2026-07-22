@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Fall 2013: 22c:005 Introduction to Computer Science (Lab) — Sikder Huq</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../courses/course-style.css?v=20260720-2">
+<script src="../assets/site-nav.js?v=20260720-2" defer></script>
+</head>
+<body class="skin-a">
+<script>
+  document.body.className = 'skin-a ' + (localStorage.getItem('v2theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+</script>
+<header class="course-top">
+  <div class="inner">
+    <a class="back" href="../">Sikder Huq</a>
+    <nav class="subnav">
+      <a href="../">Home</a>
+      <a href="../blog/">Blog</a>
+      <a href="../research/">Research</a>
+      <a href="../projects/">Projects</a>
+      <a href="../teaching/">Teaching</a>
+    </nav>
+    <span class="right">
+      <button class="theme-btn" id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme">
+        <svg id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+        <svg id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+      </button>
+    </span>
+  </div>
+</header>
+<div class="wrap">
+  <div class="course-head">
+    <div class="code">22C:005 · University of Iowa · Lab Instructor</div>
+    <h1>Fall 2013: 22c:005 Introduction to Computer Science (Lab)</h1>
+  </div>
+  <p class="orig-note">This page was migrated from my old website - here is the <a href="https://sites.google.com/site/saikatcit05/fall-2013-22c005-introduction-to-computer-science-lab" target="_blank" rel="noopener">original page ↗</a>.</p>
+  <main class="course-body">
+    <p>Course Supervisor: Dr. Denise Szecsei</p>
+    <p>Lab Sections: Tue 4:30P - 5:20P (Section A02), Wed 9:30A - 10:20A (Section A03) at 301 MLH</p>
+    <p>Office Hours: Thu 2:30A - 3:20P, Fri 8:30A to 9:20A at 301 MLH and by appointment</p>
+
+    <h2>Announcements</h2>
+    <p>Change in Office Hours Schedule (posted on 9/25): Due to conflict with class schedule, my office hour on Wednesdays is shifted to Fridays. I am going have an extended office hour (from 8:30am to 10:20am) on Fridays, instead of (11:30am to 12:20pm) hour on Wednesdays.</p>
+    <p>Here is my new office hour schedule: Thu 2:30A - 3:20P, Fri 8:30A to 10:20A at 301 MLH and by appointment.</p>
+    <p>N.B. For this week, I will hold office hour on Wednesday (today), and as well as during the extended period on Friday.</p>
+    <p>HuqLab5.py file is updated (posted on 9/26): An alternative solution for the function replaceVowels() is added. You might find this solution more helpful to solve the HW problem 3.</p>
+    <p>About HW 4 problem 1 (posted on 9/26): Probably I stated in my discussion that my example findAStatetoVisit() is similar to HW problem 1. But later on I realized that this statement can be misguiding. I went though the homework statement again, and it clearly appears that you don't need any if-elif-else statement for HW problem 1. Please feel free to email me if you have any further confusions.</p>
+    <p>HuqLab13.py file is updated (posted on 12/5): There was a small bug in the previous file. The corrected file is posted.</p>
+    <p>HuqLab13.py file is updated again! (posted on 12/6): I didn't upload the right version yesterday! The right file is uploaded now, finally. Sorry about the mess.</p>
+
+    <h2>Lab summary, examples and files (by week)</h2>
+    <div class="week"><h3>Week 1</h3><p>We introduced python and wing IDE, and talked about print statement, variables, basic data-types and functions. We wrote and ran few simple functions by using Wing IDE.</p></div>
+    <div class="week"><h3>Week 2</h3><p>We revisited the concept of variables and data-types at the beginning. Then we wrote several programs to show how to build strings by concatenating different components.</p><p>Example program: HuqLab2.py</p></div>
+    <div class="week"><h3>Week 3</h3><p>We talked about the basics of list and loop and python syntaxes associated with them. Topics covered include how to initialize, build and access lists in python, how to use basic list functions (e.g. len(), append(), max(), min(), sum() etc.), how does the append function differ from the concatenation operator (+) applied to join two lists, difference between equality operator (==) and assignment operator (=), how to write simple for and while loops, how to generate random numbers from a certain range of numbers etc. We also wrote some example functions to illustrate these concepts.</p><p>Example program: HuqLab3.py</p></div>
+    <div class="week"><h3>Week 4</h3><p>We talked about how to read inputs from keyboard, some differences between python version 2.7.x and 3.x.x, and basics of comparing two variables. Finally, we developed a guessing game program, targeting to impart necessary skills for HW3 to the students.</p><p>Example program: HuqLab4.py</p></div>
+    <div class="week"><h3>Week 5</h3><p>We talked about if-elif-else statements and the random.choice() function. Then we went through some examples to illustrate their use in programs.</p><p>Example program: HuqLab5.py</p></div>
+    <div class="week"><h3>Week 6</h3><p>We started the lab with a brief discussion on HW4 solutions. Then we talked about the break statement and use of different random functions. We wrote some example functions targeting to help students in doing their next HW.</p><p>Example program: HuqLab6.py</p></div>
+    <div class="week"><h3>Week 7</h3><p>We wrote and analyzed some programs that generate lists with random numbers and go through the list (by using a loop) to perform specific operations on the list (e.g. finding/counting a specific kind of elements). We also went though examples to show how to analyze a string by breaking it down to appropriate sub-strings.</p><p>Example program: HuqLab7.py</p></div>
+    <div class="week"><h3>Week 8</h3><p>We wrote a couple of programs in OAM assembly language, and explained them in detail by mimicking OAM operations in python function.</p><p>Example program: HuqLab8</p></div>
+    <div class="week"><h3>Week 9</h3><p>We continued our OAM Assembly Language programming, and covered examples that use loop.</p><p>Example program: HuqLab9</p></div>
+    <div class="week"><h3>Week 10</h3><p>We went through a quick overview of OAMPL, explaining the notion of major levels (machine, assembly and high-level) in programming languages. Then we solved (in Python) a sample problem as an exercise for the lab exam.</p><p>Example program: HuqLab10</p></div>
+    <div class="week"><h3>Week 11</h3><p>We demonstrated several example programs (in Python) to cover basic file operations. Our examples create, write, append and read files, as well as perform computations by using the data read from file. At the end, like the previous lab, we went through a sample problem for the lab exam, and wrote different solutions for that problem.</p><p>Example program: HuqLab11.py</p></div>
+    <div class="week"><h3>Week 12</h3><p>We wrote some programs related to lists, strings and file operations. Then we talked about HW problems and finally went through a sample problem for the lab exam.</p><p>Example program: HuqLab12.py</p></div>
+    <div class="week"><h3>Week 13</h3><p>Lab test (no discussion).</p></div>
+    <div class="week"><h3>Week 14</h3><p>Thanksgiving break (no discussion).</p></div>
+    <div class="week"><h3>Week 15</h3><p>We reviewed the lab exam. Then we developed a program that reads data from an input file (soccer.txt), generates XML tags for the data read, and writes in an output file.</p><p>Programs and the input file: HuqLab13.py soccer.txt SecA02-exam_review.py SecA03-exam_review.py</p></div>
+    <div class="week"><h3>Week 16</h3><p>We reviewed the program we wrote in the last class and talked about some issues related to the project. Thanks everyone for attending and good luck for the final exams!</p></div>
+
+    <h2>Course files</h2>
+    <div class="cabinet" style="border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#fff;">
+      <iframe src="https://drive.google.com/embeddedfolderview?id=1xRb-nYpvjXz6eg200zLFDyTh9mKabFBX#list" style="width:100%;height:520px;border:0;display:block;" loading="lazy" title="Course files (Google Drive)"></iframe>
+    </div>
+    <p style="margin-top:12px;"><a href="https://drive.google.com/folderview?id=1xRb-nYpvjXz6eg200zLFDyTh9mKabFBX" target="_blank" rel="noopener">Open the folder in Google Drive ↗</a></p>
+  </main>
+</div>
+<footer class="course-foot">
+  <div class="inner">
+    <span>srezwan.huq [at] gmail [dot] com</span>
+    <span><a href="https://sites.google.com/site/saikatcit05/fall-2013-22c005-introduction-to-computer-science-lab" target="_blank" rel="noopener">view original page ↗</a></span>
+  </div>
+</footer>
+<script>
+  (function(){
+    const btn = document.getElementById('themeBtn');
+    const moon = document.getElementById('iconMoon');
+    const sun = document.getElementById('iconSun');
+    const systemThemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    function apply(t, persist){
+      document.body.classList.remove('light','dark');
+      document.body.classList.add(t);
+      moon.style.display = t === 'light' ? '' : 'none';
+      sun.style.display = t === 'dark' ? '' : 'none';
+      if (persist) localStorage.setItem('v2theme', t);
+    }
+    apply(document.body.classList.contains('dark') ? 'dark' : 'light', false);
+    btn.addEventListener('click', () => apply(document.body.classList.contains('light') ? 'dark' : 'light', true));
+    systemThemeQuery.addEventListener('change', (event) => {
+      if (!localStorage.getItem('v2theme')) apply(event.matches ? 'dark' : 'light', false);
+    });
+  })();
+</script>
+</body>
+</html>

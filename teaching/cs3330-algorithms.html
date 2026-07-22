@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CS 3330: Algorithms — Sikder Huq</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../courses/course-style.css?v=20260720-2">
+<script src="../assets/site-nav.js?v=20260720-2" defer></script>
+</head>
+<body class="skin-a">
+<script>
+  document.body.className = 'skin-a ' + (localStorage.getItem('v2theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+</script>
+
+<header class="course-top">
+  <div class="inner">
+    <a class="back" href="../">Sikder Huq</a>
+    <nav class="subnav">
+      <a href="../">Home</a>
+      <a href="../blog/">Blog</a>
+      <a href="../research/">Research</a>
+      <a href="../projects/">Projects</a>
+      <a href="../teaching/">Teaching</a>
+    </nav>
+    <span class="right">
+      <button class="theme-btn" id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme">
+        <svg id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+        <svg id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+      </button>
+    </span>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="course-head">
+    <div class="code">CS 3330 · University of Iowa</div>
+    <h1>CS 3330: Algorithms</h1>
+  </div>
+
+  <p class="orig-note">This page was migrated from my old website - here is the <a href="https://sites.google.com/site/saikatcit05/teaching_1/cs-3330-algorithms" target="_blank" rel="noopener">original page ↗</a>.</p>
+
+  <main class="course-body">
+    <h2>Semester: Summer 2018</h2>
+    <p>Instructor: Sikder Huq, 101A MLH, sikderrezwanul-huq AT uiowa.edu</p>
+    <p>Class meeting time: MTWTh 9:30-10:45 AM in 205 MLH</p>
+    <p>Office Hours: MT 11AM - 12:30PM in 101A MLH and by appointment.</p>
+    <p>Teaching Assistant: David McDermott, david-mcdermott-1 AT uiowa.edu</p>
+    <p>TA Office Hours: TW 12:30-1:30PM in 301 MLH</p>
+
+    <h2>Textbook</h2>
+    <p>Algorithm Design<br/>Klienberg and Tardos</p>
+    <p>As a reference, we may also use lecture notes from <a href="http://jeffe.cs.illinois.edu/teaching/algorithms/" target="_blank" rel="noopener">Jeff Erickson</a>.</p>
+
+    <h2>Course objectives</h2>
+    <h3>Upon successful completion of this course, students are expected to:</h3>
+    <ul>
+      <li>learn how to abstract clearly stated algorithmic problems from messy, real world problems</li>
+      <li>learn different techniques to solve algorithmic problems</li>
+      <li>be able to identify algorithm design technique appropriate for the context</li>
+      <li>learn how to mathematically analyze algorithms and quantify their merits</li>
+      <li>develop algorithmic intuition (i.e. feel for the difficulty of the problems) and ability to effectively communicate algorithms</li>
+    </ul>
+    <h3>The course is expected to cover the following topics:</h3>
+    <ul>
+      <li>Introduction</li>
+      <li>Asymptotic Order of Growth</li>
+      <li>Basic Graph Algorithms</li>
+      <li>Greedy Algorithms and Analysis</li>
+      <li>Recursive Thinking: Divide-and-Conquer</li>
+      <li>Recursive Thinking: Dynamic Programming</li>
+      <li>Network Flow and Applications</li>
+      <li>Randomized Algorithms</li>
+      <li>NP-completeness</li>
+    </ul>
+
+    <h2>Grading</h2>
+    <p>Final grade will be determined by the following components:</p>
+    <p>Homework assignments (30%): There will be approximately six homework assignments during the course. Some of the homework problems will be based on programming.</p>
+    <p>Exams (65%): There will be one mid-term and one final exam. The mid-term exam will cover 30% and final exam will cover 35% of the total grade.</p>
+    <p>Participation (5%): You are expected to actively participate in the class discussions. There might be be in-class exercises and short quizzes, and some of them will be graded.</p>
+    <p>Grades will be curved. CLAS expects senior level undergraduate classes to have the following approximate distribution: 22% A, 38% B, 36% C, 3% D and 1% F.</p>
+
+    <h2>Late policy</h2>
+    <p>You may use a quota of three days for the entire semester for late submissions. When you submit an assignment X days late, your quota gets decreased by X irrevocably. You can only be late by an integer number of days. For example, if you submit 5 hours after the deadline, your quota is depleted by one day. Once you use up your quota of three days, any assignment submitted late will not be accepted and you will get 0 points for that assignment.</p>
+
+    <h2>Exams</h2>
+    <ul>
+      <li>The midterm exam will take place in class on Monday, July 9. Find more information about the midterm exam <a href="https://drive.google.com/file/d/1hha11eaBubLad0SApqm_5i2HGLLqYZR9/view" target="_blank" rel="noopener">here</a>.</li>
+      <li>The final exam will take place in class on Thursday, Aug 2. Details of the final exam can be found <a href="https://drive.google.com/file/d/1z2iIc46FfdxMEPOnDrKP2WAGITbfyUlv/view" target="_blank" rel="noopener">here</a>.</li>
+    </ul>
+
+    <h2>Announcements and homeworks</h2>
+    <ul class="ann-list">
+      <li><span class="d">6/13</span><span>Instructor and TA office hours are announced.</span></li>
+      <li><span class="d">6/14</span><span><a href="https://drive.google.com/file/d/1LIt4TlA5p9IvQ8e1sTT0OZYAsrW9sIg6/view" target="_blank" rel="noopener">Homework 1</a> is posted, due in class on Wed, June 20.</span></li>
+      <li><span class="d">6/20</span><span><a href="https://drive.google.com/file/d/1MouBYDft2kfHIdO2ahb_nnU5nH_vzfRO/view" target="_blank" rel="noopener">Homework 2</a> is posted, due in class on Wed, June 27.</span></li>
+      <li><span class="d">6/25</span><span>Homework 1 solutions are posted in ICON.</span></li>
+      <li><span class="d">6/27</span><span><a href="https://drive.google.com/file/d/1JlyYfCpsWHtoFkL__v99vM478Bp3CbLX/view" target="_blank" rel="noopener">Homework 3</a> is posted, due in class on Thu, July 5.</span></li>
+      <li><span class="d">7/2</span><span>Homework 2 solutions are posted in ICON.</span></li>
+      <li><span class="d">7/10</span><span>Homework 3 solutions are posted in ICON.</span></li>
+      <li><span class="d">7/12</span><span><a href="https://drive.google.com/file/d/10GJElOi8wY8jhspiTwNTakqsZVVAmE7m/view" target="_blank" rel="noopener">Homework 4</a> is posted, due in class on Wed, July 18.</span></li>
+      <li><span class="d">7/16</span><span>Midterm exam solutions are posted in ICON.</span></li>
+      <li><span class="d">7/18</span><span><a href="https://drive.google.com/file/d/1uUWTG7m-D82a_A-Zpsi12w4o316pvFKX/view" target="_blank" rel="noopener">Homework 5</a> is posted, due by 11:59 pm on Wed, July 25 (ICON submission).</span></li>
+      <li><span class="d">7/24</span><span>Homework 4 solutions are posted in ICON.</span></li>
+      <li><span class="d">7/25</span><span>Homework 5 deadline is extended to 11:59 pm on Thu, July 26.</span></li>
+      <li><span class="d">7/26</span><span><a href="https://drive.google.com/file/d/1zR52sqcK9ISoEE8cqezjIsPnQqhUFJfk/view" target="_blank" rel="noopener">Homework 6</a> is posted, due in class on Wed, Aug 1.</span></li>
+      <li><span class="d">8/1</span><span>Solutions to the problems 5,8,16, and 28 from chapter 7 (for practice) are posted in ICON. Try to solve these problems without looking at the solutions first.</span></li>
+      <li><span class="d">8/1</span><span>Homework 5 solutions are posted in ICON.</span></li>
+      <li><span class="d">8/6</span><span>Final exam solutions are posted in ICON.</span></li>
+      <li><span class="d">8/7</span><span>Final exam solutions are updated in ICON.</span></li>
+    </ul>
+
+    <h2>Lecture summaries</h2>
+    <div class="week">
+      <h3>Week 1 <span>6/11 - 6/14</span></h3>
+      <p>Topics:</p>
+      <ul>
+        <li>Course Introduction</li>
+        <li>The stable matching problem and the Gale-Shapley (GS) algorithm</li>
+        <li>Proof of correctness of the GS algorithm</li>
+        <li>Variations of the stable matching problem</li>
+        <li>Proving termination of an algorithm</li>
+        <li>five representative problems</li>
+        <li>Asymptotic order of growth: definition of Big Oh, Omega, Theta</li>
+        <li>Properties of asymptotic order of growth notation</li>
+        <li>common example of running times</li>
+      </ul>
+      <p>Links: (taken from Prof. Pemmaraju's algorithms course page)</p>
+      <ul>
+        <li>The 2012 Nobel prize in Economics was awarded to Lloyd Shapley and Alvin Roth; to Shapley for his work with David Gale on the stable marriage problem and to Roth for his work in the 1980's on the design of matching markets for matching doctors and hospitals, students and high schools, kidneys and patients, etc. <a href="https://www.nobelprize.org/nobel_prizes/economic-sciences/laureates/2012/popular-economicsciences2012.pdf" target="_blank" rel="noopener">Here</a> is a 5-page "information for the public" from the Royal Swedish Academy of Sciences on the work of Shapley and Roth.</li>
+        <li>A <a href="http://homepage.cs.uiowa.edu/~sriram/3330/fall15/runningTimesLandscape.pdf" target="_blank" rel="noopener">picture</a> showing the "landscape" of representative running times.</li>
+      </ul>
+      <div class="slides">Lecture slides: <a href="https://drive.google.com/file/d/1Nf4ek4v492RChUIKBG3BTX9Q_9C1_Dg1/view" target="_blank" rel="noopener">Introduction</a> <a href="https://drive.google.com/file/d/1XuRpP8NiSTG9dkEz5bvsqoagt68fCERw/view" target="_blank" rel="noopener">GS-Algorithm-Demo</a> <a href="https://drive.google.com/file/d/1WzPHR_Mp5mxqWdEXj0ZUla7xltt2QbD3/view" target="_blank" rel="noopener">Asympotic_Analysis</a></div>
+    </div>
+    <div class="week">
+      <h3>Week 2 <span>6/18 - 6/21</span></h3>
+      <p>Topics:</p>
+      <ul>
+        <li>Introduction to graph algorithms</li>
+        <li>Graph representations: adjacency list representation and adjacency matrix representation</li>
+        <li>Graph traversals: breadth-first search; properties of BFS and BFS trees</li>
+        <li>Depth-first search (DFS)</li>
+        <li>Applications of graph traversals: testing bipartiteness and finding all connected components</li>
+        <li>Directed graphs</li>
+        <li>Exercises related to BSF and DSF</li>
+        <li>The strongly connected components problem</li>
+        <li>Directed Acyclic Graphs (DAGs) and the topological sorting problem; an O(m + n)-time algorithm for topological sort</li>
+      </ul>
+      <div class="slides">Lecture slides: <a href="https://drive.google.com/file/d/1UuUCVjvA7ODadHZwBFD_idYsD9sCo4sn/view" target="_blank" rel="noopener">Graph_Algorithms</a> <a href="https://drive.google.com/file/d/1qXCMqOEf8rJRtC1mzpguiGetqg-YZhLL/view" target="_blank" rel="noopener">Topological_ordering_demo</a></div>
+    </div>
+    <div class="week">
+      <h3>Week 3 <span>6/25 - 6/28</span></h3>
+      <p>Topics:</p>
+      <ul>
+        <li>A greedy algorithm for the interval scheduling problem</li>
+        <li>A greedy algorithm for the truck driver's problem</li>
+        <li>A greedy algorithm for the interval partitioning problem</li>
+        <li>Three (greedy stays ahead, structural, and exchange argument) greedy analysis strategies</li>
+        <li>A greedy algorithm for the coin-chaining problem</li>
+        <li>A greedy algorithm for the scheduling to minimizing lateness problem</li>
+        <li>Different greedy design exercises</li>
+        <li>Dijkstra's shortest path algorithm, analysis, and implementation</li>
+        <li>Introduction to the Minimum Spanning Tree (MST) problem</li>
+        <li>Quick Introduction to Kruskal's algorithm and Prim's algorithm for MST</li>
+      </ul>
+      <div class="slides">Lecture slides: <a href="https://drive.google.com/file/d/107eXzXluBtk-WK-Lf27I3etmEkNdHUAM/view" target="_blank" rel="noopener">Greedy_algorithms</a> <a href="https://drive.google.com/file/d/1wy1Oq3FBNgLOUhfAvBnW22PiFh4Rt3zm/view" target="_blank" rel="noopener">Interval_Scheduling_Demo</a> <a href="https://drive.google.com/file/d/1kxHVsFzF8hzu53uKkR1XyYesg06rjsiU/view" target="_blank" rel="noopener">Dijkstra_Demo</a></div>
+    </div>
+    <div class="week">
+      <h3>Week 4 <span>7/2 - 7/5</span></h3>
+      <p>Topics:</p>
+      <ul>
+        <li>Revisiting the implementation of Dijkstra's algorithm using priority queue</li>
+        <li>Kruskal's and Prim's algorithms for the MST problem</li>
+        <li>Cycle and cut properties of MST</li>
+        <li>Proof of correctness and implementation of Kruskal's algorithm</li>
+        <li>Proof of correctness and implementation of Prim's algorithm</li>
+        <li>Solving various problems</li>
+      </ul>
+      <div class="slides">Lecture slides: <a href="https://drive.google.com/file/d/107eXzXluBtk-WK-Lf27I3etmEkNdHUAM/view" target="_blank" rel="noopener">Greedy_algorithms</a> <a href="https://drive.google.com/file/d/1UK8CcVaeNWuLMiFTyBMjo2HEnOEWM7hD/view" target="_blank" rel="noopener">MST_Demo</a></div>
+    </div>
+    <div class="week">
+      <h3>Week 5 <span>7/9 - 7/12</span></h3>
+      <p>Topics:</p>
+      <ul>
+        <li>Introduction to the Divide and Conquer paradigm</li>
+        <li>Mergesort algorithm and analysis</li>
+        <li>Different methods for solving recurrence relations</li>
+        <li>The Counting Inversion problem with an O(n log n) solution</li>
+        <li>The Closest Pair of Points problem with an O(n log n) solution</li>
+        <li>Karatsuba Multiplication for the Integer Multiplication problem</li>
+      </ul>
+      <div class="slides">Lecture slides: <a href="https://drive.google.com/file/d/1a1OMwBGXKa88fyFg8yc7-CPB3E5YQ8SX/view" target="_blank" rel="noopener">Divide_and_Conquer</a> <a href="https://drive.google.com/file/d/1LpRrNFVu1psyVanhhNTh3yfI7szQzUMl/view" target="_blank" rel="noopener">Mergesort_Demo</a> <a href="https://drive.google.com/file/d/1mVsOp5YQuaG8U0jeQ477Dm-SPL_Qr0SL/view" target="_blank" rel="noopener">Counting_Inversions_Demo</a></div>
+    </div>
+    <div class="week">
+      <h3>Week 6 <span>7/16 - 7/19</span></h3>
+      <p>Topics:</p>
+      <ul>
+        <li>Strassen's divide and conquer algorithm for matrix multiplication</li>
+        <li>The master theorem for solving recurrence relations</li>
+        <li>An O(n^2) divide and conquer algorithm for computing GCD of 2 n-bit positive intergers</li>
+        <li>History of Dynamic Programming</li>
+        <li>Introduction to Dynamic Programming using Fibonacci numbers</li>
+        <li>The Weighted Interval Scheduling problem</li>
+        <li>The Segmented Least Square Problem</li>
+        <li>The Sequence Alignment Problem</li>
+        <li>Solving various Dynamic Programming exercises</li>
+      </ul>
+      <div class="slides">Lecture slides: <a href="https://drive.google.com/file/d/1a1OMwBGXKa88fyFg8yc7-CPB3E5YQ8SX/view" target="_blank" rel="noopener">Divide_and_Conquer</a> <a href="https://drive.google.com/file/d/1eH7Ob52spXGGjhVa3exkE2r_rK3fzsRQ/view" target="_blank" rel="noopener">Dynamic_Programming</a></div>
+    </div>
+    <div class="week">
+      <h3>Week 7 <span>7/23 - 7/26</span></h3>
+      <p>Topics:</p>
+      <ul>
+        <li>The knapsack Problem</li>
+        <li>Exercise: Longest Palindromic Sub-sequence problem and Smallest Palindromic Partitioning problem</li>
+        <li>The RNA Secondary Structure problem</li>
+        <li>Bellman-Ford algorithm for the shortest path problem</li>
+        <li>Introduction to the max-flow min-cut problem</li>
+        <li>The Ford-Fulkerson algorithm</li>
+      </ul>
+      <div class="slides">Lecture slides: <a href="https://drive.google.com/file/d/1eH7Ob52spXGGjhVa3exkE2r_rK3fzsRQ/view" target="_blank" rel="noopener">Dynamic_Programming</a> <a href="https://drive.google.com/file/d/1cv_aRZNUDOb2IPSSxLGLT7d29uFUAkJ4/view" target="_blank" rel="noopener">Network_Flow</a> <a href="https://drive.google.com/file/d/1RZAV14zGBV5YgOFixmLnYrw0cn5Jwmo-/view" target="_blank" rel="noopener">FordFulkerson_Demo</a></div>
+    </div>
+    <div class="week">
+      <h3>Week 8 <span>7/30 - 8/1</span></h3>
+      <p>Topics:</p>
+      <ul>
+        <li>Capacity scaling for choosing good augmenting paths</li>
+        <li>Network flow applications: bipartite matching, edge disjoint paths, network connectivity, baseball elimination</li>
+        <li>Polynomial-time reductions</li>
+        <li>Definition of P, NP, NP-Completeness and EXP</li>
+      </ul>
+      <div class="slides">Lecture slides: <a href="https://drive.google.com/file/d/1cv_aRZNUDOb2IPSSxLGLT7d29uFUAkJ4/view" target="_blank" rel="noopener">Network_Flow</a> <a href="https://drive.google.com/file/d/1S3n7hqeli7rvY4BQ30Pu48z9qoo3zk-F/view" target="_blank" rel="noopener">NP-Completeness</a></div>
+    </div>
+
+    <h2>Course files</h2>
+    <div class="cabinet" style="border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#fff;">
+      <iframe src="https://drive.google.com/embeddedfolderview?id=1qdAAkynOn7qv2woR8xPajn4l8saMuNOT#list" style="width:100%;height:620px;border:0;display:block;" loading="lazy" title="Course files (Google Drive)"></iframe>
+    </div>
+    <p style="margin-top:12px;"><a href="https://drive.google.com/folderview?id=1qdAAkynOn7qv2woR8xPajn4l8saMuNOT" target="_blank" rel="noopener">Open the folder in Google Drive ↗</a></p>
+  </main>
+</div>
+
+<footer class="course-foot">
+  <div class="inner">
+    <span>srezwan.huq [at] gmail [dot] com</span>
+    <span><a href="https://sites.google.com/site/saikatcit05/teaching_1/cs-3330-algorithms" target="_blank" rel="noopener">view original page ↗</a></span>
+  </div>
+</footer>
+<script>
+  (function(){
+    const btn = document.getElementById('themeBtn');
+    const moon = document.getElementById('iconMoon');
+    const sun = document.getElementById('iconSun');
+    const systemThemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    function apply(t, persist){
+      document.body.classList.remove('light','dark');
+      document.body.classList.add(t);
+      moon.style.display = t === 'light' ? '' : 'none';
+      sun.style.display = t === 'dark' ? '' : 'none';
+      if (persist) localStorage.setItem('v2theme', t);
+    }
+    apply(document.body.classList.contains('dark') ? 'dark' : 'light', false);
+    btn.addEventListener('click', () => apply(document.body.classList.contains('light') ? 'dark' : 'light', true));
+    systemThemeQuery.addEventListener('change', (event) => {
+      if (!localStorage.getItem('v2theme')) apply(event.matches ? 'dark' : 'light', false);
+    });
+  })();
+</script>
+</body>
+</html>

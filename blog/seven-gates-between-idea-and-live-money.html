@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Seven Gates Between an Idea and Live Money | Sikder Huq</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700&amp;family=Inter:wght@300;400;500;600&amp;family=Space+Grotesk:wght@300;400;500&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../courses/course-style.css?v=20260720-3">
+<script src="../assets/site-nav.js?v=20260720-2" defer></script>
+<style>
+  .gate-map {
+    counter-reset: gate -1; list-style: none; padding: 0; margin: 26px 0 32px;
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;
+  }
+  article.post .gate-map li {
+    counter-increment: gate; position: relative; min-height: 78px; margin: 0;
+    padding: 14px 14px 12px 49px; border: 1px solid var(--line); border-radius: 9px;
+    background: var(--bg-soft); color: var(--ink); font-size: 14px; line-height: 1.35;
+  }
+  .gate-map li::before {
+    content: counter(gate); position: absolute; left: 14px; top: 14px;
+    width: 24px; height: 24px; display: grid; place-items: center;
+    border: 1px solid var(--accent); border-radius: 50%; color: var(--accent);
+    font-family: var(--mono); font-size: 10px; font-weight: 500;
+  }
+  article.post .gate-map li:nth-child(5) { background: var(--accent-soft); }
+  article.post .gate-map li:nth-child(n+6) { border-color: color-mix(in oklab, var(--accent) 60%, var(--line)); }
+  .gate-map small {
+    display: block; margin-top: 5px; color: var(--muted);
+    font-family: var(--mono); font-size: 9.5px; letter-spacing: .04em; text-transform: uppercase;
+  }
+  article.post h2.gate-heading { display: flex; align-items: center; gap: 10px; }
+  .gate-number {
+    width: 29px; height: 29px; flex: 0 0 auto; display: grid; place-items: center;
+    border: 1px solid var(--accent); border-radius: 50%; color: var(--accent);
+    font-family: var(--mono); font-size: 11px; font-weight: 500;
+  }
+  .disclaimer { margin-top: 42px !important; color: var(--muted) !important; font-size: 12.5px !important; font-style: italic; }
+  @media (max-width: 620px) {
+    .gate-map { grid-template-columns: 1fr; }
+    article.post .gate-map li { min-height: 0; }
+  }
+</style>
+</head>
+<body class="skin-a">
+<script>
+  document.body.className = 'skin-a ' + (localStorage.getItem('v2theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+</script>
+
+<header class="course-top">
+  <div class="inner">
+    <a class="back" href="../">Sikder Huq</a>
+    <nav class="subnav">
+      <a href="../">Home</a>
+      <a href="../blog/">Blog</a>
+      <a href="../research/">Research</a>
+      <a href="../projects/">Projects</a>
+      <a href="../teaching/">Teaching</a>
+    </nav>
+    <span class="right">
+      <button class="theme-btn" id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme">
+        <svg id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+        <svg id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+      </button>
+    </span>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="article-head">
+    <div class="kicker">quant · research systems · risk engineering</div>
+    <h1>Seven Gates Between an Idea and Live Money</h1>
+    <p class="dek">Seven checks I use before a trading idea can move from research to capital.</p>
+    <div class="meta">Feb 15, 2026 · 8 min read</div>
+  </div>
+
+  <article class="post">
+    <aside class="in-brief" aria-labelledby="seven-gates-brief">
+      <h2 id="seven-gates-brief">In brief</h2>
+      <ul>
+        <li>An impressive experimental result can come from a bug, from luck, or from running experiments until one works. In a summary table, all three are indistinguishable from a real discovery.</li>
+        <li>I promote ideas the way production systems promote releases: staged checks that get progressively harder, from static validation through held-out testing to shadow execution and a tightly limited rollout with a kill switch.</li>
+        <li>Most ideas are supposed to die at the early gates. The system's job is to make sure the survivors earned it, and the final call stays with a human.</li>
+      </ul>
+    </aside>
+    <p>Most trading ideas fail. The dangerous ones fail while their first backtest looks strong.</p>
+    <p>A good equity curve is a reason to test more. It isn't a reason to trade live.</p>
+    <p>I use this seven-gate sequence in my own research system to decide when a candidate can move from an idea to a larger test and, eventually, to capital. The gates start at zero because the first check comes before a full backtest. A candidate must pass each gate in order.</p>
+    <p>The sequence is my synthesis, not a standard published protocol. It combines agentic research patterns, statistical controls for backtest overfitting, and my operating rules for sealed tests, shadow execution, and capital risk.</p>
+
+    <ol class="gate-map" start="0" aria-label="Seven promotion gates">
+      <li><strong>Static validity</strong><small>Structure</small></li>
+      <li><strong>Discovery</strong><small>Controlled search</small></li>
+      <li><strong>Rolling validation</strong><small>Generalization</small></li>
+      <li><strong>Multiple-testing adjustment</strong><small>Selection bias</small></li>
+      <li><strong>Sealed test</strong><small>Final holdout</small></li>
+      <li><strong>Prospective shadow execution</strong><small>Operations</small></li>
+      <li><strong>Constrained capital</strong><small>Risk</small></li>
+    </ol>
+
+    <p>The first four gates cover research. The fifth protects the final test. The last two cover operations and risk. Coding agents can do much of the work, but they do not decide what counts as evidence or when a strategy receives capital.</p>
+
+    <h2 class="gate-heading"><span class="gate-number">0</span> Static validity</h2>
+    <p>The first question is not whether the strategy made money. It is whether the result is structurally possible.</p>
+    <p>Before a full backtest, I check that:</p>
+    <ul>
+      <li>every signal uses only information available at that timestamp;</li>
+      <li>higher-timeframe values appear only after their bars are complete;</li>
+      <li>an order is filled at a price that could have been traded after the decision;</li>
+      <li>commission, slippage, sizing, session rules, and contract rolls are explicit;</li>
+      <li>the unchanged baseline reproduces on the same data path;</li>
+      <li>the new rule matches its written specification;</li>
+      <li>the trade log can reconstruct the reported result.</li>
+    </ul>
+    <p>This gate exists because I've been burned without it. One strategy reported $2.23 million over two years because it decided at a bar's close and filled at that same bar's open; correcting the timing cut the result to $265,000. In another case, two pandas resampling arguments built every 15-second bar incorrectly, and the backtest ran normally on bad data for two years. I describe that failure in <a href="timestamp-bug.html">How a 15-Second Bar-Labeling Bug Changed Two Years of Backtests</a>.</p>
+    <p>I also apply cheap smell tests here, before anything expensive runs. If a 15-second strategy reports thousands of trades in two weeks, it's trading noise. If a Sharpe ratio looks spectacular, the first suspect is lookahead, not genius.</p>
+    <p>A strategy passes Gate 0 only when its data, timing, implementation, and accounting checks all pass.</p>
+
+    <h2 class="gate-heading"><span class="gate-number">1</span> Discovery</h2>
+    <p>During discovery, agents can propose variants, run short tests, inspect trades, and suggest another experiment. I set a limit on the search before it starts.</p>
+    <p>Each experiment gets an ID. I record its parent hypothesis, parameters, data window, costs, baseline, result, and verdict. I also fix the number of variants and the ranking metrics before a sweep.</p>
+    <p>A discovery result should answer a narrow question. For example: does blocking new entries after repeated trend flips reduce whipsaw without removing the large trends that pay for the strategy?</p>
+    <p>I also inspect representative trades with my <a href="backtest-charts.html">backtest chart tool</a>. The chart shows whether the rule behaved as intended. For example, it can reveal a filter that changed too often or a signal that fired repeatedly instead of once.</p>
+    <p>Gate 1 passes when the rule behaves as specified and the net result justifies a larger test. It does not yet show that the result will generalize.</p>
+
+    <h2 class="gate-heading"><span class="gate-number">2</span> Rolling validation</h2>
+    <p>Markets change, so one train/test split can give a misleading result. My default is chronological walk-forward validation: three months of training followed by one untouched out-of-sample month, repeated through the available history.</p>
+    <p>The training window selects the parameters. The next month measures them. Within that out-of-sample month, the code and parameters do not move.</p>
+    <p>Every window includes the unchanged baseline on the identical bars, warm-up period, costs, and trade cutoff. I care about the paired comparison:</p>
+    <ul>
+      <li>Did the candidate improve or merely benefit from an easier month?</li>
+      <li>How much in-sample performance survived out of sample?</li>
+      <li>Did drawdown improve because the signal became better, or only because exposure fell?</li>
+      <li>Were gains distributed across windows and regimes?</li>
+      <li>Did a small parameter change reverse the conclusion?</li>
+    </ul>
+    <p>If I change the strategy after seeing an out-of-sample month, that month has joined the research history. It can't remain evidence for the revised strategy. The new version must earn evidence from later windows.</p>
+    <p>This has been the most brutal gate in my own research, and the most valuable. One entry pattern won 78% of its trades in the training sample and 29% out of sample, and the filter with the best in-sample Sharpe I ever tested produced the worst out-of-sample result of any variant. In my data so far, in-sample beauty and out-of-sample survival have been close to unrelated.</p>
+    <p>For candidates that pass, I also reproduce the strategy in another engine or data path, such as Python, LEAN, QuantConnect, or Pine Script. Cross-engine agreement checks portability and execution semantics. It does not establish profitability on its own.</p>
+
+    <h2 class="gate-heading"><span class="gate-number">3</span> Multiple-testing adjustment</h2>
+    <p>An agent can test many ideas in an afternoon, and as the trial count grows, the best result improves by chance alone. That is where false positives come from, so this gate evaluates the full search process rather than the winning candidate.</p>
+    <p>The experiment registry provides the trial count and keeps related variants visible. I check parameter sensitivity, non-normal returns, and correlation with earlier candidates. Deflated Sharpe Ratio and Probability of Backtest Overfitting are useful diagnostics. Purging, embargo, and combinatorial validation can help when observations overlap.</p>
+    <p>The total number of attempts must always travel with the best result. Reporting a great Sharpe without its trial count is like a casino advertising only its jackpot winners.</p>
+    <p>One strategy family went through about 250 configurations without a robust full-history result. Its best month looked strong. The full record showed the formulation wasn't worth more research time, and that conclusion exists only because the failures were recorded.</p>
+    <p>Gate 3 passes only when the candidate remains interesting after accounting for the process that selected it.</p>
+
+    <h2 class="gate-heading"><span class="gate-number">4</span> The sealed test</h2>
+    <p>Walk-forward results influence later research because I see them and use them to form new hypotheses. A final holdout must remain separate.</p>
+    <p>Before a sealed test, I freeze:</p>
+    <ul>
+      <li>source code and dependencies;</li>
+      <li>parameters and signal definitions;</li>
+      <li>sizing and portfolio rules;</li>
+      <li>transaction costs and fill assumptions;</li>
+      <li>data and contract-selection rules;</li>
+      <li>the exact pass/fail criteria.</li>
+    </ul>
+    <p>An independent evaluator runs the frozen candidate once on data that was unavailable during research. The agent does not receive the result during the research process.</p>
+    <p>If the sealed result is disappointing, I can revise the strategy, but I can't retest the revision on the same holdout and keep calling it sealed. That dataset has become another validation set.</p>
+    <p>This is especially important with language models because their training data may contain historical market information. A holdout helps. New data collected after the research is stronger evidence because neither the researcher nor the model could have seen it.</p>
+
+    <h2 class="gate-heading"><span class="gate-number">5</span> Prospective shadow execution</h2>
+    <p>The strategy now runs on incoming data without permission to place a live order.</p>
+    <p>Shadow execution tests questions a historical backtest cannot answer:</p>
+    <ul>
+      <li>When did the data actually arrive?</li>
+      <li>How long did the computation take?</li>
+      <li>Was the expected price obtainable?</li>
+      <li>What spread and slippage appeared around the signal?</li>
+      <li>Did contract rolls, missing bars, or late data change the decision?</li>
+      <li>Did the process recover cleanly after an outage or restart?</li>
+      <li>Would monitoring have caught a stale or duplicated signal?</li>
+    </ul>
+    <p>The research implementation and the shadow system should make the same decisions. Any difference must be traced to an operational issue or a modeling assumption.</p>
+    <p>A backtest replays logic on historical data. Shadow execution tests the live data feed, computation time, stored state, and monitoring without placing orders.</p>
+
+    <h2 class="gate-heading"><span class="gate-number">6</span> Constrained capital</h2>
+    <p>Only after prospective evidence does a strategy become eligible for capital, and eligibility does not mean full size.</p>
+    <p>The initial allocation should be deliberately small, with controls outside the strategy:</p>
+    <ul>
+      <li>hard position and loss limits;</li>
+      <li>stale-data and impossible-price rejection;</li>
+      <li>independent exposure monitoring;</li>
+      <li>alerts for missed, duplicated, or delayed orders;</li>
+      <li>a tested rollback path;</li>
+      <li>an immediate kill switch;</li>
+      <li>clear human authority to stop the system.</li>
+    </ul>
+    <p>The research agent may propose an adjustment. It cannot change risk limits, increase its allocation, or override a shutdown. A separate risk process controls capital.</p>
+    <p>Scaling should follow prospective evidence rather than conviction. If live behavior diverges from the shadow model, or the assumptions behind the strategy stop holding, the correct action may be to reduce exposure or return to research.</p>
+
+    <h2>Most ideas should stop early</h2>
+    <p>The gates aren't a pipeline for moving every idea toward deployment. They're a filter, and a filter that passes everything is broken. Most candidates should fail early, and a clear negative result saves time and caps risk.</p>
+    <p>In my current project, many ideas have passed the code and behavior checks. Some have reached walk-forward validation or independent-engine testing. None should move further until sealed and prospective evidence supports it. Historical backtests are research results, not live performance.</p>
+    <p>AI makes implementation faster. The seven gates keep validation, reproducibility, and risk decisions separate from that speed.</p>
+
+    <h2>Related work</h2>
+    <p>These sources informed specific parts of the framework:</p>
+    <ul>
+      <li><a href="https://arxiv.org/abs/2505.15155" target="_blank" rel="noopener">RD-Agent(Q)</a> (2025) describes an iterative multi-agent research and development loop for quantitative finance.</li>
+      <li><a href="https://arxiv.org/abs/2502.16789" target="_blank" rel="noopener">AlphaAgent</a> (2025) uses originality, hypothesis-alignment, and complexity controls during alpha generation.</li>
+      <li><a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2326253" target="_blank" rel="noopener">The Probability of Backtest Overfitting</a> (2015) and <a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2460551" target="_blank" rel="noopener">The Deflated Sharpe Ratio</a> (2014) address selection bias from repeated backtests.</li>
+      <li><a href="https://arxiv.org/abs/2504.14765" target="_blank" rel="noopener">The Memorization Problem</a> (2025) explains why historical evaluations involving language models need stronger isolation and prospective evidence.</li>
+    </ul>
+    <p class="disclaimer">This describes an independent research and risk-control framework. It is not investment advice or a claim of live trading performance.</p>
+
+    <nav class="post-pagination" aria-label="Post navigation">
+      <a class="post-pagination-link previous" href="human-in-the-loop-quant-research.html">
+        <span class="post-pagination-label">← Previous post</span>
+        <span class="post-pagination-title">A Self-Improving Quant Research Harness with a Human in the Loop</span>
+      </a>
+    </nav>
+  </article>
+</div>
+
+<footer class="course-foot">
+  <div class="inner">
+    <span>srezwan.huq [at] gmail [dot] com</span>
+    <span><a href="../">sikderhuq.com</a></span>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    const btn = document.getElementById('themeBtn');
+    const moon = document.getElementById('iconMoon');
+    const sun = document.getElementById('iconSun');
+    const systemThemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    function apply(t, persist){
+      document.body.classList.remove('light','dark');
+      document.body.classList.add(t);
+      moon.style.display = t === 'light' ? '' : 'none';
+      sun.style.display = t === 'dark' ? '' : 'none';
+      if (persist) localStorage.setItem('v2theme', t);
+    }
+    apply(document.body.classList.contains('dark') ? 'dark' : 'light', false);
+    btn.addEventListener('click', () => apply(document.body.classList.contains('light') ? 'dark' : 'light', true));
+    systemThemeQuery.addEventListener('change', (event) => {
+      if (!localStorage.getItem('v2theme')) apply(event.matches ? 'dark' : 'light', false);
+    });
+  })();
+</script>
+</body>
+</html>

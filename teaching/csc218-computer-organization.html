@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CSC218 Computer Organization — Sikder Huq</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../courses/course-style.css?v=20260720-2">
+<script src="../assets/site-nav.js?v=20260720-2" defer></script>
+</head>
+<body class="skin-a">
+<script>
+  document.body.className = 'skin-a ' + (localStorage.getItem('v2theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+</script>
+<header class="course-top">
+  <div class="inner">
+    <a class="back" href="../">Sikder Huq</a>
+    <nav class="subnav">
+      <a href="../">Home</a>
+      <a href="../blog/">Blog</a>
+      <a href="../research/">Research</a>
+      <a href="../projects/">Projects</a>
+      <a href="../teaching/">Teaching</a>
+    </nav>
+    <span class="right">
+      <button class="theme-btn" id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme">
+        <svg id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+        <svg id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+      </button>
+    </span>
+  </div>
+</header>
+<div class="wrap">
+  <div class="course-head">
+    <div class="code">CSC:218 · Cornell College</div>
+    <h1>CSC218 Computer Organization</h1>
+  </div>
+  <p class="orig-note">This page was migrated from my old website - here is the <a href="https://sites.google.com/site/saikatcit05/teaching_1/csc218-computer-organization" target="_blank" rel="noopener">original page ↗</a>.</p>
+  <main class="course-body">
+    <h2>Block 1 (August 27, 2018 to September 19, 2018), Fall 2018</h2>
+    <p>Instructor: Sikder Huq, 206D Law Hall, SHuq AT cornellcollege.edu</p>
+    <p>Class meeting time: MTWThF 9:00-11:00 AM in 309 Law Hall (Lecture)<br/>MTWThF 1:00-3:00 PM in 113 Law Hall (Lab)</p>
+    <p>Office Hours: I will be available in my office after the lab sessions (typically from 3:00 p.m. until 3:30 p.m) and by appointment</p>
+
+    <h2>Textbook</h2>
+    <p><a href="http://www.nand2tetris.org/" target="_blank" rel="noopener">The Elements of Computing Systems: Building a Modern Computer from First Principles</a><br/>Noam Nisan and Shimon Schocken</p>
+
+    <h2>Other resources</h2>
+    <p><a href="https://www.coursera.org/learn/build-a-computer" target="_blank" rel="noopener">Build a modern computer from first principles: from NAND to Tetris</a></p>
+    <p>Textbook (optional):<br/>Digital Design and Computer Architecture<br/>Harris and Harris, 2nd Edition, 2012.</p>
+
+    <h2>Course objectives</h2>
+    <p>We will give special attention to three of Cornell College's <a href="https://www.cornellcollege.edu/about-cornell/mission/index.shtml" target="_blank" rel="noopener">educational priorities and outcomes</a>:</p>
+    <p>Knowledge: you will develop an overall understanding on how computers work and how they are designed. After successful completion of this course, you should be able to:</p>
+    <ul>
+      <li>Understand how hardware and software systems are built, and how they work together</li>
+      <li>Interpret the function of a digital logic circuit comprised of combinational and sequential logic</li>
+      <li>Explain how numbers and other data are represented and stored within the computer</li>
+      <li>Explain the role of various representations of a program, such as machine code binary and source code</li>
+      <li>Explain how computer programs run on a CPU in terms of the computing stack, comprised of layers of the system that each hide complexity below</li>
+      <li>Understand MIPS microarchitecture</li>
+    </ul>
+    <p>Inquiry: You will learn how to design a complex and fully functioning computer system from scratch using a hardware simulator. You will break complex problems into simpler ones and ask yourself how you can solve them efficiently to solve the overall larger problems.</p>
+    <p>Citizenship: In this project-centered course you will learn how to collaborate with classmates. You will learn with one another and from one another.</p>
+
+    <h2>Grading</h2>
+    <p>You are expected to participate in the discussions and work actively in the laboratory. There will be in-class quizzes/exercises to verify your understanding of the materials presented in class. There will also be four/five short written assignment throughout the block.</p>
+    <p>Grading of this course will be based on the following components:</p>
+    <ul>
+      <li>Participation and in-class quizzes (10%)</li>
+      <li>Short writing assignments (10%)</li>
+      <li>Graded exercise 1 (Monday, 3 August, 2018) (20%)</li>
+      <li>Graded exercise 2 (Friday, 7 September, 2018) (20%)</li>
+      <li>Graded exercise 3 (Friday, 14 September, 2018) (20%)</li>
+      <li>Graded exercise 4 (Wednesday, 19 September, 2018) (20%)</li>
+    </ul>
+    <p>Note that, the graded exercises are likely to take place in class. The dates mentioned above are tentative.</p>
+    <p>The final grade will be assigned according to the following percentages: 90 A, 85 A-, 82 B+, 78 B, 75 B-, 70 C+, 65 C, 60 C-, 55 D+, 50 D, 45 D-, &lt;45 F.</p>
+    <p>The grades of the graded exercises might be curved to calibrate for the difficulty of the exercise relative to course objectives; your curved grade will always be equal to or higher than your raw points. The instructor reserves the right to adjust the weights and percentages if it is appropriate and will notify students if these adjustments occur.</p>
+
+    <h2>Materials</h2>
+    <p>All materials (including lecture slides/notes, homework assignments, links to the external resources etc.) will be posted in Moodle.</p>
+
+    <h2>Lecture/activity summaries</h2>
+    <div class="week">
+      <h3>Week 1</h3>
+      <p><strong>Day 1 (8/27, Mon):</strong></p>
+      <p>Lecture: Course intro, an overview of the different layers of a general purpose computer system.</p>
+      <p>Lab: Introduction to hardware simulator and HDL (Hardware Description Language), NAND logic to construct basic logic gates, implementation of basic logic gates (Not, And, Or, Xor, Mux and DMux) using NAND Logic.</p>
+      <p><strong>Day 2 (8/28, Tue):</strong></p>
+      <p>Lecture: Designing Not16, And16, Or16, Mux16, Or8Way, Mux4Way16, DMux4Way and DMux8Way chips using the basic logic gates.</p>
+      <p>Lab: Implementation and testing of the chips (designed during the lecture) using hardware simulator (<a href="https://www.nand2tetris.org/project01" target="_blank" rel="noopener">project 1</a>).</p>
+      <p><strong>Day 3 (8/29, Wed):</strong></p>
+      <p>Lecture: Boolean algebra, canonical representation of a function, programmable logic devices (PLD), introduction to counting system and two's complement, introduction to different adder chips and ALU.</p>
+      <p>Lab: Design and implementation of HalfAdder, FullAdder, Add16, Inc16 and ALU (<a href="https://www.nand2tetris.org/project02" target="_blank" rel="noopener">project 2</a>).</p>
+      <p>Reading: Read chapters 1 and 2, and watch a video tutorial on sign magnitude, one's complement and two's complement.</p>
+      <p><strong>Day 4 (8/30, Thu):</strong></p>
+      <p>Lecture: Number systems, integer representations (e.g. unsigned integers, sign-magnitude, 1's complement, 2's complement), Big Endian vs. Little Endian, floating point number representation (IEEE-754 32 bit single-precision), character encoding, understanding different functionalities of the ALU we studied for project 2.</p>
+      <p>Lab: Overview of sequential logic, flip-flops, design of an 1-bit register (<a href="https://www.nand2tetris.org/project03" target="_blank" rel="noopener">project 3</a>).</p>
+      <p>Homework: Short writing assignment 1 is posted. Topic: VLSI fabrication and how does a CPU work.</p>
+      <p>Announcement: Graded exercise 1 review is posted.</p>
+      <p><strong>Day 5 (8/31, Fri):</strong></p>
+      <p>Lecture: Designing a 16-bit register, RAMs of various sizes (recursive design), and a program counter (PC),</p>
+      <p>Lab: Implementing register, RAM8, RAM64, RAM512, RAM4K, RAM8K and PC (<a href="https://www.nand2tetris.org/project03" target="_blank" rel="noopener">project 3</a>).</p>
+    </div>
+    <div class="week">
+      <h3>Week 2</h3>
+      <p><strong>Day 6 (9/3, Mon):</strong></p>
+      <p>Lecture: Graded Exercise 1 (in-class).</p>
+      <p>Lab: Introduction to the Hack assembly/machine language.</p>
+      <p><strong>Day 7 (9/4, Tue):</strong></p>
+      <p>Lecture: Hack assembly/machine language, A-instruction, C-instruction, IF and WHILE logic.</p>
+      <p>Lab: Implementing multiplication hack assembly/machine language (<a href="https://www.nand2tetris.org/project04" target="_blank" rel="noopener">project 4</a>).</p>
+      <p>Homework: Short writing assignment 2 is posted. Topic: Transistors and Moore's law.</p>
+      <p><strong>Day 8 (9/5, Wed):</strong></p>
+      <p>Lecture: Students worked in groups and implemented division using Hack assembly language ,</p>
+      <p>Lab: Handling I/O devices (e.g. keyboard and screen_ using Hack assembly language (<a href="https://www.nand2tetris.org/project04" target="_blank" rel="noopener">project 4</a>).</p>
+      <p><strong>Day 9 (9/6, Thu):</strong></p>
+      <p>Lecture: Finding the minimum number from an array/list using Hack assembly language, the detailed architecture of the Hack computer (including instruction memory, data memory, I/O memory, CPU etc.)</p>
+      <p>Lab: Detailed hardware design of memory, CPU and the overall Hack computer (<a href="https://www.nand2tetris.org/project05" target="_blank" rel="noopener">project 5</a>).</p>
+      <p>Announcement: Graded exercise 2 review is posted.</p>
+      <p><strong>Day 10 (9/7, Fri):</strong></p>
+      <p>Lecture: Graded exercise 2 (in-class).</p>
+      <p>Lab: CPU jump logic, students worked on completing their <a href="https://www.nand2tetris.org/project05" target="_blank" rel="noopener">project 5</a>.</p>
+    </div>
+    <div class="week">
+      <h3>Week 3</h3>
+      <p><strong>Day 11 (9/10, Mon):</strong></p>
+      <p>Lecture: Details on how to design and implement an assembler for Hack platform.</p>
+      <p>Lab: Developing an assembler: parsing (<a href="https://www.nand2tetris.org/project05" target="_blank" rel="noopener">project 6</a>).</p>
+      <p>Homework: Short writing assignment 3 is posted. Topic: RISC vs CISC, and pipelining.</p>
+      <p><strong>Day 12 (9/11, Tue):</strong></p>
+      <p>Lecture: Implementation of a parser for an assembler.</p>
+      <p>Lab: Handling symbols in assembler development, finishing up <a href="https://www.nand2tetris.org/project05" target="_blank" rel="noopener">project 6</a>.</p>
+      <p><strong>Day 13 (9/12, Wed):</strong></p>
+      <p>Lecture: Review of the Hack assembler implementation, exercise on Hack architecture, introduction to MIPS architecture, MIPS design principles.</p>
+      <p>Lab: Introduction to MIPS assembly language and MARS simulator.</p>
+      <p><strong>Day 14 (9/13, Thu):</strong></p>
+      <p>Lecture: Memory handling in MIPS, MIPS instruction types, different MIPS instructions.</p>
+      <p>Lab: Writing code using MIPS assembly language, focusing on array, IO handling, loop, branching etc.</p>
+      <p>Announcement: Graded exercise 3 review is posted.</p>
+      <p><strong>Day 15 (9/14, Fri):</strong></p>
+      <p>Lecture: Graded exercise 3 (in-class).</p>
+      <p>Lab: Implementing bubble sort using MIPS assembly language.</p>
+    </div>
+    <div class="week">
+      <h3>Week 4</h3>
+      <p><strong>Day 16 (9/17, Mon):</strong></p>
+      <p>Lecture: Multiplication and division in MIPS, branching in MIPS, function handling with stack, MIPS memory map.</p>
+      <p>Lab: Playing with MIPS programs that use function and bitmap display handling.</p>
+      <p>Homework: Short writing assignment 4 is posted. Topic: CPU caches with multiple levels.</p>
+      <p><strong>Day 17 (9/17, Tue):</strong></p>
+      <p>Lecture: Instruction pipelining, data and control hazards, deep pipelining, branch predicition, superscalar processors, out of order processors, SIMD, multithreading and multiprocessors.</p>
+      <p>Lab: No lab, we had a review session instead.</p>
+      <p>Announcement: Graded exercise 4 review is posted.</p>
+      <p><strong>Day 18 (9/17, Wed):</strong></p>
+      <p>Lecture: Graded exercise 4 (in-class).</p>
+    </div>
+  </main>
+</div>
+<footer class="course-foot">
+  <div class="inner">
+    <span>srezwan.huq [at] gmail [dot] com</span>
+    <span><a href="https://sites.google.com/site/saikatcit05/teaching_1/csc218-computer-organization" target="_blank" rel="noopener">view original page ↗</a></span>
+  </div>
+</footer>
+<script>
+  (function(){
+    const btn = document.getElementById('themeBtn');
+    const moon = document.getElementById('iconMoon');
+    const sun = document.getElementById('iconSun');
+    const systemThemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    function apply(t, persist){
+      document.body.classList.remove('light','dark');
+      document.body.classList.add(t);
+      moon.style.display = t === 'light' ? '' : 'none';
+      sun.style.display = t === 'dark' ? '' : 'none';
+      if (persist) localStorage.setItem('v2theme', t);
+    }
+    apply(document.body.classList.contains('dark') ? 'dark' : 'light', false);
+    btn.addEventListener('click', () => apply(document.body.classList.contains('light') ? 'dark' : 'light', true));
+    systemThemeQuery.addEventListener('change', (event) => {
+      if (!localStorage.getItem('v2theme')) apply(event.matches ? 'dark' : 'light', false);
+    });
+  })();
+</script>
+</body>
+</html>

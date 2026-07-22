@@ -1,0 +1,1069 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sikder Huq</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&family=Space+Grotesk:wght@300;400;500&family=JetBrains+Mono:wght@400;500&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: auto; }
+  body { margin: 0; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; overflow-x: hidden; }
+  img { max-width: 100%; }
+
+  /* ============ THEME TOKENS ============ */
+  /* Skin A · Editorial serif — warm, soft */
+  body.skin-a {
+    --serif: 'Fraunces', serif;
+    --sans: 'Inter', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+    --display: var(--serif);
+    --bodyfont: var(--sans);
+  }
+  body.skin-a.light {
+    --bg: #faf7f2;
+    --bg-soft: #f1ece3;
+    --ink: #2b2823;
+    --ink-2: #5c564c;
+    --muted: #98917f;
+    --line: #e4ddd0;
+    --accent: #667761;
+    --accent-soft: #eef0ea;
+    --halo-1: #ffb84d;
+    --halo-2: #ff9e3d;
+    --halo-3: #ffd166;
+    --halo-4: #46c98f;
+    --sun: #ff9500;
+  }
+  body.skin-a.dark {
+    --bg: #171613;
+    --bg-soft: #1f1d19;
+    --ink: #e9e4d8;
+    --ink-2: #b0a996;
+    --muted: #746e5f;
+    --line: #2b2822;
+    --accent: #9db08f;
+    --accent-soft: #23261f;
+    --halo-1: #5c3d1c;
+    --halo-2: #55321f;
+    --halo-3: #443055;
+    --halo-4: #23453a;
+    --sun: #e09a3e;
+  }
+  /* Skin B · Quiet modern — cool, airy */
+  body.skin-b {
+    --serif: 'Newsreader', serif;
+    --sans: 'Space Grotesk', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+    --display: var(--sans);
+    --bodyfont: var(--sans);
+  }
+  body.skin-b.light {
+    --bg: #f8f9fa;
+    --bg-soft: #eef1f3;
+    --ink: #24282c;
+    --ink-2: #565e66;
+    --muted: #939ca5;
+    --line: #e2e6e9;
+    --accent: #5a7d99;
+    --accent-soft: #eaf0f4;
+    --halo-1: #ffb54a;
+    --halo-2: #3db4e8;
+    --halo-3: #ffd35c;
+    --halo-4: #3ecf96;
+    --sun: #ff9500;
+  }
+  body.skin-b.dark {
+    --bg: #131518;
+    --bg-soft: #1a1d21;
+    --ink: #e4e7ea;
+    --ink-2: #a4abb3;
+    --muted: #666e77;
+    --line: #262a2f;
+    --accent: #8fb0c9;
+    --accent-soft: #1d2329;
+    --halo-1: #59391f;
+    --halo-2: #1f3c50;
+    --halo-3: #4d2c3c;
+    --halo-4: #1e4136;
+    --sun: #d69544;
+  }
+
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: var(--bodyfont);
+    transition: background .35s ease, color .35s ease;
+    font-size: 16px; line-height: 1.6;
+  }
+  a { color: var(--accent); text-decoration: underline; text-decoration-color: color-mix(in oklab, var(--accent) 45%, transparent); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+  a:hover { color: var(--ink); text-decoration-color: var(--ink); }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 clamp(40px, 8vw, 110px); }
+
+  /* ============ HEADER ============ */
+  /* ============ HEADER — always dark ============ */
+  header {
+    position: sticky; top: 0; z-index: 40;
+    background: #131210;
+    border-bottom: 1px solid #2a2824;
+  }
+  .head-inner {
+    max-width: 900px; margin: 0 auto; padding: 12px 32px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    min-height: 52px;
+  }
+  .name {
+    font-family: 'Open Sans', sans-serif; font-size: 19px; font-weight: 300;
+    letter-spacing: .01em; cursor: pointer; color: #f0ebe0;
+    text-decoration: none; white-space: nowrap;
+    line-height: 1; display: inline-flex; align-items: center;
+  }
+  .name:hover, .name:focus-visible { color: #f0ebe0; text-decoration: none; }
+  body.skin-a .name { font-weight: 300; }
+  nav.main { display: flex; gap: 4px; align-items: center; }
+  nav.main a {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px; font-weight: 300; text-decoration: none;
+    color: rgba(240,235,224,.72); padding: 5px 11px; border-radius: 999px;
+    transition: all .15s; cursor: pointer;
+  }
+  nav.main a:hover { color: #f0ebe0; background: rgba(255,255,255,.08); }
+  nav.main a.current { color: #f0ebe0; background: none; font-weight: 600; }
+  .theme-btn {
+    all: unset; cursor: pointer; width: 32px; height: 32px;
+    display: grid; place-items: center; border-radius: 50%;
+    color: rgba(240,235,224,.65); transition: all .15s; flex-shrink: 0;
+  }
+  .theme-btn:hover { background: rgba(255,255,255,.08); color: #f0ebe0; }
+  /* Burger */
+  .burger { display: none; }
+  .mobile-nav {
+    display: none; position: fixed; inset: 0; z-index: 30;
+    background: rgba(10,9,7,.55);
+  }
+  .mobile-nav.open { display: block; }
+  .mobile-nav .sheet {
+    position: absolute; top: 0; left: 0; bottom: 0; width: min(280px, 80vw);
+    background: #131210; border-right: 1px solid #2a2824;
+    padding: 62px 0 20px; display: flex; flex-direction: column; gap: 2px;
+    box-shadow: 8px 0 32px rgba(0,0,0,.4);
+    transform: translateX(-100%); transition: transform .28s ease;
+  }
+  .mobile-nav.open .sheet { transform: translateX(0); }
+  .mobile-nav .sheet .mn-head {
+    font-family: 'Open Sans', sans-serif; font-size: 18px; font-weight: 300;
+    color: #f0ebe0; padding: 6px 22px 16px;
+    border-bottom: 1px solid #2a2824; margin-bottom: 8px;
+  }
+  .mobile-nav .sheet a {
+    font-family: 'Open Sans', sans-serif; font-size: 15px; font-weight: 300;
+    color: rgba(240,235,224,.78); text-decoration: none;
+    padding: 12px 22px; cursor: pointer;
+  }
+  .mobile-nav .sheet a:hover, .mobile-nav .sheet a.current { color: #f0ebe0; background: rgba(255,255,255,.06); }
+
+  /* Search overlay */
+  .search-overlay {
+    position: fixed; inset: 0; z-index: 200; display: none;
+    background: rgba(10,9,7,.55); backdrop-filter: blur(4px);
+    padding: 12vh 20px 0;
+  }
+  .search-overlay.open { display: block; }
+  .search-box {
+    max-width: 560px; margin: 0 auto;
+    background: var(--bg); border: 1px solid var(--line); border-radius: 10px;
+    box-shadow: 0 24px 64px rgba(0,0,0,.35); overflow: hidden;
+  }
+  .search-box input {
+    width: 100%; border: 0; outline: 0; background: transparent;
+    font-family: var(--bodyfont); font-size: 17px; color: var(--ink);
+    padding: 18px 20px; border-bottom: 1px solid var(--line);
+    box-sizing: border-box;
+  }
+  .search-box input::placeholder { color: var(--muted); }
+  .search-results { max-height: 46vh; overflow-y: auto; }
+  .search-results .sr {
+    display: block; padding: 12px 20px; cursor: pointer;
+    text-decoration: none; color: var(--ink);
+    border-bottom: 1px solid var(--line);
+  }
+  .search-results .sr:last-child { border-bottom: 0; }
+  .search-results .sr:hover, .search-results .sr.sel { background: var(--bg-soft); }
+  .search-results .sr .st { font-size: 14.5px; font-weight: 500; }
+  .search-results .sr .sc { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .search-results .none { padding: 16px 20px; font-size: 14px; color: var(--muted); }
+  .theme-btn svg { width: 17px; height: 17px; }
+
+  /* ============ PAGES ============ */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ============ HOME / BANNER — warm blurred photo, like original site ============ */
+  .banner {
+    position: relative; overflow: hidden;
+    border-bottom: 1px solid var(--line);
+    background: url('assets/banner-blurred3.png') center / 100% 100% no-repeat, #4a3c26;
+  }
+  .banner::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: rgba(20,14,6,.30);
+  }
+  .banner-inner {
+    position: relative; z-index: 1;
+    max-width: 900px; margin: 0 auto; padding: 28px 32px 32px;
+    display: grid; grid-template-columns: auto 1fr; gap: 44px; align-items: start;
+  }
+  .banner .site-title {
+    font-family: var(--display); font-weight: 300;
+    font-size: clamp(34px, 4.6vw, 48px); letter-spacing: 0;
+    color: #e7e3d7; margin: 0 0 16px; line-height: 1.1;
+    text-align: center;
+    text-shadow: 0 2px 12px rgba(0,0,0,.35);
+  }
+  .banner .site-sub {
+    margin: 8px 0 0; font-size: 14px; color: rgba(245,237,220,.75);
+    letter-spacing: .01em;
+  }
+  .banner-intro {
+    margin-top: 18px !important;
+    color: rgba(230,226,214,.95) !important;
+    font-size: 15.5px !important;
+    text-shadow: 0 1px 8px rgba(0,0,0,.3);
+  }
+  .banner-intro strong { color: inherit !important; font-weight: 400 !important; }
+  .banner-links { margin-top: 20px !important; }
+  .banner .banner-links a { color: rgba(230,226,214,.88); white-space: nowrap; }
+  .banner .banner-links a:hover { color: #e8e3d6; }
+  .banner .banner-links .sep { color: rgba(216,211,198,.35); }
+  .intro {
+    font-size: 16.5px; line-height: 1.65; color: var(--ink-2);
+    max-width: 60ch; margin: 0;
+  }
+  .intro strong { color: var(--ink); font-weight: 550; }
+  .intro a { color: var(--accent); text-decoration: underline; text-decoration-color: color-mix(in oklab, var(--accent) 45%, transparent); }
+  .intro a:hover { color: var(--ink); }
+  .home-links {
+    margin-top: 28px; display: flex; gap: 20px; flex-wrap: wrap;
+    font-size: 13.5px;
+  }
+  .home-links a {
+    text-decoration: none; color: var(--ink-2); font-weight: 500;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .home-links a:hover { color: var(--accent); }
+  .home-links .sep { color: var(--line); }
+
+  .portrait {
+    position: relative; width: 200px;
+  }
+  .portrait img {
+    display: block; width: 200px; height: 248px; object-fit: cover;
+    object-position: 50% 30%;
+    border-radius: 2px;
+    box-shadow: 0 12px 36px rgba(0,0,0,.45);
+    filter: saturate(.98);
+  }
+
+  /* Home lower: single column */
+  .home-body { padding-block: 44px 88px; }
+  .home-cols { display: flex; flex-direction: column; gap: 48px; max-width: 640px; min-width: 0; }
+  .home-cols h3 {
+    font-family: var(--mono); font-size: 11px; font-weight: 500;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+    margin: 0 0 18px;
+  }
+  /* Recent writing */
+  .write-list { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+  .write-item {
+    display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: start;
+    padding: 24px 0; border-bottom: 1px solid var(--line); color: var(--ink);
+  }
+  .write-item.pinned, .post-item.pinned { order: -1; }
+  .pin-mark {
+    display: flex; align-items: center; gap: 5px; width: max-content;
+    margin: 0 0 8px; padding: 4px 8px; border: 1px solid var(--line);
+    border-radius: 999px; background: var(--accent-soft); color: var(--accent);
+    font-family: var(--mono); font-size: 9.5px; font-weight: 500;
+    line-height: 1; letter-spacing: .03em; text-transform: uppercase;
+  }
+  .pin-mark .pin-icon { font-size: 10px; line-height: 1; }
+  .write-item.pinned .d, .post-item.pinned .date { color: var(--accent); }
+  .write-item .t {
+    display: inline; font-family: var(--display); font-size: 22px; font-weight: 430;
+    line-height: 1.25; letter-spacing: -.01em; color: var(--ink); text-decoration: none;
+    transition: color .15s;
+  }
+  body.skin-a .write-item .t { font-weight: 380; }
+  .write-item .t:hover { color: var(--accent); }
+  .write-item .desc { font-size: 14px; color: var(--ink-2); line-height: 1.62; margin: 9px 0 0; max-width: 58ch; }
+  .write-item .read-more {
+    display: inline-block; margin-top: 11px; color: var(--accent);
+    font-size: 12.5px; font-weight: 550; text-decoration: underline;
+    text-decoration-color: color-mix(in oklab, var(--accent) 40%, transparent);
+    text-underline-offset: 3px; text-decoration-thickness: 1px;
+  }
+  .write-item .read-more:hover { color: var(--ink); text-decoration-color: var(--ink); }
+  .write-item .d { font-family: var(--mono); font-size: 11px; color: var(--muted); white-space: nowrap; align-self: start; padding-top: 4px; }
+  .open-source-mark {
+    display: inline-flex; align-items: center; gap: 5px; vertical-align: middle;
+    padding: 4px 8px; border: 1px solid var(--line); border-radius: 999px;
+    background: var(--bg-soft); color: var(--ink-2); font-family: var(--mono);
+    font-size: 9.5px; font-weight: 500; line-height: 1; letter-spacing: .02em;
+  }
+  .open-source-mark svg { width: 13px; height: 13px; flex: 0 0 auto; fill: currentColor; }
+  .write-item .open-source-mark { margin: 10px 0 0 8px; }
+  @media (max-width: 560px) {
+    .write-item { grid-template-columns: 1fr; }
+    .write-item .d { grid-row: 1; padding-top: 0; }
+  }
+  .mini-list { display: flex; flex-direction: column; }
+  .mini-item {
+    padding: 13px 0; border-bottom: 1px solid var(--line);
+    text-decoration: none; color: var(--ink);
+    display: flex; justify-content: space-between; gap: 16px; align-items: baseline;
+    transition: padding-left .15s;
+    flex-wrap: wrap; min-width: 0;
+  }
+  .mini-item > .t { flex: 1 1 auto; overflow-wrap: break-word; min-width: 0; max-width: 100%; }
+  .mini-item:first-child { border-top: 1px solid var(--line); }
+  .mini-item:hover { padding-left: 6px; color: var(--ink); }
+  .mini-item:hover .t { color: var(--accent); text-decoration-color: var(--accent); }
+  .mini-item .t {
+    font-size: 14.5px; font-weight: 480; line-height: 1.4; transition: color .15s;
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklab, var(--accent) 40%, transparent);
+    text-underline-offset: 3px; text-decoration-thickness: 1px;
+  }
+  .mini-item .d { font-family: var(--mono); font-size: 11px; color: var(--muted); white-space: nowrap; }
+
+  /* ============ SUBPAGE COMMON ============ */
+  .page-head { padding-block: 72px 36px; }
+  .page-head h1 {
+    font-family: var(--display); font-weight: 400;
+    font-size: clamp(34px, 4.4vw, 46px); letter-spacing: -.02em;
+    margin: 0 0 14px; line-height: 1.1;
+  }
+  body.skin-a .page-head h1 { font-weight: 350; }
+  .page-head p {
+    color: var(--ink-2); max-width: 60ch; margin: 0; font-size: 16px;
+  }
+  .blog-banner {
+    --bbp: #f2ecdd; --bb-grid: #ded4bd; --bb-ink: #55503e; --bb-amber: #bf8f3e; --bb-olive: #7c7c4a; --bb-sage: #98a383; --bb-slate: #8aa0b4; --bb-dot: #3f3b30;
+    position: relative; overflow: hidden; background: var(--bbp);
+    border-bottom: 1px solid var(--line);
+    transition: background .35s ease;
+  }
+  body.dark .blog-banner { --bbp: #1d1b16; --bb-grid: #2a2721; --bb-ink: #8f886f; --bb-amber: #d9b25e; --bb-olive: #8e8e5e; --bb-sage: #9db08f; --bb-slate: #7d95ab; --bb-dot: #c9c0a8; }
+  .blog-banner svg { display: block; width: 100%; height: clamp(112px, 15vw, 176px); }
+  .page-body { padding-block: 8px 96px; }
+
+  /* Blog list */
+  .post-list { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+  .post-item {
+    padding: 24px 0; border-bottom: 1px solid var(--line);
+    display: grid; grid-template-columns: 96px 1fr; gap: 28px;
+    text-decoration: none; color: var(--ink); cursor: pointer;
+    align-items: baseline;
+  }
+  .post-item .date { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  .post-item h3 {
+    font-family: var(--display); font-size: 21px; font-weight: 450;
+    letter-spacing: -.01em; margin: 0 0 6px; line-height: 1.3;
+    transition: color .15s;
+  }
+  body.skin-a .post-item h3 { font-weight: 420; }
+  .post-item:hover h3 { color: var(--accent); }
+  .post-item p { margin: 0; font-size: 14.5px; color: var(--ink-2); max-width: 58ch; }
+  .post-item .tag {
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+    margin-top: 8px; display: inline-block;
+  }
+  .post-item .post-read-more {
+    display: inline-block; margin: 10px 13px 0 0;
+    color: var(--accent); font-size: 12.5px; font-weight: 550;
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklab, var(--accent) 40%, transparent);
+    text-underline-offset: 3px; text-decoration-thickness: 1px;
+  }
+  .post-item:hover .post-read-more { color: var(--ink); text-decoration-color: var(--ink); }
+  .post-item .open-source-mark { margin: 8px 0 0 8px; }
+
+  /* Research */
+  .sec-label {
+    font-family: var(--mono); font-size: 11px; font-weight: 500;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+    margin: 40px 0 8px;
+  }
+  .pub-list { display: flex; flex-direction: column; }
+  .pub {
+    padding: 20px 0; border-bottom: 1px solid var(--line);
+    display: grid; grid-template-columns: 56px 1fr; gap: 24px;
+  }
+  .pub:first-child { border-top: 1px solid var(--line); }
+  .pub .yr { font-family: var(--mono); font-size: 12px; color: var(--muted); padding-top: 3px; }
+  .pub .title { font-size: 16px; font-weight: 520; line-height: 1.4; margin-bottom: 4px; }
+  .pub .authors { font-size: 13.5px; color: var(--ink-2); margin-bottom: 3px; }
+  .pub .venue { font-family: var(--mono); font-size: 11.5px; color: var(--muted); }
+  .pub .venue .hl { color: var(--accent); }
+
+  /* Projects */
+  .proj-list { display: flex; flex-direction: column; }
+  .proj {
+    padding: 22px 0; border-bottom: 1px solid var(--line);
+    display: grid; grid-template-columns: 56px 1fr; gap: 24px;
+  }
+  .proj:first-child { border-top: 1px solid var(--line); }
+  .proj .yr { font-family: var(--mono); font-size: 12px; color: var(--muted); padding-top: 3px; }
+  .proj h3 { font-size: 16.5px; font-weight: 520; margin: 0 0 5px; letter-spacing: -.005em; }
+  .proj p { margin: 0; font-size: 14.5px; color: var(--ink-2); max-width: 60ch; }
+  .proj .stack { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 7px; }
+
+  /* Teaching */
+  .course {
+    padding: 22px 0; border-bottom: 1px solid var(--line);
+    display: grid; grid-template-columns: 96px 1fr; gap: 28px; align-items: baseline;
+  }
+  .course:first-child { border-top: 1px solid var(--line); }
+  .course .code { font-family: var(--mono); font-size: 12.5px; color: var(--accent); font-weight: 500; }
+  .course h3 { font-size: 17px; font-weight: 520; margin: 0 0 4px; }
+  .course h3 a { color: var(--accent); text-decoration: underline; text-decoration-color: color-mix(in oklab, var(--accent) 40%, transparent); text-underline-offset: 3px; text-decoration-thickness: 1px; transition: all .15s; }
+  .course h3 a::after { content: ' ↗'; font-size: 12px; color: var(--muted); }
+  .course h3 a:hover { color: var(--ink); text-decoration-color: var(--ink); }
+  .course .where { font-size: 13.5px; color: var(--ink-2); }
+
+  /* Footer */
+  /* Footer — always dark */
+  footer {
+    border-top: 1px solid #2a2824;
+    background: #131210;
+    padding: 36px 0 44px;
+  }
+  .foot-inner {
+    max-width: 860px; margin: 0 auto; padding: 0 clamp(40px, 8vw, 110px);
+    display: flex; justify-content: space-between; align-items: baseline; gap: 16px;
+    flex-wrap: wrap;
+  }
+  .foot-inner .mail { font-size: 14px; color: rgba(240,235,224,.7); }
+  .foot-inner .links { display: flex; gap: 18px; font-size: 13.5px; }
+  .foot-inner .links a { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; text-decoration-color: rgba(240,235,224,.4); color: rgba(240,235,224,.7); }
+  .foot-inner .links a:hover { color: #f0ebe0; text-decoration-color: #f0ebe0; }
+  .foot-inner .fine { width: 100%; margin-top: 18px; font-family: var(--mono); font-size: 11px; color: rgba(240,235,224,.4); }
+
+  /* ============ COMBINATION CHOOSER ============ */
+  .chooser {
+    position: fixed; bottom: 20px; right: 20px; z-index: 1000;
+    display: inline-flex; gap: 4px; padding: 4px; align-items: center;
+    background: rgba(20,20,22,.88); backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,.08); border-radius: 999px;
+    font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500;
+    box-shadow: 0 8px 24px rgba(0,0,0,.25);
+  }
+  .chooser.collapsed .ch-opts { display: none; }
+  .ch-opts { display: inline-flex; gap: 4px; }
+  .chooser button {
+    all: unset; cursor: pointer; padding: 8px 14px; border-radius: 999px;
+    color: rgba(255,255,255,.65); transition: all .2s; display: inline-flex; align-items: center;
+  }
+  .chooser button:hover { color: #fff; }
+  .chooser button.active { background: #fff; color: #111; }
+  .chooser .dot { width: 6px; height: 6px; border-radius: 50%; margin-right: 6px; display: inline-block; }
+  .chooser button[data-skin="skin-a"] .dot { background: #8a9a7e; }
+  .chooser button[data-skin="skin-b"] .dot { background: #7d9cb8; }
+  .ch-toggle { padding: 10px 12px !important; color: rgba(255,255,255,.85) !important; font-size: 14px; }
+
+  @media (max-width: 560px) {
+    .banner-inner { grid-template-columns: 1fr; gap: 28px; padding: 36px 20px 40px; justify-items: center; }
+    .portrait { width: 180px; }
+    .portrait img { width: 180px; height: 224px; }
+    .banner .site-title { font-size: 32px; margin-bottom: 16px; }
+    .intro { font-size: 15.5px; text-align: left; max-width: 100%; }
+    .mini-item { flex-direction: column; gap: 3px; align-items: flex-start; }
+    .mini-item > .t { flex: 0 0 auto; }
+  }
+  @media (max-width: 760px) {
+    .wrap { padding: 0 clamp(32px, 10vw, 80px); }
+    .head-inner { padding: 8px clamp(16px, 4vw, 28px); align-items: center; min-height: 52px; }
+    .burger svg { display: block; }
+    .name { font-size: 17px; }
+    nav.main { display: none; }
+    .burger {
+      all: unset;
+      box-sizing: border-box; cursor: pointer; width: 36px; height: 36px;
+      display: grid; place-items: center; border-radius: 50%;
+      color: rgba(240,235,224,.85); flex-shrink: 0;
+    }
+    .burger:hover { background: rgba(255,255,255,.08); }
+    .burger svg { width: 22px; height: 22px; }
+    .burger .bline { transition: transform .28s ease, opacity .2s ease; transform-origin: 12px 12px; }
+    body.nav-open .burger .bl1 { transform: rotate(45deg) translateY(5px); }
+    body.nav-open .burger .bl2 { opacity: 0; }
+    body.nav-open .burger .bl3 { transform: rotate(-45deg) translateY(-5px); }
+    .head-inner { justify-content: flex-start; gap: 10px; }
+    .head-inner > div:last-child { margin-left: auto; }
+    .banner-inner { gap: 28px; }
+    .portrait { width: 150px; }
+    .portrait img { width: 150px; height: 186px; }
+    .banner .site-title { font-size: 32px; margin-bottom: 16px; }
+    .intro { font-size: 15.5px; text-align: left; max-width: 100%; }
+    .home-links { justify-content: flex-start; }
+    .home-cols { grid-template-columns: 1fr; gap: 40px; }
+    .home-cols > div { min-width: 0; }
+    .home-body { padding-block: 32px 64px; }
+    .mini-item { flex-direction: column; gap: 3px; align-items: flex-start; }
+    .mini-item .t { font-size: 14px; }
+    .page-head { padding-block: 44px 24px; }
+    .page-head h1 { font-size: clamp(30px, 8vw, 38px); }
+    .page-body { padding-block: 8px 64px; }
+    .post-item { grid-template-columns: 1fr; gap: 6px; padding: 20px 0; }
+    .post-item > span { min-width: 0; }
+    .post-item h3 { font-size: 19px; }
+    .pub, .proj { grid-template-columns: 1fr; gap: 4px; padding: 18px 0; }
+    .pub > span, .proj > span { min-width: 0; }
+    .pub .yr, .proj .yr { padding-top: 0; }
+    .pub .title, .proj h3 { overflow-wrap: break-word; }
+    .course { grid-template-columns: 1fr; gap: 4px; padding: 18px 0; }
+    .course > span { min-width: 0; }
+    .course h3 { overflow-wrap: break-word; }
+    .foot-inner { padding: 0 clamp(32px, 10vw, 80px); flex-direction: column; gap: 10px; align-items: flex-start; }
+    .chooser { bottom: 14px; right: 14px; font-size: 11px; max-width: calc(100vw - 28px); }
+    .chooser button { padding: 7px 11px; }
+  }
+</style>
+</head>
+<body class="skin-a">
+<script>
+  document.body.classList.add(localStorage.getItem('v2theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+</script>
+<template id="__bundler_thumbnail">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <rect width="100" height="100" fill="#faf7f2"></rect>
+    <circle cx="50" cy="50" r="20" fill="#ff9800"></circle>
+    <text x="50" y="57" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="#2b2823">S</text>
+  </svg>
+</template>
+
+<header>
+  <div class="head-inner">
+    <button class="burger" id="burgerBtn" title="Menu" aria-label="Open menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path class="bline bl1" d="M4 7h16"></path><path class="bline bl2" d="M4 12h16"></path><path class="bline bl3" d="M4 17h16"></path></svg>
+    </button>
+    <a class="name" href="/" data-go="home">Sikder Huq</a>
+    <nav class="main">
+      <a href="/" data-go="home" class="current">Home</a>
+      <a href="/blog/" data-go="blog">Blog</a>
+      <a href="/research/" data-go="research">Research</a>
+      <a href="/projects/" data-go="projects">Projects</a>
+      <a href="/teaching/" data-go="teaching">Teaching</a>
+    </nav>
+    <div style="display:flex;gap:2px;align-items:center;flex-shrink:0;">
+    <button class="theme-btn" id="searchBtn" title="Search" aria-label="Search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.35-4.35"></path></svg>
+    </button>
+    <button class="theme-btn" id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme">
+      <svg id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+      <svg id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+    </button>
+    </div>
+  </div>
+</header>
+<div class="mobile-nav" id="mobileNav">
+  <div class="sheet">
+    <a href="/" data-go="home" class="current">Home</a>
+    <a href="/blog/" data-go="blog">Blog</a>
+    <a href="/research/" data-go="research">Research</a>
+    <a href="/projects/" data-go="projects">Projects</a>
+    <a href="/teaching/" data-go="teaching">Teaching</a>
+  </div>
+</div>
+
+<!-- ================= HOME ================= -->
+<main class="page active" id="home" data-screen-label="Home">
+  <section class="banner">
+    <div class="banner-inner">
+      <div class="portrait">
+        <img src="assets/sikder.png" alt="Sikder Huq" />
+      </div>
+      <div>
+        <h1 class="site-title">Sikder Huq</h1>
+        <p class="intro banner-intro">I’m a software engineer specializing in <strong>backend infrastructure</strong>, <strong>distributed systems</strong>, and <strong>AI platforms</strong>. As a founding member of <strong>Atlassian’s AI Lab</strong>, I build the systems that make AI agents reliable and useful at scale. Previously, I worked on large-scale production systems at <strong>Meta</strong>, <strong>DoorDash</strong>, and <strong>Amazon</strong>. I hold a <strong>Ph.D. in Computer Science</strong> from the University of Iowa, and outside work I pursue independent quantitative research in market data, backtesting, and systematic trading.</p>
+        <div class="home-links banner-links">
+          <a href="/blog/" data-go="blog">Read the blog</a>
+          <span class="sep">·</span>
+          <a href="https://www.linkedin.com/in/sikder-huq/" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-body wrap">
+    <div class="home-cols">
+      <div>
+        <h3>Recent writing</h3>
+        <div class="write-list">
+          <article class="write-item pinned">
+            <div>
+              <span class="pin-mark" aria-label="Pinned post"><span class="pin-icon" aria-hidden="true">📌</span> Pinned</span>
+              <a class="t" href="/blog/human-in-the-loop-quant-research.html">A self-improving quant research harness with a human in the loop</a>
+              <p class="desc">A self-improving multi-agent coding system built for correctness. Agents reason about what's holding a strategy back, test alternative fixes, and validate behavior with chart evidence across market regimes and results across multiple backtest engines. A seven-gate process decides what earns trust, and I set the direction.</p>
+              <a class="read-more" href="/blog/human-in-the-loop-quant-research.html">Read more</a>
+            </div>
+            <time class="d" datetime="2026-02-02">Feb 2, 2026</time>
+          </article>
+          <article class="write-item pinned">
+            <div>
+              <span class="pin-mark" aria-label="Pinned post"><span class="pin-icon" aria-hidden="true">📌</span> Pinned</span>
+              <a class="t" href="/blog/backtest-charts.html">A small charting tool for inspecting backtests</a>
+              <p class="desc">An open-source chart for reviewing candles, volume, trades, stops, indicators, hover details, and market context in one HTML file.</p>
+              <a class="read-more" href="/blog/backtest-charts.html">Read more</a>
+              <span class="open-source-mark" aria-label="Open-source project on GitHub" title="Open-source project on GitHub">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.477 2 2 6.484 2 12.021c0 4.428 2.865 8.184 6.839 9.504.5.092.682-.217.682-.483 0-.237-.009-.866-.014-1.7-2.782.605-3.369-1.344-3.369-1.344-.455-1.158-1.11-1.466-1.11-1.466-.908-.621.069-.608.069-.608 1.003.071 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.091-.647.349-1.088.635-1.338-2.221-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.987 1.029-2.687-.103-.253-.446-1.272.098-2.65 0 0 .84-.269 2.75 1.026A9.555 9.555 0 0 1 12 6.844a9.57 9.57 0 0 1 2.504.337c1.909-1.295 2.748-1.026 2.748-1.026.546 1.378.203 2.397.1 2.65.64.7 1.028 1.594 1.028 2.687 0 3.848-2.337 4.695-4.566 4.943.359.31.679.923.679 1.861 0 1.344-.012 2.428-.012 2.758 0 .269.18.58.688.481A10.025 10.025 0 0 0 22 12.021C22 6.484 17.523 2 12 2z"></path></svg>
+                Open source
+              </span>
+            </div>
+            <time class="d" datetime="2025-12-05">Dec 5, 2025</time>
+          </article>
+          <article class="write-item">
+            <div>
+              <a class="t" href="/blog/seven-gates-between-idea-and-live-money.html">Seven gates between an idea and live money</a>
+              <p class="desc">Seven checks I use before a trading idea can move from research to capital. They cover code validity, walk-forward testing, trial counts, sealed evaluation, shadow execution, and risk limits.</p>
+              <a class="read-more" href="/blog/seven-gates-between-idea-and-live-money.html">Read more</a>
+            </div>
+            <time class="d" datetime="2026-02-15">Feb 15, 2026</time>
+          </article>
+          <article class="write-item">
+            <div>
+              <a class="t" href="/blog/timestamp-bug.html">How a 15-second bar-labeling bug changed two years of backtests</a>
+              <p class="desc">A 15-second labeling error changed two years of backtest results. Lag correlation exposed the shift, and a clean rebuild showed which strategies were sensitive to bar construction.</p>
+              <a class="read-more" href="/blog/timestamp-bug.html">Read more</a>
+            </div>
+            <time class="d" datetime="2026-01-03">Jan 3, 2026</time>
+          </article>
+          <article class="write-item">
+            <div>
+              <a class="t" href="/blog/parquet-data-engineering.html">From 38 GB of NQ ticks to backtests in minutes</a>
+              <p class="desc">How I turn 24 months of raw NQ data into Parquet datasets, cache shared indicators, and use NumPy and Numba to make repeated backtests fast.</p>
+              <a class="read-more" href="/blog/parquet-data-engineering.html">Read more</a>
+            </div>
+            <time class="d" datetime="2025-12-12">Dec 12, 2025</time>
+          </article>
+        </div>
+      </div>
+      <div>
+        <h3>Courses taught</h3>
+        <div class="mini-list">
+          <a class="mini-item" href="/teaching/cs3330-algorithms.html"><span class="t">CS:3330 Algorithms · University of Iowa</span><span class="d">Summer 2018</span></a>
+          <a class="mini-item" href="/teaching/cs3640-networks.html"><span class="t">CS:3640 Intro to Networks and Their Applications · University of Iowa</span><span class="d">Fall 2017</span></a>
+          <a class="mini-item" href="/teaching/cs3210-java.html"><span class="t">CS:3210 Programming with Java · University of Iowa</span><span class="d">Fall 2014</span></a>
+          <a class="mini-item" href="/teaching/csc218-computer-organization.html"><span class="t">CSC:218 Computer Organization · Cornell College</span><span class="d">Fall 2018</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ================= BLOG ================= -->
+<main class="page" id="blog" data-screen-label="Blog">
+  <section class="blog-banner" aria-label="Decorative banner">
+    <svg viewBox="0 0 1440 240" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g stroke="var(--bb-grid)" stroke-width="1">
+        <line x1="120" y1="0" x2="120" y2="240"></line><line x1="330" y1="0" x2="330" y2="240"></line><line x1="0" y1="45" x2="1440" y2="45"></line><line x1="0" y1="200" x2="1440" y2="200"></line><line x1="808" y1="0" x2="808" y2="240"></line>
+      </g>
+      <g>
+        <rect x="150" y="45" width="56" height="50" fill="var(--bb-amber)" opacity=".8"></rect>
+        <rect x="266" y="42" width="64" height="58" fill="var(--bb-olive)" opacity=".75"></rect>
+        <rect x="150" y="95" width="40" height="46" fill="var(--bb-sage)" opacity=".6"></rect>
+        <rect x="190" y="108" width="76" height="80" fill="var(--bb-slate)" opacity=".55"></rect>
+        <rect x="206" y="95" width="60" height="46" fill="none" stroke="var(--bb-ink)" stroke-width="1" stroke-dasharray="2 3" opacity=".7"></rect>
+        <rect x="266" y="140" width="56" height="48" fill="none" stroke="var(--bb-ink)" stroke-width="1" opacity=".5"></rect>
+        <g fill="var(--bb-dot)"><circle cx="150" cy="45" r="2.4"></circle><circle cx="330" cy="45" r="2.4"></circle><circle cx="150" cy="141" r="2.4"></circle><circle cx="330" cy="188" r="2.4"></circle><circle cx="266" cy="100" r="2.4"></circle></g>
+      </g>
+      <line x1="330" y1="120" x2="465" y2="120" stroke="var(--bb-ink)" stroke-width="1.2"></line>
+      <circle cx="398" cy="120" r="3" fill="var(--bb-dot)"></circle>
+      <g fill="none" stroke-width="1.4">
+        <rect x="465" y="32" width="260" height="176" stroke="var(--bb-ink)"></rect>
+        <rect x="490" y="50" width="210" height="140" stroke="var(--bb-amber)"></rect>
+        <rect x="515" y="68" width="160" height="104" stroke="var(--bb-ink)"></rect>
+        <rect x="540" y="86" width="110" height="68" stroke="var(--bb-amber)" opacity=".85"></rect>
+      </g>
+      <circle cx="595" cy="120" r="3.4" fill="var(--bb-dot)"><animate attributeName="r" values="3;5;3" dur="3.2s" repeatCount="indefinite"></animate></circle>
+      <line x1="725" y1="120" x2="808" y2="120" stroke="var(--bb-ink)" stroke-width="1.2"></line>
+      <path d="M756 120 V74 H846" stroke="var(--bb-amber)" stroke-width="1.1" stroke-dasharray="5 4" fill="none"></path>
+      <circle cx="846" cy="74" r="3" fill="var(--bb-amber)"></circle>
+      <g transform="translate(952,118)">
+        <circle r="62" fill="none" stroke="var(--bb-ink)" stroke-width="1" stroke-dasharray="4 6" opacity=".55">
+          <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="80s" repeatCount="indefinite"></animateTransform>
+        </circle>
+      </g>
+      <circle cx="985" cy="112" r="88" fill="none" stroke="var(--bb-ink)" stroke-width="1" stroke-dasharray="170 400" opacity=".5"></circle>
+      <circle cx="875" cy="66" r="4.5" fill="var(--bb-dot)"></circle>
+      <circle cx="905" cy="186" r="4.5" fill="var(--bb-dot)"></circle>
+      <circle cx="968" cy="196" r="4" fill="var(--bb-amber)"></circle>
+      <path pathLength="1" d="M808 120 C 880 52 990 196 1090 118 C 1150 72 1240 84 1380 96" stroke="var(--bb-olive)" stroke-width="1.6" fill="none" style="stroke-dasharray:1;stroke-dashoffset:1;">
+        <animate attributeName="stroke-dashoffset" from="1" to="0" dur="2.6s" begin="0.3s" fill="freeze"></animate>
+      </path>
+      <path d="M846 74 C 940 40 1020 180 1120 140 C 1200 108 1280 128 1400 110" stroke="var(--bb-amber)" stroke-width="1.1" stroke-dasharray="5 4" fill="none" opacity=".75"></path>
+      <g>
+        <circle cx="1160" cy="92" r="3" fill="var(--bb-slate)"><animate attributeName="opacity" values=".3;1;.3" dur="4.4s" begin="0s" repeatCount="indefinite"></animate></circle>
+        <circle cx="1195" cy="132" r="4.6" fill="var(--bb-olive)"><animate attributeName="opacity" values=".3;1;.3" dur="4.4s" begin=".5s" repeatCount="indefinite"></animate></circle>
+        <circle cx="1222" cy="76" r="2.6" fill="var(--bb-dot)"><animate attributeName="opacity" values=".3;1;.3" dur="4.4s" begin="1s" repeatCount="indefinite"></animate></circle>
+        <circle cx="1252" cy="112" r="3.6" fill="var(--bb-amber)"><animate attributeName="opacity" values=".3;1;.3" dur="4.4s" begin="1.5s" repeatCount="indefinite"></animate></circle>
+        <circle cx="1282" cy="88" r="2.4" fill="var(--bb-slate)"><animate attributeName="opacity" values=".3;1;.3" dur="4.4s" begin="2s" repeatCount="indefinite"></animate></circle>
+        <circle cx="1306" cy="128" r="5" fill="var(--bb-slate)"><animate attributeName="opacity" values=".3;1;.3" dur="4.4s" begin="2.5s" repeatCount="indefinite"></animate></circle>
+        <circle cx="1336" cy="100" r="3" fill="var(--bb-olive)"><animate attributeName="opacity" values=".3;1;.3" dur="4.4s" begin="3s" repeatCount="indefinite"></animate></circle>
+        <circle cx="1366" cy="122" r="3.8" fill="var(--bb-amber)"><animate attributeName="opacity" values=".3;1;.3" dur="4.4s" begin="3.5s" repeatCount="indefinite"></animate></circle>
+        <circle cx="1396" cy="86" r="2.6" fill="var(--bb-dot)"><animate attributeName="opacity" values=".3;1;.3" dur="4.4s" begin="4s" repeatCount="indefinite"></animate></circle>
+        <circle cx="1420" cy="112" r="2.2" fill="var(--bb-slate)"><animate attributeName="opacity" values=".3;1;.3" dur="4.4s" begin="4.4s" repeatCount="indefinite"></animate></circle>
+      </g>
+      <circle r="3.2" fill="var(--bb-dot)">
+        <animateMotion dur="10s" repeatCount="indefinite" path="M120 120 H465 M465 120 H808 C 880 52 990 196 1090 118 C 1150 72 1240 84 1380 96"></animateMotion>
+        <animate attributeName="opacity" values="0;1;1;1;0" keyTimes="0;.05;.5;.95;1" dur="10s" repeatCount="indefinite"></animate>
+      </circle>
+      <circle r="2.6" fill="var(--bb-amber)">
+        <animateMotion dur="10s" begin="5s" repeatCount="indefinite" path="M120 120 H465 M465 120 H808 C 880 52 990 196 1090 118 C 1150 72 1240 84 1380 96"></animateMotion>
+        <animate attributeName="opacity" values="0;1;1;1;0" keyTimes="0;.05;.5;.95;1" dur="10s" begin="5s" repeatCount="indefinite"></animate>
+      </circle>
+    </svg>
+  </section>
+  <div class="wrap">
+    <div class="page-head">
+      <h1>Blog</h1>
+    </div>
+    <div class="page-body">
+      <div class="post-list">
+        <a class="post-item pinned" href="/blog/human-in-the-loop-quant-research.html">
+          <span class="date">Feb 2, 2026</span>
+          <span>
+            <span class="pin-mark" aria-label="Pinned post"><span class="pin-icon" aria-hidden="true">📌</span> Pinned</span>
+            <h3>A Self-Improving Quant Research Harness with a Human in the Loop</h3>
+            <p>A self-improving multi-agent coding system built for correctness. Agents implement each research idea independently, reason about where a strategy struggles and why, and test alternative fixes, with chart-level validation across market regimes and reproduction across multiple backtest engines. A seven-gate promotion process decides what earns trust, and the final decisions stay human.</p>
+            <span class="post-read-more">Read more</span>
+            <span class="tag">quant · AI engineering · 10 min</span>
+          </span>
+        </a>
+        <a class="post-item pinned" href="/blog/backtest-charts.html">
+          <span class="date">Dec 5, 2025</span>
+          <span>
+            <span class="pin-mark" aria-label="Pinned post"><span class="pin-icon" aria-hidden="true">📌</span> Pinned</span>
+            <h3>A Small Charting Tool for Inspecting Backtests</h3>
+            <p>Summary metrics can hide incorrect or surprising individual decisions. This open-source tool reconstructs them in an interactive HTML chart with the underlying data, trades, stops, signals, volume, market context, and hover details.</p>
+            <span class="post-read-more">Read more</span>
+            <span class="tag">quant · open source · 3 min</span>
+            <span class="open-source-mark" aria-label="Open-source project on GitHub" title="Open-source project on GitHub">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.477 2 2 6.484 2 12.021c0 4.428 2.865 8.184 6.839 9.504.5.092.682-.217.682-.483 0-.237-.009-.866-.014-1.7-2.782.605-3.369-1.344-3.369-1.344-.455-1.158-1.11-1.466-1.11-1.466-.908-.621.069-.608.069-.608 1.003.071 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.091-.647.349-1.088.635-1.338-2.221-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.987 1.029-2.687-.103-.253-.446-1.272.098-2.65 0 0 .84-.269 2.75 1.026A9.555 9.555 0 0 1 12 6.844a9.57 9.57 0 0 1 2.504.337c1.909-1.295 2.748-1.026 2.748-1.026.546 1.378.203 2.397.1 2.65.64.7 1.028 1.594 1.028 2.687 0 3.848-2.337 4.695-4.566 4.943.359.31.679.923.679 1.861 0 1.344-.012 2.428-.012 2.758 0 .269.18.58.688.481A10.025 10.025 0 0 0 22 12.021C22 6.484 17.523 2 12 2z"></path></svg>
+              Open source
+            </span>
+          </span>
+        </a>
+        <a class="post-item" href="/blog/seven-gates-between-idea-and-live-money.html">
+          <span class="date">Feb 15, 2026</span>
+          <span>
+            <h3>Seven Gates Between an Idea and Live Money</h3>
+            <p>Strong historical results can come from bugs, luck, or repeated experimentation. I describe seven progressively harder checks that move an idea from basic correctness through independent validation, shadow execution, and tightly constrained rollout.</p>
+            <span class="post-read-more">Read more</span>
+            <span class="tag">quant · research systems · 8 min</span>
+          </span>
+        </a>
+        <a class="post-item" href="/blog/timestamp-bug.html">
+          <span class="date">Jan 3, 2026</span>
+          <span>
+            <h3>How a 15-Second Bar-Labeling Bug Changed Two Years of Backtests</h3>
+            <p>A subtle time-labeling error shifted every derived data interval while leaving the output plausible. An independent comparison exposed the problem, and correcting it materially changed two years of results.</p>
+            <span class="post-read-more">Read more</span>
+            <span class="tag">quant · data engineering · 9 min</span>
+          </span>
+        </a>
+        <a class="post-item" href="/blog/parquet-data-engineering.html">
+          <span class="date">Dec 12, 2025</span>
+          <span>
+            <h3>From 38 GB of NQ Ticks to Backtests in Minutes</h3>
+            <p>I converted 24 months of market history, including 38 GB of tick and order-book data, into compact reusable datasets. The pipeline and targeted optimizations made key calculations 8x to 789x faster while keeping correctness-critical code auditable.</p>
+            <span class="post-read-more">Read more</span>
+            <span class="tag">quant · data engineering · 10 min</span>
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ================= RESEARCH ================= -->
+<main class="page" id="research" data-screen-label="Research">
+  <div class="wrap">
+    <div class="page-head">
+      <h1>Research</h1>
+      <p>My research focuses on distributed algorithms for large-scale networks, distributed systems, self-adjustment, cloud computing, and IoT, evaluated both theoretically and experimentally. Ph.D. under <a href="http://homepage.cs.uiowa.edu/~ghosh/" target="_blank" rel="noopener">Professor Sukumar Ghosh</a>, The University of Iowa.</p>
+    </div>
+    <div class="page-body">
+      <div class="sec-label">Publications</div>
+      <div class="pub-list">
+        <div class="pub"><span class="yr">2019</span><span><div class="title">Locally Self-Adjusting Hypercubic Networks</div><div class="authors">Sikder Huq, Sukumar Ghosh</div><div class="venue">arXiv preprint · abs/1905.07699</div></span></div>
+        <div class="pub"><span class="yr">2017</span><span><div class="title">Locally Self-Adjusting Skip Graphs</div><div class="authors">Sikder Huq, Sukumar Ghosh</div><div class="venue">IEEE ICDCS 2017 <span class="hl">· 16.9% acceptance</span></div></span></div>
+        <div class="pub"><span class="yr">2017</span><span><div class="title">Distributed Load Balancing in Key-Value Networked Caches</div><div class="authors">Sikder Huq, M. Zubair Shafiq, Sukumar Ghosh, Amir Khakpour, Harkeerat Bedi</div><div class="venue">IEEE ICDCS 2017 <span class="hl">· 16.9% acceptance</span></div></span></div>
+        <div class="pub"><span class="yr">2015</span><span><div class="title">Self-Adjusting Skip Graphs</div><div class="authors">Sikder Huq, Sukumar Ghosh</div><div class="venue">SSS 2015 · Symp. on Stabilization, Safety &amp; Security of Distributed Systems</div></span></div>
+        <div class="pub"><span class="yr">2011</span><span><div class="title">An Efficient and Cost-Effective Maximum Clique Analysis Based Approximation in Military Application of WSN</div><div class="authors">F. Jaigirdar, M. M. Islam, Sikder Huq</div><div class="venue">IEEE ICCIT 2011</div></span></div>
+        <div class="pub"><span class="yr">2011</span><span><div class="title">Grid Approximation Based Inductive Charger Deployment Technique in Wireless Sensor Networks</div><div class="authors">F. Jaigirdar, M. M. Islam, Sikder Huq</div><div class="venue">IJACSA · Vol. 2, Issue 1</div></span></div>
+        <div class="pub"><span class="yr">2011</span><span><div class="title">Intelligent Car Control for a Smart Car</div><div class="authors">Md. N. Hasan, S. M. Didar-Al-Alam, Sikder Huq</div><div class="venue">Intl. Journal of Computer Applications · Vol. 14, No. 3</div></span></div>
+      </div>
+
+      <div class="sec-label">Posters &amp; talks</div>
+      <div class="pub-list">
+        <div class="pub"><span class="yr">2017</span><span><div class="title">The Audience in Twitter Communication</div><div class="authors">G. R. Boynton, Sikder Huq, Y. Mojeva</div><div class="venue">IC2S2 2017 · poster</div></span></div>
+        <div class="pub"><span class="yr">2017</span><span><div class="title">Self-Adjusting Skip Graphs — invited talk</div><div class="authors">Sikder Huq</div><div class="venue">Algorithm Reading Group · University of Iowa</div></span></div>
+      </div>
+
+      <div class="sec-label">Dissertation</div>
+      <div class="pub-list">
+        <div class="pub"><span class="yr">2018</span><span><div class="title"><a href="https://iro.uiowa.edu/esploro/outputs/doctoral/Locally-self-adjusting-distributed-algorithms/9983777205602771" target="_blank" rel="noopener">Locally self-adjusting distributed algorithms</a></div><div class="authors">Sikder Rezwanul Huq · Advisor: Sukumar Ghosh</div><div class="venue">Ph.D. dissertation · University of Iowa · Autumn 2018 · DOI 10.17077/etd.lumu-vzd6</div></span></div>
+      </div>
+
+      <div class="sec-label">Professional Service</div>
+      <div class="pub-list">
+        <div class="pub"><span class="yr">2023</span><span><div class="title">Reviewer, Intl. Symposium on Reliable Distributed Systems (SRDS)</div></span></div>
+        <div class="pub"><span class="yr">2022</span><span><div class="title">Industry Track Technical Program Committee Member &amp; Session Chair</div><div class="venue">IEEE International Symposium on Software Reliability Engineering (ISSRE)</div></span></div>
+        <div class="pub"><span class="yr">2017–18</span><span><div class="title">Reviewer, Elsevier JPDC · IEEE ICC</div></span></div>
+      </div>
+
+      <div class="sec-label">Selected Recognition</div>
+      <div class="pub-list">
+        <div class="pub"><span class="yr">2021</span><span><div class="title">Consumer Engagement Relentless Award</div><div class="authors">Amazon</div><div class="venue">Recognized for the robot mitigation effort</div></span></div>
+        <div class="pub"><span class="yr">2018</span><span><div class="title"><a href="https://grad.uiowa.edu/funding/fellowships/ballard-seashore" target="_blank" rel="noopener">Ballard and Seashore Dissertation Fellowship</a></div><div class="authors">University of Iowa</div></span></div>
+        <div class="pub"><span class="yr">2013–14</span><span><div class="title">Outstanding Computer Science TA Award</div><div class="authors">University of Iowa</div></span></div>
+        <div class="pub"><span class="yr">2008</span><span><div class="title">Best Project, Prime Bank 1st IUT National ICT Fest</div><div class="authors">Court Management System · Islamic University of Technology</div></span></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ================= PROJECTS ================= -->
+<main class="page" id="projects" data-screen-label="Projects">
+  <div class="wrap">
+    <div class="page-head">
+      <h1>Projects</h1>
+      <p>A selection of things I've built, from research prototypes to production systems.</p>
+    </div>
+    <div class="page-body">
+      <div class="proj-list">
+        <div class="proj"><span class="yr">2025</span><span><h3>Agentic quant research platform</h3><p>Independent research: backtesting, alpha discovery, and real-time monitoring over ~100B tick-level datapoints, with AI agents in the research loop.</p><div class="stack">python · numba · parquet · agent tooling</div></span></div>
+        <div class="proj"><span class="yr">2015</span><span><h3>Twitter data processing with MongoDB</h3><p>A web interface for spatial analyses on Twitter data, backed by a sharded MongoDB cluster.</p><div class="stack">mongodb · node</div></span></div>
+        <div class="proj"><span class="yr">2014</span><span><h3>Skin detection with kNN + Nyström approximation</h3><p>GPU-accelerated kNN over 500M+ data points in 160 dimensions for pixel-level skin detection.</p><div class="stack">cuda · c++ · matlab</div></span></div>
+        <div class="proj"><span class="yr">2014</span><span><h3>Automated programming grader</h3><p>Python harness that auto-runs student submissions against spec; used for 150-student sections at Iowa.</p><div class="stack">python</div></span></div>
+        <div class="proj"><span class="yr">2014</span><span><h3>Dict Eye: video subtitle dictionary</h3><p>Android app that reads words from subtitles in real time and stores them as spaced-repetition flashcards.</p><div class="stack">android · vuforia</div></span></div>
+        <div class="proj"><span class="yr">2013</span><span><h3>Co-authorship network analysis</h3><p>Network-science analysis of giant components, degree distributions, and diameters in research collaborations.</p><div class="stack">graphs · networkx</div></span></div>
+        <div class="proj"><span class="yr">2009</span><span><h3>LocaGrid: local HPC grid</h3><p>Globus-based grid with PBS/SGE clusters and a friendly Java portal; undergraduate thesis work.</p><div class="stack">globus · java</div></span></div>
+        <div class="proj"><span class="yr">2008</span><span><h3>Supreme Court case automation</h3><p>Case-handling system for the Bangladesh Supreme Court with four user roles. Best Project, IUT ICT Fest 2008.</p><div class="stack">java · oracle</div></span></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ================= TEACHING ================= -->
+<main class="page" id="teaching" data-screen-label="Teaching">
+  <div class="wrap">
+    <div class="page-head">
+      <h1>Teaching</h1>
+      <p>Courses I've instructed at the University of Iowa and Cornell College, where I served as a Visiting Assistant Professor of Computer Science.</p>
+    </div>
+    <div class="page-body">
+      <div class="sec-label">As instructor · University of Iowa</div>
+      <div class="course"><span class="code">CS:3330</span><span><h3><a href="/teaching/cs3330-algorithms.html">Algorithms</a></h3><div class="where">Summer 2018</div></span></div>
+      <div class="course"><span class="code">CS:3640</span><span><h3><a href="/teaching/cs3640-networks.html">Introduction to Networks and Their Applications</a></h3><div class="where">Fall 2017</div></span></div>
+      <div class="course"><span class="code">22C:109</span><span><h3><a href="/teaching/cs3210-java.html">Programming with Java</a></h3><div class="where">Fall 2014</div></span></div>
+
+      <div class="sec-label">As instructor · Cornell College</div>
+      <div class="course"><span class="code">CSC:301</span><span><h3>Algorithms and Data Structures</h3><div class="where">Block 4, Spring 2019</div></span></div>
+      <div class="course"><span class="code">CSC:140</span><span><h3>Software Architecture</h3><div class="where">Block 3, Spring 2019</div></span></div>
+      <div class="course"><span class="code">CSC:317</span><span><h3>Computer Networks</h3><div class="where">Block 2, Spring 2019</div></span></div>
+      <div class="course"><span class="code">CSC:151</span><span><h3>Discrete Mathematics for CSE</h3><div class="where">Block 3, Fall 2018</div></span></div>
+      <div class="course"><span class="code">CSC:140</span><span><h3>Foundations of Computer Science</h3><div class="where">Block 2, Fall 2018</div></span></div>
+      <div class="course"><span class="code">CSC:218</span><span><h3><a href="/teaching/csc218-computer-organization.html">Computer Organization</a></h3><div class="where">Block 1, Fall 2018</div></span></div>
+
+      <div class="sec-label">As teaching assistant · University of Iowa</div>
+      <div class="course"><span class="code">22C:021</span><span><h3><a href="/teaching/22c021-data-structures.html">Data Structures</a> <span style="font-weight:400;color:var(--muted);">(discussion)</span></h3><div class="where">Summer 2016</div></span></div>
+      <div class="course"><span class="code">22C:005</span><span><h3><a href="/teaching/22c005-summer2015-intro-cs.html">Introduction to Computer Science</a> <span style="font-weight:400;color:var(--muted);">(lab)</span></h3><div class="where">Summer 2015</div></span></div>
+      <div class="course"><span class="code">22C:016</span><span><h3><a href="/teaching/22c016-spring2014-cs1.html">Computer Science I: Fundamentals</a> <span style="font-weight:400;color:var(--muted);">(discussion)</span></h3><div class="where">Spring 2014</div></span></div>
+      <div class="course"><span class="code">22C:005</span><span><h3><a href="/teaching/22c005-fall2013-intro-cs-lab.html">Introduction to Computer Science</a> <span style="font-weight:400;color:var(--muted);">(lab)</span></h3><div class="where">Fall 2013</div></span></div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="foot-inner">
+    <span class="mail">srezwan.huq [at] gmail [dot] com</span>
+    <span class="links">
+      <a href="https://www.linkedin.com/in/sikder-huq/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://github.com/rezwan05" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://scholar.google.com/citations?user=kJUoUnQAAAAJ&amp;hl=en" target="_blank" rel="noopener">Scholar</a>
+    </span>
+    <span class="fine">© 2026 Sikder Huq · sikderhuq.com</span>
+  </div>
+</footer>
+
+
+
+<!-- Search overlay -->
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-box">
+    <input id="searchInput" type="text" placeholder="Search this site…" autocomplete="off" />
+    <div class="search-results" id="searchResults"></div>
+  </div>
+</div>
+
+<script>
+
+  // ---- Chooser collapse ----
+
+  // ---- Theme toggle ----
+  const themeBtn = document.getElementById('themeBtn');
+  const iconMoon = document.getElementById('iconMoon');
+  const iconSun = document.getElementById('iconSun');
+  const systemThemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+  function setTheme(t, persist) {
+    document.body.classList.remove('light', 'dark');
+    document.body.classList.add(t);
+    iconMoon.style.display = t === 'light' ? '' : 'none';
+    iconSun.style.display = t === 'dark' ? '' : 'none';
+    if (persist) localStorage.setItem('v2theme', t);
+  }
+  const savedTheme = localStorage.getItem('v2theme');
+  setTheme(savedTheme || (systemThemeQuery.matches ? 'dark' : 'light'), false);
+  themeBtn.addEventListener('click', () => {
+    setTheme(document.body.classList.contains('light') ? 'dark' : 'light', true);
+  });
+  systemThemeQuery.addEventListener('change', (event) => {
+    if (!localStorage.getItem('v2theme')) setTheme(event.matches ? 'dark' : 'light', false);
+  });
+
+  // ---- Page navigation ----
+  const pageRoutes = {
+    home: '/',
+    blog: '/blog/',
+    research: '/research/',
+    projects: '/projects/',
+    teaching: '/teaching/'
+  };
+  const pageTitles = {
+    home: 'Sikder Huq',
+    blog: 'Blog · Sikder Huq',
+    research: 'Research · Sikder Huq',
+    projects: 'Projects · Sikder Huq',
+    teaching: 'Teaching · Sikder Huq'
+  };
+  function pageFromLocation() {
+    const importedPage = new URLSearchParams(location.search).get('page');
+    if (importedPage && pageRoutes[importedPage]) return importedPage;
+    const path = location.pathname.replace(/index\.html$/, '').replace(/\/+$/, '') || '/';
+    return Object.keys(pageRoutes).find(id => pageRoutes[id].replace(/\/$/, '') === path) || 'home';
+  }
+  function go(id, updateHistory = true) {
+    if (!pageRoutes[id]) id = 'home';
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const t = document.getElementById(id);
+    if (t) t.classList.add('active');
+    document.querySelectorAll('nav.main a, .mobile-nav .sheet a').forEach(a => a.classList.toggle('current', a.dataset.go === id));
+    document.getElementById('mobileNav').classList.remove('open');
+    document.body.classList.remove('nav-open');
+    document.title = pageTitles[id];
+    if (location.protocol !== 'file:') {
+      const targetPath = pageRoutes[id];
+      if (updateHistory && location.pathname !== targetPath) history.pushState({ page: id }, '', targetPath);
+      else if (!updateHistory && new URLSearchParams(location.search).has('page')) history.replaceState({ page: id }, '', targetPath);
+    }
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+  document.addEventListener('click', (e) => {
+    const el = e.target.closest('[data-go]');
+    if (el) { e.preventDefault(); go(el.dataset.go); }
+  });
+  window.addEventListener('popstate', () => go(pageFromLocation(), false));
+  go(pageFromLocation(), false);
+
+  // ---- Burger menu ----
+  const mobileNav = document.getElementById('mobileNav');
+  const burgerBtn = document.getElementById('burgerBtn');
+  burgerBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const opening = !mobileNav.classList.contains('open');
+    mobileNav.classList.toggle('open', opening);
+    document.body.classList.toggle('nav-open', opening);
+    burgerBtn.setAttribute('aria-label', opening ? 'Close menu' : 'Open menu');
+  });
+  mobileNav.addEventListener('click', (e) => {
+    if (e.target === mobileNav) { mobileNav.classList.remove('open'); document.body.classList.remove('nav-open'); }
+  });
+
+  // ---- Search ----
+  const searchBtn = document.getElementById('searchBtn');
+  const overlay = document.getElementById('searchOverlay');
+  const sInput = document.getElementById('searchInput');
+  const sResults = document.getElementById('searchResults');
+  let sIndex = null, sel = -1;
+  function buildIndex() {
+    if (sIndex) return sIndex;
+    sIndex = [];
+    const pageNames = { home: 'Home', blog: 'Blog', research: 'Research', projects: 'Projects', teaching: 'Teaching' };
+    document.querySelectorAll('.page').forEach(pg => {
+      const pid = pg.id, pname = pageNames[pid] || pid;
+      sIndex.push({ t: pname, c: 'Page', act: () => go(pid) });
+      pg.querySelectorAll('.post-item, .mini-item').forEach(el => {
+        const t = (el.querySelector('h3, .t') || el).textContent.trim();
+        const href = el.getAttribute('href');
+        sIndex.push({ t, c: pname, act: href && !el.dataset.go ? href : () => go(pid) });
+      });
+      pg.querySelectorAll('.pub, .proj, .course').forEach(el => {
+        const t = (el.querySelector('.title, h3') || el).textContent.trim();
+        const a = el.querySelector('h3 a');
+        sIndex.push({ t, c: pname, act: a ? a.getAttribute('href') : () => go(pid), blank: a && a.target === '_blank' });
+      });
+    });
+    return sIndex;
+  }
+  function render(q) {
+    const idx = buildIndex();
+    const hits = q ? idx.filter(i => i.t.toLowerCase().includes(q.toLowerCase())).slice(0, 12) : [];
+    sel = -1;
+    sResults.innerHTML = '';
+    if (q && !hits.length) { sResults.innerHTML = '<div class="none">No results</div>'; return; }
+    hits.forEach((h) => {
+      const el = document.createElement('a');
+      el.className = 'sr';
+      el.innerHTML = '<div class="st"></div><div class="sc"></div>';
+      el.querySelector('.st').textContent = h.t;
+      el.querySelector('.sc').textContent = h.c;
+      if (typeof h.act === 'string') { el.href = h.act; if (h.blank) { el.target = '_blank'; el.rel = 'noopener'; } }
+      else el.addEventListener('click', (e) => { e.preventDefault(); h.act(); closeSearch(false); });
+      sResults.appendChild(el);
+    });
+  }
+  function openSearch() { overlay.classList.add('open'); sInput.value = ''; render(''); setTimeout(() => sInput.focus(), 30); }
+  const searchParams = new URLSearchParams(location.search);
+  let searchReturnPath = searchParams.get('return');
+  function closeSearch(returnToSource = true) {
+    overlay.classList.remove('open');
+    const returnPath = searchReturnPath;
+    searchReturnPath = null;
+    if (returnToSource && returnPath && returnPath.startsWith('/') && !returnPath.startsWith('//')) {
+      location.replace(returnPath);
+    }
+  }
+  searchBtn.addEventListener('click', openSearch);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeSearch(); });
+  sInput.addEventListener('input', () => render(sInput.value.trim()));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeSearch();
+    if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); openSearch(); }
+    if (!overlay.classList.contains('open')) return;
+    const items = [...sResults.querySelectorAll('.sr')];
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      sel = e.key === 'ArrowDown' ? Math.min(sel + 1, items.length - 1) : Math.max(sel - 1, 0);
+      items.forEach((it, i) => it.classList.toggle('sel', i === sel));
+    }
+    if (e.key === 'Enter' && items.length) (items[Math.max(sel, 0)]).click();
+  });
+  if (searchParams.get('search') === '1') openSearch();
+</script>
+
+</body>
+</html>

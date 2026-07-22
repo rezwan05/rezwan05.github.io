@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CS 3210 Programming with Java — Sikder Huq</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700&family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../courses/course-style.css?v=20260720-2">
+<script src="../assets/site-nav.js?v=20260720-2" defer></script>
+</head>
+<body class="skin-a">
+<script>
+  document.body.className = 'skin-a ' + (localStorage.getItem('v2theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+</script>
+
+<header class="course-top">
+  <div class="inner">
+    <a class="back" href="../">Sikder Huq</a>
+    <nav class="subnav">
+      <a href="../">Home</a>
+      <a href="../blog/">Blog</a>
+      <a href="../research/">Research</a>
+      <a href="../projects/">Projects</a>
+      <a href="../teaching/">Teaching</a>
+    </nav>
+    <span class="right">
+      <button class="theme-btn" id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme">
+        <svg id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+        <svg id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+      </button>
+    </span>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="course-head">
+    <div class="code">CS 3210 · University of Iowa</div>
+    <h1>CS 3210 Programming with Java</h1>
+  </div>
+
+  <p class="orig-note">This page was migrated from my old website - here is the <a href="https://sites.google.com/site/saikatcit05/teaching_1/cs-3210-programming-with-java" target="_blank" rel="noopener">original page ↗</a>.</p>
+
+  <main class="course-body">
+    <h2>Semester: Fall 2014</h2>
+    <p>Instructor: Sikder Rezwanul Huq, 201C Maclean Hall, sikderrezwanul-huq@uiowa.edu</p>
+    <p>Class meeting time: MW 6:30-7:45PM in 117 MLH</p>
+    <p>Office Hours: Tuesday 11:00A to noon, Thursday 10:00A 12 noon at 101N MLH, and by appointment</p>
+
+    <h2>Textbook</h2>
+    <p>Absolute Java 5/E<br/>Savitch &amp; Mock<br/>Addison-Wesley/ Pearson<br/>© 2012<br/>ISBN: 9780132830317</p>
+    <p>Note: Many of the topics will be covered from Oracle Java Documentations (<a href="http://docs.oracle.com/javase/tutorial/" target="_blank" rel="noopener">http://docs.oracle.com/javase/tutorial/</a>).</p>
+    <p>Students are free to use any textbook they prefer to understand the materials covered in class.</p>
+
+    <h2>Course description</h2>
+    <p>This course covers the basic features of Java programming language. The topics covered include philosophy of Java, concepts of OOP (Object Oriented Programming) as applied in Java, programming basics, inheritance, packages, interfaces, exceptions, threads, streams, generics, event driven graphical user interfaces, database programming, applets etc. This course is designed for students who know how to program in a language other than Java.</p>
+
+    <h2>Grading</h2>
+    <p>Final grade will be determined by following components:</p>
+    <p>Homework assignments (25%): There will be six homework assignments during the semester. The homework problems may ask you to write codes or answer theoretical questions on different topics. Your best five scores will be counted in your final grade.</p>
+    <p>Weekly quizzes (20%): There will be one in-class or take-home short quiz in almost every week. Quizzes will mostly contain short questions.</p>
+    <p>Projects (30%): There will be two projects. The first project is intended to judge you understanding on classes and objects in Java. Second project will ask you to develop a simple but real life Java application which may use database.</p>
+    <p>Exams (25%): There will be one mid-term and one final exam. The mid-term exam is worth 12% and final exam is worth 13% of total grade.</p>
+    <p>Letter grades will be assigned roughly as follows:</p>
+    <p>A+ = 95-100 A = 90-94 A- = 85-89<br/>B+ = 80-84 B = 75-79 B- = 70-74<br/>C+ = 65-69 C = 60-64 C- = 55-59<br/>D+ = 50-54 D = 45-49 D- = 40-44<br/>F = 0-39</p>
+    <p>The instructor preserves the rights to make minor modifications in the grading scale.</p>
+
+    <h2>Quizzes, homeworks and Projects</h2>
+    <ul>
+      <li>Quiz 1 (due on Friday 9/5 at 11:59 pm)</li>
+      <li><a href="https://drive.google.com/folderview?id=1j9-AgnoYTdm_GFpwJE3gQco0DrI7z6kD" target="_blank" rel="noopener">Homework 1</a> (due on Wednesday 9/17 at 11:59 pm) Homework 1 Solutions</li>
+      <li>Quiz 2 (taken in class on Wednesday 9/10) Quiz 2 Solution</li>
+      <li><a href="https://drive.google.com/folderview?id=1j9-AgnoYTdm_GFpwJE3gQco0DrI7z6kD" target="_blank" rel="noopener">Homework 2</a> (due on Thursday 9/25 at 11:59 pm). Files: MagicSquare.java, MagicSquareOutput.txt, StringApp.java. Homework 2 Solutions</li>
+      <li>Quiz 3 (taken in class on Wednesday 9/17) Quiz 3 Solution</li>
+      <li><a href="https://drive.google.com/folderview?id=1j9-AgnoYTdm_GFpwJE3gQco0DrI7z6kD" target="_blank" rel="noopener">Homework 3</a> (due on Thursday 10/2 at 11:59 pm) Homework 3 Solutions</li>
+      <li>Quiz 4 (taken in class on Wednesday 9/24) Quiz 4 Solution</li>
+      <li>Quiz 5 (taken in class on Wednesday 10/1) Quiz 5 Solution</li>
+      <li><a href="https://drive.google.com/folderview?id=1j9-AgnoYTdm_GFpwJE3gQco0DrI7z6kD" target="_blank" rel="noopener">Homework 4</a> (due on Thursday 10/16 at 11:59 pm)</li>
+      <li>Quiz 6 (take-home, hard copy (handwritten or typed) due before the exam on Monday 10/20)</li>
+      <li>Quiz 6 solution is posted in ICON</li>
+      <li>Mid-term exam with solutions</li>
+      <li><a href="https://drive.google.com/folderview?id=1j9-AgnoYTdm_GFpwJE3gQco0DrI7z6kD" target="_blank" rel="noopener">Project 1</a> (due on Friday 11/07 at 11:59 pm), here is the starter project. Project 1 Solution</li>
+      <li>Quiz 7 (taken in class on Wednesday 10/29) Quiz 7 Solution</li>
+      <li><a href="https://drive.google.com/folderview?id=1j9-AgnoYTdm_GFpwJE3gQco0DrI7z6kD" target="_blank" rel="noopener">Homework 5</a> (due on Thursday 11/20 at 11:59 pm)</li>
+      <li><a href="https://drive.google.com/folderview?id=1j9-AgnoYTdm_GFpwJE3gQco0DrI7z6kD" target="_blank" rel="noopener">Project 2</a> (due on Saturday 12/20 at 11:59 pm)</li>
+      <li>Quiz 8 &amp; 9 Combined (take-home, due on Monday 12/08 at 11:59 pm in ICON Dropbox)</li>
+    </ul>
+
+    <h2>Announcements</h2>
+    <ul>
+      <li>Change in office hours for this Thursday (posted on 9/17): the office hours for Thursday (9/18) is changed to Friday (9/19) from 12 to 2pm at 201C MLH. This change is applicable only for this week.</li>
+      <li>Homework 2 description is updated (posted on 9/17).</li>
+      <li>Change in class and office location (posted on 9/29): Our classroom has been changed from 301 MLH to 117 MLH for the rest of the semester. Regular office hours will take place at 101N MLH.</li>
+      <li>Mid-term exam on Oct 20th in class (posted on 10/16): Find more information about the exam <a href="https://drive.google.com/folderview?id=1j9-AgnoYTdm_GFpwJE3gQco0DrI7z6kD" target="_blank" rel="noopener">here</a>.</li>
+      <li>Mid-term exam office hours (posted on 10/16): Monday (10/20) from 1:00 to 3:00 pm at 201C MLH.</li>
+      <li>Mid-term exam solutions updated (posted on 10/23): There were minor mistakes in the previous version.</li>
+      <li>Description of project 1 is updated (posted on 10/23).</li>
+      <li>Final exam on Dec 17th in 205 MLH from 7:30 am to 9:30 am (posted on 12/15): Find more information about the exam <a href="https://drive.google.com/folderview?id=1j9-AgnoYTdm_GFpwJE3gQco0DrI7z6kD" target="_blank" rel="noopener">here</a>.</li>
+    </ul>
+
+    <h2>Important links</h2>
+    <ul>
+      <li><a href="https://drive.google.com/folderview?id=1j9-AgnoYTdm_GFpwJE3gQco0DrI7z6kD" target="_blank" rel="noopener">Syllabus &amp; Tentative Schedule</a></li>
+      <li><a href="http://docs.oracle.com/javase/tutorial/" target="_blank" rel="noopener">Java tutorial</a></li>
+      <li><a href="http://homepage.cs.uiowa.edu/~baberman/109/helloworld/helloworld.html" target="_blank" rel="noopener">Hello World! (taken from Ben Berman's webpage)</a></li>
+      <li><a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html" target="_blank" rel="noopener">Download JDK</a></li>
+      <li><a href="https://netbeans.org/" target="_blank" rel="noopener">NetBeans IDE</a></li>
+      <li><a href="http://dimitrisli.wordpress.com/2012/08/08/how-to-install-oracle-database-on-mac-os-any-version/" target="_blank" rel="noopener">How to install Oracle Database in Mac OS</a> (The VM link in this article is for 12c) Here are instructions for mac users</li>
+      <li><a href="http://www.oracle.com/technetwork/database/database-technologies/express-edition/downloads/index.html" target="_blank" rel="noopener">Oracle Database Express Edition 11g R2 Download</a></li>
+      <li><a href="https://docs.oracle.com/javase/7/docs/api/" target="_blank" rel="noopener">Java API Specification</a></li>
+      <li><a href="http://www.w3schools.com/sql/sql_foreignkey.asp" target="_blank" rel="noopener">Foreign Keys</a></li>
+    </ul>
+
+    <h2>Class summaries, examples and files</h2>
+    <div class="week"><h3>Week 1</h3><p>Lecture notes: <a href="https://drive.google.com/folderview?id=1j9-AgnoYTdm_GFpwJE3gQco0DrI7z6kD" target="_blank" rel="noopener">Course Intro</a>, <a href="https://drive.google.com/folderview?id=1j9-AgnoYTdm_GFpwJE3gQco0DrI7z6kD" target="_blank" rel="noopener">Getting started and Object Oriented Programming Concepts.</a></p><p>Example programs: Byclcle.java PersonApp.java</p></div>
+    <div class="week"><h3>Week 2</h3><p>Lecture notes: Variables and Arrays</p><p>Example programs: ArrayDemo.java MultiDimArrayDemo.java StackDemo.java</p></div>
+    <div class="week"><h3>Week 3</h3><p>Lecture notes: Arrays (Continuation), Operator and Control Flow Statements, <a href="http://docs.oracle.com/javase/tutorial/java/data/index.html" target="_blank" rel="noopener">Numbers and Strings</a></p><p>Discussion on Homework 1</p></div>
+    <div class="week"><h3>Week 4</h3><p>Lecture notes: <a href="http://docs.oracle.com/javase/tutorial/java/data/index.html" target="_blank" rel="noopener">Numbers and Strings</a>, Classes and Objects Part 1 (Classes)</p><p>Example program: ExamplesSept15.java</p><p>Discussion on Homework 2</p></div>
+    <div class="week"><h3>Week 5</h3><p>Lecture notes: Classes and Objects Part 2 (Objects and more)</p><p>Classes and Objects Part 3 (Nested Classes and Enum Types)</p><p>Discussion on Homework 3</p></div>
+    <div class="week"><h3>Week 6</h3><p>Lecture notes: Classes and Objects Part 3 (Nested Classes and Enum Types), Interfaces</p><p>Example Programs: PointDemo (9/29) MyTestClass.java</p></div>
+    <div class="week"><h3>Week 7</h3><p>Introduction to Java GUI programming using NetBeans IDE.</p><p>Discussion on Homework 4</p><p>Example project: SimpleCalculatorApp SimpleCalculatorApp V2 (with substance look and feel)</p><p>Lecture notes: Interfaces</p></div>
+    <div class="week"><h3>Week 8</h3><p>Lecture notes: Interfaces Inheritance</p><p>Discussion on mid-term exam.</p></div>
+    <div class="week"><h3>Week 9</h3><p>Mid-term exam in class</p><p>Discussion on exam solutions</p><p>Discussion on Project 1</p><p>Project 1 starter (PredatorPreySimulator)</p></div>
+    <div class="week"><h3>Week 10</h3><p>Lecture notes: Packages Exceptions</p><p>Sample mini project: LibraryAppArray (Mini Library Management System array version)</p></div>
+    <div class="week"><h3>Week 11</h3><p>Lecture notes: JDBC</p><p>Sample mini project: LibraryAppArray (Mini Library Management System array version)</p><p><a href="https://docs.oracle.com/javase/tutorial/essential/io/streams.html" target="_blank" rel="noopener">I/O Streams (Tutorial link)</a></p></div>
+    <div class="week"><h3>Week 12</h3><p>Oracle Database 11g Express Edition intro</p><p>Developing the database version of the Mini Library Management System:</p><p>LibraryAppDB project Database script for mini library app Instructions</p><p>Database project demonstration:</p><p>AGM (This project has personal and sensitive data, so this is posted in ICON)</p><p>Discussion on HW 5</p></div>
+    <div class="week"><h3>Week 13</h3><p>I/O stream example with socket programming (client server model): KnockKnockServer KnockKnockClient</p><p>Lecture notes: I/O Stream additional notes ArrayList</p><p>Discussion on Project 2</p><p>Generics (<a href="http://docs.oracle.com/javase/tutorial/java/generics/" target="_blank" rel="noopener">Tutorial</a>), topics covered: Why use Generics, Generics Types, Generics Methods</p></div>
+    <div class="week"><h3>Week 14</h3><p>Discussion on Project 2</p><p>Discussion of HW5 Solution</p><p>Project demonstration:</p><p>GRE PicDic: This project uses a table that contains JPanels in its cells. Some screenshots are available <a href="http://picdic.synthasite.com/screenshots-of-gre-picdic.php" target="_blank" rel="noopener">here</a>. Feel free to let me know if you want to put JPanels in JTables for project 2, and if you need any help.</p><p>Lift Simulation: This project uses a timer that invokes a method in every two seconds. You may want to do something similar for Project 2. However, there are bugs in the simulation logic and everything may not work as you expect when you run it.</p><p>Generics (<a href="http://docs.oracle.com/javase/tutorial/java/generics/" target="_blank" rel="noopener">Tutorial</a>), topics covered: Bounded type parameters (Generic methods and bounded type parameters), Generics, Inheritance and Subtypes, Type Inference (just the definition), Wildcards (upper bounded, unbounded, lower bounded), Wildcards and subtyping, Wildcard guidelines, Type Erasure (Erasure of generic types), Restriction on generics (just a quick look).</p><p>Java Threads: <a href="http://docs.oracle.com/javase/tutorial/essential/concurrency/index.html" target="_blank" rel="noopener">Tutorial</a></p><p>Lecture slides</p><p>Additional notes (A quick Intro)</p><p>Thread example</p><p>Thread Synchronization example</p></div>
+    <div class="week"><h3>Week 15</h3><p>Continuation of discussion on Java threads.</p><p>Final exam review</p><p>More discussion on Project 2 (Quick demo)</p><p>Quick Introduction (not included in exam): Java Applets (<a href="https://docs.oracle.com/javase/tutorial/deployment/applet/index.html" target="_blank" rel="noopener">tutorial</a>) <a href="http://www.dgp.toronto.edu/people/JamesStewart/270/9798s/Laffra/DijkstraApplet.html" target="_blank" rel="noopener">Applet Example</a> (<a href="http://www.dgp.toronto.edu/people/JamesStewart/270/9798s/Laffra/GraphAlgorithm.java" target="_blank" rel="noopener">Source code</a>)</p><p>Quick Introduction (not included in exam): Annotations (<a href="https://docs.oracle.com/javase/tutorial/java/annotations/" target="_blank" rel="noopener">tutorial</a> <a href="http://en.wikipedia.org/wiki/Java_annotation" target="_blank" rel="noopener">Wiki article</a>)</p></div>
+
+    <h2>Course files</h2>
+    <div class="cabinet" style="border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#fff;">
+      <iframe src="https://drive.google.com/embeddedfolderview?id=1j9-AgnoYTdm_GFpwJE3gQco0DrI7z6kD#list" style="width:100%;height:620px;border:0;display:block;" loading="lazy" title="Course files (Google Drive)"></iframe>
+    </div>
+    <p style="margin-top:12px;"><a href="https://drive.google.com/folderview?id=1j9-AgnoYTdm_GFpwJE3gQco0DrI7z6kD" target="_blank" rel="noopener">Open the folder in Google Drive ↗</a></p>
+  </main>
+</div>
+
+<footer class="course-foot">
+  <div class="inner">
+    <span>srezwan.huq [at] gmail [dot] com</span>
+    <span><a href="https://sites.google.com/site/saikatcit05/teaching_1/cs-3210-programming-with-java" target="_blank" rel="noopener">view original page ↗</a></span>
+  </div>
+</footer>
+<script>
+  (function(){
+    const btn = document.getElementById('themeBtn');
+    const moon = document.getElementById('iconMoon');
+    const sun = document.getElementById('iconSun');
+    const systemThemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    function apply(t, persist){
+      document.body.classList.remove('light','dark');
+      document.body.classList.add(t);
+      moon.style.display = t === 'light' ? '' : 'none';
+      sun.style.display = t === 'dark' ? '' : 'none';
+      if (persist) localStorage.setItem('v2theme', t);
+    }
+    apply(document.body.classList.contains('dark') ? 'dark' : 'light', false);
+    btn.addEventListener('click', () => apply(document.body.classList.contains('light') ? 'dark' : 'light', true));
+    systemThemeQuery.addEventListener('change', (event) => {
+      if (!localStorage.getItem('v2theme')) apply(event.matches ? 'dark' : 'light', false);
+    });
+  })();
+</script>
+</body>
+</html>

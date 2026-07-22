@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>A Small Charting Tool for Inspecting Backtests | Sikder Huq</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700&amp;family=Inter:wght@300;400;500;600&amp;family=Space+Grotesk:wght@300;400;500&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../courses/course-style.css?v=20260720-3">
+<script src="../assets/site-nav.js?v=20260720-2" defer></script>
+</head>
+<body class="skin-a">
+<script>
+  document.body.className = 'skin-a ' + (localStorage.getItem('v2theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+</script>
+
+<header class="course-top">
+  <div class="inner">
+    <a class="back" href="../">Sikder Huq</a>
+    <nav class="subnav">
+      <a href="../">Home</a>
+      <a href="../blog/">Blog</a>
+      <a href="../research/">Research</a>
+      <a href="../projects/">Projects</a>
+      <a href="../teaching/">Teaching</a>
+    </nav>
+    <span class="right">
+      <button class="theme-btn" id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme">
+        <svg id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+        <svg id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+      </button>
+    </span>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="article-head">
+    <div class="kicker">quant · open source · series part 1</div>
+    <h1>A Small Charting Tool for Inspecting Backtests</h1>
+    <p class="dek">An open-source tool for reviewing candles, trades, stops, indicators, and market context in one HTML chart.</p>
+    <div class="meta">Dec 5, 2025 · 3 min read</div>
+    <a class="repo-link" href="https://github.com/rezwan05/backtest-charts" target="_blank" rel="noopener" aria-label="View backtest-charts on GitHub">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.477 2 2 6.484 2 12.021c0 4.428 2.865 8.184 6.839 9.504.5.092.682-.217.682-.483 0-.237-.009-.866-.014-1.7-2.782.605-3.369-1.344-3.369-1.344-.455-1.158-1.11-1.466-1.11-1.466-.908-.621.069-.608.069-.608 1.003.071 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.091-.647.349-1.088.635-1.338-2.221-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.987 1.029-2.687-.103-.253-.446-1.272.098-2.65 0 0 .84-.269 2.75 1.026A9.555 9.555 0 0 1 12 6.844a9.57 9.57 0 0 1 2.504.337c1.909-1.295 2.748-1.026 2.748-1.026.546 1.378.203 2.397.1 2.65.64.7 1.028 1.594 1.028 2.687 0 3.848-2.337 4.695-4.566 4.943.359.31.679.923.679 1.861 0 1.344-.012 2.428-.012 2.758 0 .269.18.58.688.481A10.025 10.025 0 0 0 22 12.021C22 6.484 17.523 2 12 2z"/></svg>
+      <span>View on GitHub</span>
+    </a>
+  </div>
+
+  <article class="post">
+    <aside class="in-brief" aria-labelledby="backtest-charts-brief">
+      <h2 id="backtest-charts-brief">In brief</h2>
+      <ul>
+        <li>My trading system's scorecard said it was working. Aggregate metrics can't say whether the system did the right thing for the right reason on any individual decision, and that's where bugs live.</li>
+        <li>I built and open-sourced a tool that replays every decision the system made, overlaid on the exact data and internal state that produced it, in one shareable interactive file.</li>
+        <li>The first payoff was a bug no metric had flagged: a filter toggling itself on and off eighteen times inside a single market move.</li>
+      </ul>
+    </aside>
+    <p>A backtest summary tells me whether a strategy made money. It doesn't tell me whether a stop moved at the right time, whether an entry landed on the intended bar, or whether a filter behaved sensibly during a trend. Those are different questions, and the second kind is where bugs hide.</p>
+    <p>For a while my routine was to export a run, open TradingView, and hunt down each timestamp by hand. It was slow enough that inspection usually happened late, once something already looked wrong, and that order is backwards. I built <a href="https://github.com/rezwan05/backtest-charts" target="_blank" rel="noopener"><code>backtest-charts</code></a> to make inspection cheap enough to do first: bars, saved fills, and indicator values on one interactive chart.</p>
+
+    <h2>What it does</h2>
+    <ul>
+      <li>Draws candlesticks, volume, trade boxes, entry and exit markers, and realized P/L.</li>
+      <li>Adds indicator lines, bands, levels, background regimes, event markers, and an optional equity curve.</li>
+      <li>Shows candle, indicator, and trade details on hover.</li>
+      <li>Marks regular market hours on the time axis and removes dead session gaps.</li>
+      <li>Uses familiar navigation: scroll to zoom horizontally, drag to pan, and drag the price scale to change the vertical range.</li>
+      <li>Exports a standalone HTML file that can be opened locally or shared with a research report.</li>
+    </ul>
+    <p>The last two items are deliberate design decisions, not just features. A single self-contained file means a chart can sit next to a research note and still open in five years. The navigation is rebuilt because a default web chart handles nothing like a trading platform, and reviewing hundreds of trades is only bearable when the chart gets out of the way.</p>
+
+    <h2 id="feature-screenshots">A closer look</h2>
+    <p>These examples use real NQ 5-minute bars and saved backtest fills. The market data and strategy are not included in the public repository.</p>
+    <figure class="post-figure">
+      <img src="../assets/backtest-charts-candle-hover.jpg" alt="NQ candlestick chart with two winning trades, one losing trade, flat gaps between trades, an orange dashed stop line, and a hover tooltip showing candle, indicator, and losing-trade details" loading="lazy" />
+      <figcaption><strong>Trade review.</strong> The chart keeps the flat periods between positions. Hovering the losing exit shows OHLCV, indicator values, entry and exit prices, realized P/L, and the exit reason.</figcaption>
+    </figure>
+    <figure class="post-figure">
+      <img src="../assets/backtest-charts-volume-profile.jpg" alt="NQ chart with a right-anchored horizontal volume profile, blue value area, gold point of control, and labeled value-area high and low" loading="lazy" />
+      <figcaption><strong>Volume profile.</strong> The displayed range can include a price-by-volume profile with its point of control and value area.</figcaption>
+    </figure>
+    <figure class="post-figure">
+      <img src="../assets/backtest-charts-market-hours.jpg" alt="NQ intraday chart zoomed from 05:45 to 13:20 Pacific with the 06:30 to 13:00 regular market session marked by a blue strip behind the time axis" loading="lazy" />
+      <figcaption><strong>Market hours.</strong> The blue strip marks 06:30 to 13:00 PT without covering the price area.</figcaption>
+    </figure>
+
+    <h2>Why I use it</h2>
+    <p>The clearest example was a chart that showed a consolidation filter switching on and off eighteen times during a single clean downtrend. The bug was mundane: the filter recalculated its range on every bar instead of freezing it while active. No summary metric flagged it, since win rate, profit factor, and drawdown all looked plausible, but on the chart it took seconds to see.</p>
+    <p>Since then I split the job: statistics tell me how a strategy performed, and the chart tells me whether it behaved.</p>
+
+    <h2>Basic use</h2>
+    <p>The public package only renders. It doesn't compute indicators or trading signals, so you bring an OHLCV table, a trades table, and whatever overlay series you want to inspect.</p>
+    <pre><code>import pandas as pd
+from backtest_charts import TradeChart
+
+bars = pd.read_csv("bars.csv")
+trades = pd.read_csv("trades.csv")
+
+chart = TradeChart(bars, title="Backtest review", symbol="NQ")
+chart.add_trades(trades)
+chart.add_line(stop_values, "Stop", color="#fb923c", dash="dash")
+chart.add_band(upper_band, lower_band, "Volatility band")
+chart.render("chart.html", include_plotlyjs="inline")</code></pre>
+    <p>The result is a self-contained HTML file that needs no server or notebook, and whoever you send it to has nothing to install.</p>
+
+    <h2>Try it</h2>
+    <pre><code>pip install git+https://github.com/rezwan05/backtest-charts.git
+python examples/basic_usage.py &amp;&amp; open examples/demo_chart.html</code></pre>
+    <p>The repository includes a synthetic-data example, so the demo can be run without market data. Source and documentation are available at <a href="https://github.com/rezwan05/backtest-charts" target="_blank" rel="noopener">github.com/rezwan05/backtest-charts</a>.</p>
+
+    <nav class="post-pagination" aria-label="Post navigation">
+      <a class="post-pagination-link next" href="parquet-data-engineering.html">
+        <span class="post-pagination-label">Next post →</span>
+        <span class="post-pagination-title">From 38 GB of NQ Ticks to Backtests in Minutes</span>
+      </a>
+    </nav>
+  </article>
+</div>
+
+<footer class="course-foot">
+  <div class="inner">
+    <span>srezwan.huq [at] gmail [dot] com</span>
+    <span><a href="../">sikderhuq.com</a></span>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    const btn = document.getElementById('themeBtn');
+    const moon = document.getElementById('iconMoon');
+    const sun = document.getElementById('iconSun');
+    const systemThemeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    function apply(t, persist){
+      document.body.classList.remove('light','dark');
+      document.body.classList.add(t);
+      moon.style.display = t === 'light' ? '' : 'none';
+      sun.style.display = t === 'dark' ? '' : 'none';
+      if (persist) localStorage.setItem('v2theme', t);
+    }
+    apply(document.body.classList.contains('dark') ? 'dark' : 'light', false);
+    btn.addEventListener('click', () => apply(document.body.classList.contains('light') ? 'dark' : 'light', true));
+    systemThemeQuery.addEventListener('change', (event) => {
+      if (!localStorage.getItem('v2theme')) apply(event.matches ? 'dark' : 'light', false);
+    });
+  })();
+</script>
+</body>
+</html>
