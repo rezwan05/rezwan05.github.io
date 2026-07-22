@@ -38,8 +38,8 @@
   <div class="article-head">
     <div class="kicker">quant · open source · series part 1</div>
     <h1>A Small Charting Tool for Inspecting Backtests</h1>
-    <p class="dek">An open-source tool for reviewing candles, trades, stops, indicators, and market context in one HTML chart.</p>
-    <div class="meta">Dec 5, 2025 · 3 min read</div>
+    <p class="dek">A flexible, open-source charting tool I built for my own quant research: candles, trades, stops, and indicators in one HTML file, with zooming that feels like a paid trading platform, and an API simple enough for AI agents to drive.</p>
+    <div class="meta">Dec 5, 2025 · 4 min read</div>
     <a class="repo-link" href="https://github.com/rezwan05/backtest-charts" target="_blank" rel="noopener" aria-label="View backtest-charts on GitHub">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.477 2 2 6.484 2 12.021c0 4.428 2.865 8.184 6.839 9.504.5.092.682-.217.682-.483 0-.237-.009-.866-.014-1.7-2.782.605-3.369-1.344-3.369-1.344-.455-1.158-1.11-1.466-1.11-1.466-.908-.621.069-.608.069-.608 1.003.071 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.091-.647.349-1.088.635-1.338-2.221-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.987 1.029-2.687-.103-.253-.446-1.272.098-2.65 0 0 .84-.269 2.75 1.026A9.555 9.555 0 0 1 12 6.844a9.57 9.57 0 0 1 2.504.337c1.909-1.295 2.748-1.026 2.748-1.026.546 1.378.203 2.397.1 2.65.64.7 1.028 1.594 1.028 2.687 0 3.848-2.337 4.695-4.566 4.943.359.31.679.923.679 1.861 0 1.344-.012 2.428-.012 2.758 0 .269.18.58.688.481A10.025 10.025 0 0 0 22 12.021C22 6.484 17.523 2 12 2z"/></svg>
       <span>View on GitHub</span>
@@ -51,8 +51,8 @@
       <h2 id="backtest-charts-brief">In brief</h2>
       <ul>
         <li>My trading system's scorecard said it was working. Aggregate metrics can't say whether the system did the right thing for the right reason on any individual decision, and that's where bugs live.</li>
-        <li>I built and open-sourced a tool that replays every decision the system made, overlaid on the exact data and internal state that produced it, in one shareable interactive file.</li>
-        <li>The first payoff was a bug no metric had flagged: a filter toggling itself on and off eighteen times inside a single market move.</li>
+        <li>I built a flexible charting tool for my own quant research and open-sourced it. It replays every decision over the exact data and internal state that produced it, in one shareable file that zooms and pans like a paid trading platform.</li>
+        <li>Coding agents can drive it too, adding indicators, choosing the zoom window, and labeling what deserves my attention. The first payoff was a bug no metric had flagged: a filter toggling on and off eighteen times inside one market move.</li>
       </ul>
     </aside>
     <p>A backtest summary tells me whether a strategy made money. It doesn't tell me whether a stop moved at the right time, whether an entry landed on the intended bar, or whether a filter behaved sensibly during a trend. Those are different questions, and the second kind is where bugs hide.</p>
@@ -64,7 +64,7 @@
       <li>Adds indicator lines, bands, levels, background regimes, event markers, and an optional equity curve.</li>
       <li>Shows candle, indicator, and trade details on hover.</li>
       <li>Marks regular market hours on the time axis and removes dead session gaps.</li>
-      <li>Uses familiar navigation: scroll to zoom horizontally, drag to pan, and drag the price scale to change the vertical range.</li>
+      <li>Uses the navigation you'd expect from a paid charting platform: scroll to zoom horizontally, drag to pan, and drag the price scale to change the vertical range.</li>
       <li>Exports a standalone HTML file that can be opened locally or shared with a research report.</li>
     </ul>
     <p>The last two items are deliberate design decisions, not just features. A single self-contained file means a chart can sit next to a research note and still open in five years. The navigation is rebuilt because a default web chart handles nothing like a trading platform, and reviewing hundreds of trades is only bearable when the chart gets out of the way.</p>
@@ -102,6 +102,10 @@ chart.add_line(stop_values, "Stop", color="#fb923c", dash="dash")
 chart.add_band(upper_band, lower_band, "Volatility band")
 chart.render("chart.html", include_plotlyjs="inline")</code></pre>
     <p>The result is a self-contained HTML file that needs no server or notebook, and whoever you send it to has nothing to install.</p>
+
+    <h2>Built to be driven by agents</h2>
+    <p>Most charts in my research loop aren't made by me anymore. Coding agents render them, because the API is plain Python calls that an agent can compose: add an indicator line, shade a regime in the background, place custom labels on the exact trades worth attention, and slice the window so the chart opens already zoomed to the two days that matter.</p>
+    <p>That changes what a chart review looks like. Instead of me scrolling through months of data, an agent hands me a small set of charts it selected and annotated: the biggest winners, the ugliest losses, and the trades that test the rule we're actually studying. The repository ships an agent skill file that teaches a coding agent the API and its pitfalls, so the charts come back consistent no matter which agent built them. I describe how these audit sets fit into the wider research loop in <a href="human-in-the-loop-quant-research.html">the harness post</a>.</p>
 
     <h2>Try it</h2>
     <pre><code>pip install git+https://github.com/rezwan05/backtest-charts.git
