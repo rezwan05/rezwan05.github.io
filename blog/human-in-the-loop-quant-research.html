@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>A Self-Improving Agentic Quant Research Harness with a Human in the Loop | Sikder Huq</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700&amp;family=Inter:wght@300;400;500;600&amp;family=Space+Grotesk:wght@300;400;500&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../courses/course-style.css?v=20260720-3">
+<script src="../assets/site-nav.js?v=20260720-2" defer></script>
+<style>
+  .loop-map {
+    counter-reset: loop-step; list-style: none; padding: 0; margin: 24px 0 30px;
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;
+  }
+  article.post .loop-map li {
+    counter-increment: loop-step; position: relative; margin: 0; min-height: 86px;
+    padding: 15px 16px 14px 48px; border: 1px solid var(--line); border-radius: 9px;
+    background: var(--bg-soft); color: var(--ink-2); font-size: 14px; line-height: 1.5;
+  }
+  .loop-map li::before {
+    content: counter(loop-step); position: absolute; left: 15px; top: 15px;
+    width: 22px; height: 22px; display: grid; place-items: center;
+    border: 1px solid var(--accent); border-radius: 50%; color: var(--accent);
+    font-family: var(--mono); font-size: 10px; font-weight: 500;
+  }
+  article.post .loop-map li.human-step { background: var(--accent-soft); color: var(--ink); }
+  .loop-caption {
+    margin: -13px 0 30px; font-family: var(--mono); font-size: 10.5px;
+    letter-spacing: .02em; color: var(--muted); text-align: right;
+  }
+  .gate-table-wrap { width: 100%; overflow-x: auto; margin: 20px 0 26px; }
+  article.post table.gates { width: 100%; min-width: 620px; border-collapse: collapse; font-size: 13px; }
+  article.post table.gates th {
+    padding: 9px 14px 9px 0; border-bottom: 1px solid var(--line);
+    color: var(--muted); font-family: var(--mono); font-size: 10px; font-weight: 500;
+    letter-spacing: .06em; text-align: left; text-transform: uppercase;
+  }
+  article.post table.gates td {
+    padding: 11px 14px 11px 0; border-bottom: 1px solid var(--line);
+    color: var(--ink-2); line-height: 1.45; vertical-align: top;
+  }
+  article.post table.gates td:first-child { color: var(--ink); font-weight: 600; white-space: nowrap; }
+  .disclaimer { margin-top: 42px !important; color: var(--muted) !important; font-size: 12.5px !important; font-style: italic; }
+  @media (max-width: 620px) {
+    .loop-map { grid-template-columns: 1fr; }
+    article.post .loop-map li { min-height: 0; }
+    .loop-caption { text-align: left; }
+    .gate-table-wrap { overflow: visible; }
+    article.post table.gates { min-width: 0; }
+    article.post table.gates thead { display: none; }
+    article.post table.gates,
+    article.post table.gates tbody,
+    article.post table.gates tr,
+    article.post table.gates td { display: block; width: 100%; }
+    article.post table.gates tr {
+      margin-bottom: 10px; padding: 13px 15px 12px;
+      border: 1px solid var(--line); border-radius: 8px; background: var(--bg-soft);
+    }
+    article.post table.gates td { padding: 0; border: 0; white-space: normal; }
+    article.post table.gates td:first-child { margin-bottom: 7px; color: var(--accent); }
+    article.post table.gates td + td { margin-top: 8px; font-size: 13px; }
+    article.post table.gates td:nth-child(n+2)::before {
+      display: block; margin-bottom: 2px; color: var(--muted);
+      font-family: var(--mono); font-size: 9px; font-weight: 500;
+      letter-spacing: .06em; text-transform: uppercase;
+    }
+    article.post table.gates td:nth-child(2)::before { content: "Question"; }
+    article.post table.gates td:nth-child(3)::before { content: "Artifact"; }
+  }
+  article.post table.result { border-collapse: collapse; margin: 18px 0 10px; font-size: 14px; width: 100%; max-width: 640px; }
+  article.post table.result td.no { color: var(--muted); font-style: italic; }
+  article.post table.result th { font-family: var(--mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); text-align: left; padding: 8px 14px 8px 0; border-bottom: 1px solid var(--line); font-weight: 500; }
+  article.post table.result td { padding: 9px 14px 9px 0; border-bottom: 1px solid var(--line); color: var(--ink-2); font-variant-numeric: tabular-nums; }
+  article.post table.result td:first-child { color: var(--ink); }
+  article.post table.result td.up { color: var(--accent); font-weight: 600; }
+  article.post .post-figure svg { width: 100%; height: auto; display: block; }
+  #equity-curves { scroll-margin-top: 72px; }
+  article.post .chart-context {
+    margin: 12px 0 30px; padding: 13px 15px;
+    border-left: 2px solid var(--accent); background: var(--accent-soft);
+    color: var(--ink-2); font-size: 13.5px; line-height: 1.55;
+  }
+  article.post .chart-context strong { color: var(--ink); }
+  article.post .closing-note {
+    margin: 26px 0 6px; padding: 22px 24px 20px;
+    border: 1px solid var(--line); border-left: 3px solid var(--accent);
+    border-radius: 0 9px 9px 0; background: var(--accent-soft);
+  }
+  article.post .closing-note p {
+    font-family: var(--display); font-size: 18px; line-height: 1.6;
+    color: var(--ink); margin: 0 0 14px;
+  }
+  article.post .closing-note p.team {
+    margin: 0; font-size: 19px; font-weight: 500; color: var(--accent);
+  }
+  article.post h2.part-head { font-size: 31px; margin: 62px 0 14px; padding-top: 36px; border-top: 1px solid var(--line); }
+  article.post h2.part-head .part-no { display: block; font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+  .loop-figure { margin: 28px 0 4px; }
+  .loop-figure svg { width: 100%; height: auto; display: block; }
+  @media (min-width: 621px) { article.post ol.loop-map { display: none; } .loop-caption { display: none; } }
+  @media (max-width: 620px) { .loop-figure { display: none; } }
+</style>
+</head>
+<body class="skin-a">
+<script>
+  document.body.className = 'skin-a ' + (localStorage.getItem('v2theme') || 'dark');
+</script>
+
+<header class="course-top">
+  <div class="inner">
+    <a class="back" href="../">Sikder Huq</a>
+    <nav class="subnav">
+      <a href="../">Home</a>
+      <a href="../blog/">Blog</a>
+      <a href="../research/">Research</a>
+      <a href="../projects/">Projects</a>
+      <a href="../teaching/">Teaching</a>
+    </nav>
+    <span class="right">
+      <button class="theme-btn" id="themeBtn" title="Toggle light / dark" aria-label="Toggle theme">
+        <svg id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg>
+        <svg id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>
+      </button>
+    </span>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="article-head">
+    <div class="kicker">quant · AI engineering · research systems</div>
+    <h1>A Self-Improving Agentic Quant Research Harness with a Human in the Loop</h1>
+    <p class="dek">A self-improving multi-agent workflow: agents implement each hypothesis independently, review each other's code, reason about what's holding a strategy back, and test alternative fixes. Correctness comes from forced agreement between implementations, AI-assisted human verification across market regimes, reproduction in multiple independent backtest engines, and a seven-gate path before anything earns trust. I set the direction, the agents automate the search, and that combination keeps finding paths neither of us would find alone.</p>
+    <div class="meta">Feb 2, 2026 · 10 min read</div>
+  </div>
+
+  <article class="post">
+    <aside class="in-brief" aria-labelledby="research-harness-brief">
+      <h2 id="research-harness-brief">In brief</h2>
+      <ul>
+        <li>AI agents can implement a trading hypothesis faster than any human can check it, and they can make critical mistakes along the way, so a convincing backtest can land far from reality. This post describes the harness I built around that problem.</li>
+        <li>Each hypothesis is implemented twice by independent agents that cross-review once and must agree trade by trade. I then audit behavior on agent-selected charts, a regime analysis explains where the idea earns and where it bleeds, and survivors are reproduced in independent backtest engines.</li>
+        <li>The loop is self-improving: every diagnosis becomes the next set of proposals, a registry of all past experiments keeps failed ideas from returning, and a seven-gate path separates a good backtest from anything worth trusting. I set the direction, and the agents automate the process.</li>
+      </ul>
+    </aside>
+    <p>A backtest of one of my earlier strategies reported over $2 million in profit across two years. An AI coding agent had implemented and backtested it, and I was excited. Then I dug into the trade log and found orders filling at a bar's open price while the signal that triggered them fired at that bar's close: a look-ahead bias. After the fix, the profit went down to around $220K. All algo traders have been there at some point in their research.</p>
+    <p>That taught me a vital lesson, and the lesson is mostly about speed. An AI agent can now write a strategy faster than I can check it, including incorrect implementations based on incorrect assumptions. The question is how I can leverage the power of AI, yet develop reliable, rigorously validated strategies.</p>
+    <p>The harness I built is verification machinery. I define the hypothesis and the evidence that would settle it, Claude Code and Codex implement and analyze it, and deterministic code computes every number along the way. Each iteration diagnoses what isn't working and carries that diagnosis into the next attempt, so the harness gets smarter about a strategy the longer it works on it. A candidate advances only when its code, its trades, and its behavior all pass.</p>
+
+    <figure class="loop-figure" role="img" aria-label="The research loop: Frame, Build, Review, Measure, Inspect, Diagnose, Reproduce, Improve, and back to Frame. Frame, Inspect, and Improve are human decision points. Inspection is regime-aware and agent-assisted, and fixes found on charts return directly to Build.">
+      <svg viewBox="0 0 760 540" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <g stroke="var(--accent)" stroke-width="3.5" stroke-linecap="round" fill="none">
+          <path d="M447.5,75.1 A300,200 0 0 1 539.0,100.4"/>
+          <path d="M634.4,164.0 A300,200 0 0 1 672.3,225.0"/>
+          <path d="M672.3,315.0 A300,200 0 0 1 634.4,376.0"/>
+          <path d="M539.0,439.6 A300,200 0 0 1 467.7,461.2"/>
+          <path d="M312.5,464.9 A300,200 0 0 1 221.0,439.6"/>
+          <path d="M125.6,376.0 A300,200 0 0 1 87.7,315.0"/>
+          <path d="M87.7,225.0 A300,200 0 0 1 125.6,164.0"/>
+          <path d="M221.0,100.4 A300,200 0 0 1 292.3,78.7"/>
+        </g>
+        <g fill="var(--accent)">
+          <path d="M2,0 L-14,-8 L-14,8 Z" transform="translate(539.0,100.4) rotate(22.6)"/>
+          <path d="M2,0 L-14,-8 L-14,8 Z" transform="translate(672.3,225.0) rotate(70.9)"/>
+          <path d="M2,0 L-14,-8 L-14,8 Z" transform="translate(634.4,376.0) rotate(133.1)"/>
+          <path d="M2,0 L-14,-8 L-14,8 Z" transform="translate(467.7,461.2) rotate(168.5)"/>
+          <path d="M2,0 L-14,-8 L-14,8 Z" transform="translate(221.0,439.6) rotate(202.6)"/>
+          <path d="M2,0 L-14,-8 L-14,8 Z" transform="translate(87.7,315.0) rotate(250.9)"/>
+          <path d="M2,0 L-14,-8 L-14,8 Z" transform="translate(125.6,164.0) rotate(313.1)"/>
+          <path d="M2,0 L-14,-8 L-14,8 Z" transform="translate(292.3,78.7) rotate(348.5)"/>
+        </g>
+        <g>
+          <path d="M420,442 Q478.8,394.9 515.5,337.7" stroke="var(--accent)" stroke-width="2.5" stroke-dasharray="6 6" fill="none"/>
+          <path d="M540.3,292.6 Q568.7,231.4 575,160" stroke="var(--accent)" stroke-width="2.5" stroke-dasharray="6 6" fill="none"/>
+          <path d="M2,0 L-14,-8 L-14,8 Z" transform="translate(575,160) rotate(-85)" fill="var(--accent)"/>
+          <text x="529" y="319" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--ink-2)">fixes return to Build</text>
+        </g>
+        <g>
+          <rect x="302" y="42" width="156" height="56" rx="9" fill="var(--accent-soft)" stroke="var(--accent)"/>
+          <circle cx="322" cy="70" r="10" stroke="var(--accent)"/>
+          <text x="322" y="73.5" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--accent)">1</text>
+          <text x="340" y="67" font-size="13.5" font-weight="600" fill="var(--ink)">Frame</text>
+          <text x="340" y="84" font-size="10.5" fill="var(--ink-2)">testable hypothesis</text>
+        </g>
+        <g>
+          <rect x="514" y="101" width="156" height="56" rx="9" fill="var(--bg-soft)" stroke="var(--line)"/>
+          <circle cx="534" cy="129" r="10" stroke="var(--accent)"/>
+          <text x="534" y="132.5" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--accent)">2</text>
+          <text x="552" y="126" font-size="13.5" font-weight="600" fill="var(--ink)">Build</text>
+          <text x="552" y="143" font-size="10.5" fill="var(--ink-2)">two agents, isolated</text>
+        </g>
+        <g>
+          <rect x="602" y="242" width="156" height="56" rx="9" fill="var(--bg-soft)" stroke="var(--line)"/>
+          <circle cx="622" cy="270" r="10" stroke="var(--accent)"/>
+          <text x="622" y="273.5" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--accent)">3</text>
+          <text x="640" y="267" font-size="13.5" font-weight="600" fill="var(--ink)">Review</text>
+          <text x="640" y="284" font-size="10.5" fill="var(--ink-2)">one cross-review</text>
+        </g>
+        <g>
+          <rect x="514" y="383" width="156" height="56" rx="9" fill="var(--bg-soft)" stroke="var(--line)"/>
+          <circle cx="534" cy="411" r="10" stroke="var(--accent)"/>
+          <text x="534" y="414.5" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--accent)">4</text>
+          <text x="552" y="408" font-size="13.5" font-weight="600" fill="var(--ink)">Measure</text>
+          <text x="552" y="425" font-size="10.5" fill="var(--ink-2)">deterministic backtest</text>
+        </g>
+        <g>
+          <rect x="302" y="442" width="156" height="56" rx="9" fill="var(--accent-soft)" stroke="var(--accent)"/>
+          <circle cx="322" cy="470" r="10" stroke="var(--accent)"/>
+          <text x="322" y="473.5" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--accent)">5</text>
+          <text x="340" y="460" font-size="13.5" font-weight="600" fill="var(--ink)">Inspect</text>
+          <text x="340" y="476" font-size="10" fill="var(--ink-2)">regime-aware,</text>
+          <text x="340" y="489" font-size="10" fill="var(--ink-2)">agent-assisted charts</text>
+        </g>
+        <g>
+          <rect x="90" y="383" width="156" height="56" rx="9" fill="var(--bg-soft)" stroke="var(--line)"/>
+          <circle cx="110" cy="411" r="10" stroke="var(--accent)"/>
+          <text x="110" y="414.5" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--accent)">6</text>
+          <text x="128" y="408" font-size="13.5" font-weight="600" fill="var(--ink)">Diagnose</text>
+          <text x="128" y="425" font-size="10.5" fill="var(--ink-2)">where it fails, and why</text>
+        </g>
+        <g>
+          <rect x="2" y="242" width="156" height="56" rx="9" fill="var(--bg-soft)" stroke="var(--line)"/>
+          <circle cx="22" cy="270" r="10" stroke="var(--accent)"/>
+          <text x="22" y="273.5" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--accent)">7</text>
+          <text x="40" y="267" font-size="13.5" font-weight="600" fill="var(--ink)">Reproduce</text>
+          <text x="40" y="284" font-size="10.5" fill="var(--ink-2)">independent engines</text>
+        </g>
+        <g>
+          <rect x="90" y="101" width="156" height="56" rx="9" fill="var(--accent-soft)" stroke="var(--accent)"/>
+          <circle cx="110" cy="129" r="10" stroke="var(--accent)"/>
+          <text x="110" y="132.5" text-anchor="middle" font-family="var(--mono)" font-size="10" fill="var(--accent)">8</text>
+          <text x="128" y="126" font-size="13.5" font-weight="600" fill="var(--ink)">Improve</text>
+          <text x="128" y="143" font-size="10.5" fill="var(--ink-2)">proposals, my decision</text>
+        </g>
+        <text x="380" y="254" text-anchor="middle" font-size="15" font-weight="600" fill="var(--ink)">One research iteration</text>
+        <text x="380" y="276" text-anchor="middle" font-family="var(--mono)" font-size="10.5" fill="var(--muted)">shaded steps = human decisions</text>
+        <text x="380" y="294" text-anchor="middle" font-family="var(--mono)" font-size="10.5" fill="var(--muted)">every decision returns to the human</text>
+      </svg>
+    </figure>
+
+    <ol class="loop-map" aria-label="Human-in-the-loop quant research workflow">
+      <li class="human-step"><strong>Frame.</strong> I write a testable market hypothesis and its failure condition.</li>
+      <li><strong>Build.</strong> Two agents implement it independently in separate sandboxes.</li>
+      <li><strong>Review.</strong> Each agent reviews the other once; both address the findings.</li>
+      <li><strong>Measure.</strong> Deterministic backtests produce trade-level artifacts.</li>
+      <li class="human-step"><strong>Inspect.</strong> An agent selects charts by regime, and I review the behavior; fixes found here go back to Build.</li>
+      <li><strong>Diagnose.</strong> A regime-analysis agent reasons about where the idea works, where it fails, and why.</li>
+      <li><strong>Reproduce.</strong> Candidates that pass run in independent backtest engines and data paths.</li>
+      <li class="human-step"><strong>Improve.</strong> The agents propose paths to fix the weakest part, and I decide which to pursue.</li>
+    </ol>
+    <div class="loop-caption">The decision returns to the human before the next iteration.</div>
+
+    <p>I have written about pieces of this system before: the <a href="backtest-charts.html">interactive chart tool</a>, the <a href="parquet-data-engineering.html">data pipeline</a> that turns 300 GB of ticks into backtests that run in minutes, and the <a href="timestamp-bug.html">15-second timestamp bug</a> that an independent data comparison exposed. This post is how the pieces fit together.</p>
+
+    <h2 class="part-head"><span class="part-no">Part 1</span>How the loop works</h2>
+    <h2>Start with a specific hypothesis</h2>
+    <p>I don't start an agent with “find me a profitable strategy.” I tried, and it generally doesn't work :)</p>
+    <p>Instead, I start with a mechanism. For example:</p>
+    <blockquote><p>A trend-following strategy is vulnerable when its direction flips repeatedly in a short window. Block new entries after four flips in the trailing 30 signal bars, then compare it with the ungated strategy on the same periods.</p></blockquote>
+    <p>Before implementation, I define what counts as a flip, when it becomes observable, when the next order can fill, the transaction costs, position limits, data windows, baseline, and pass criteria.</p>
+    <p>None of that is negotiable after the results come in. If a variant fails with one tick of slippage, the answer is that it failed, not that we should revisit the slippage model.</p>
+
+    <h2>Implement it twice, in independent sandboxes</h2>
+    <p>Two coding agents (I use Claude Code and Codex) get the same specification, data contract, and baseline, then each builds in its own sandbox without seeing the other's work. Agreement between two independent implementations doesn't prove the idea works, but disagreement always points at something real: an ambiguous spec, a data difference, or a bug.</p>
+    <p>Claude Code doubles as the orchestrator of the whole loop. It runs the experiments end to end and communicates with Codex through the Codex MCP server, so the second implementation and the cross-review happen without me shuttling anything between tools.</p>
+    <p>In one early experiment, the two implementations traded very differently from the same spec. The cross-review traced it to a trigger bug in one of them, the fix went in, and the implementations converged. Each agent reviews the other's code exactly once; in my experience, more passes add more noise than signal.</p>
+
+    <h2>Agents review the code and fix the bugs</h2>
+    <p>After both implementations are complete, each agent reviews the other once. The checklist flexes with each experiment, but these are typical checks:</p>
+    <ul>
+      <li>Is every feature based only on information available at that timestamp?</li>
+      <li>Are higher-timeframe values exposed only after the bar closes?</li>
+      <li>Are orders filled at prices that could have been traded?</li>
+      <li>Are commission, slippage, sizing, and session rules identical?</li>
+      <li>Does the code implement the written trigger, including its state transitions?</li>
+      <li>Can the headline result be recomputed from the raw trade log?</li>
+    </ul>
+    <p>After the fixes and rerun, I compare entry times, indicator values, fills, and independently recomputed P/L. If a difference stays unexplained, I mark the experiment inconclusive instead of arguing it to a verdict.</p>
+    <p>The process earns its keep on negative results too. In one review, an agent re-aggregated all 1,628 trades from the other implementation's raw trade log and found identical timestamps and zero P/L difference. The idea genuinely didn't work, and now we knew that instead of suspecting it.</p>
+
+    <h2>Review the trades on charts</h2>
+    <p>A summary can tell me a strategy made money. It can't tell me the strategy did what I meant.</p>
+    <p>After a run, an agent uses my <a href="backtest-charts.html">backtest chart tool</a> to produce a small audit set: strong winners, large losses, unusual holding periods, regime boundaries, and examples around the exact rule being tested. The selection is deliberate across market conditions, so I'm not just admiring trades from the periods that flattered the strategy. Each chart includes candles, entries, exits, stops, indicator values, volume, and hover details from the trade log.</p>
+    <p>I review those examples and ask plain questions. Did the stop move for the reason we intended? Did a higher-timeframe signal appear too early? Did a filter stay active through a trend, or switch on and off every few bars? Are repeated entries genuine opportunities or the same signal firing continuously?</p>
+    <figure class="post-figure">
+      <img src="../assets/backtest-charts-behavior-audit.jpg" alt="NQ 15-second backtest chart across one session showing discrete trades as shaded boxes with flat periods between them, trailing stop step lines, moving averages, dashed key levels, P/L labels, and volume bars with the regular session marked on the time axis" loading="lazy" />
+      <figcaption><strong>Behavioral review.</strong> One session at 15-second resolution. The shaded boxes mark each trade's span and outcome, the step lines show how the stops trailed, and the flat stretches between boxes are the strategy choosing not to trade.</figcaption>
+    </figure>
+    <p>Charts keep exposing rules that are mathematically valid but behave badly. Sometimes a chart hands me the next test, like comparing an initial stop fitted to the current trend against the tightest available stop line. When that happens, the comparison gets written up as a new hypothesis and enters the loop at the top; the current result is never adjusted by hand.</p>
+
+    <h2>Keep a memory of every idea</h2>
+    <p>None of this works without memory. An experiment registry records the parent hypothesis, configuration, data snapshot, baseline, costs, result, and verdict for every run. Failed tests stay in the registry on purpose. They keep the total trial count visible, and they stop an agent from proposing the same idea again under a new name.</p>
+    <p>Each finished experiment also writes a short report in a fixed format: the question, the data window, the baseline on that same window, the method, the results, and a verdict of pass, in-sample only, or fail. A master findings log holds a one-line summary of every report, and agents read that log before proposing anything new. The negative results end up doing as much work as the wins, because they mark the dead ends.</p>
+    <p>The registry also tracks lineage. Every hypothesis records which idea it descends from, so I can trace how a mechanism evolved across experiments. And when a bug is found, results produced before the fix are not deleted; they get a pre-fix label so an old inflated number can't be quoted later as if it were still true.</p>
+    <p>One strategy family went through about 250 configurations without producing a robust full-history result. That record is a useful output in itself: it tells me to spend research time elsewhere, and there is no configuration #251.</p>
+
+    <h2>Test the result in another engine</h2>
+    <p>Two implementations can still share one engine's bug, so stronger candidates get rerun in independent systems:</p>
+    <ul>
+      <li>a readable Python backtester is the research reference;</li>
+      <li>LEAN runs the same strategy against the same local market data;</li>
+      <li>QuantConnect cloud runs it on an independent data path;</li>
+      <li>TradingView and Pine Script provide an additional visual and execution-semantics check when appropriate.</li>
+    </ul>
+    <p>One note on platform fit: neither QuantConnect nor TradingView is a great backtesting platform for order flow trading, since they don't replay market depth. For price-action strategies like the ones here, both work well.</p>
+    <p>I compare trade counts, timestamps, prices, costs, and P/L. Some differences are expected near contract rolls, session boundaries, and ambiguous intrabar fills. I investigate every unexplained difference.</p>
+    <p>For one combined strategy, the Python backtest produced $1.196 million. LEAN reproduced 96.5% of that result, and QuantConnect produced 102.4%, with trade counts within 4% across the three systems. That's the passing grade: the implementation transferred across engines and data paths. It did not prove profitability, because walk-forward evaluation was still pending.</p>
+    <p>Agreement has limits, though. One of the inflated early results had also been cross-checked, and an independent LEAN reimplementation matched it within 3% because both versions had faithfully implemented the same wrong fill assumption. Cross-engine agreement validates the implementation but not the assumptions behind it, which is why fill realism gets audited separately.</p>
+
+    <h2 class="part-head"><span class="part-no">Part 2</span>A worked example</h2>
+    <p>I had a trend-following algorithm that was profitable over two years of NQ backtests. Trend followers ride some form of moving average or regression line, and those are laggy indicators. The algorithm made its money riding big trends, and it gave a lot of it back in choppy, consolidating markets. I wanted to improve that.</p>
+    <p>The obvious questions lined up quickly. Should we use a tighter stop? It can cut trends short prematurely. Should we re-enter when we get stopped out and the trend keeps going? Should we fade extended moves and take mean-reversion trades against them? Should we lean on market levels like support, resistance, point of control, trendlines? Out of that came three hypotheses worth testing: re-entry, fading extended moves, and a dynamic stop based on recent trend and choppiness. I'll skip the exact rules and parameters, because the edge is not the point of this post; the process is. The numbers and curves below focus on that progression, at no more than four NQ contracts.</p>
+    <p><strong>Iterations one and two: the stop trap.</strong> The tighter stop came first, because it is everyone's first idea. It cut the give-back exactly as intended and cut the winners with it; profit fell by more than half. Iteration two tried to rescue it with naive re-entry: stopped out, trend still going, get back in. On trend days it looked brilliant. Across the full history it churned every consolidation, paid friction on every false start, and finished at minus $602K. The regime agent's post-mortem was blunt: two-thirds of the exits were direction flips inside chop, and the chart set it handed me was one consolidation day after another with the entry clusters marked.</p>
+    <p><strong>Iteration three: re-entry with discipline.</strong> The agents proposed conditions under which re-entry had historically paid, and the sweep kept only the strict version: re-enter only when the trend is steep and price is near the structure that defined it. Twenty to thirty parameter variants ran on short windows first, survivors were promoted to the full history, and each variant came back with a one-page summary and regime-selected charts. This was the first build to beat the baseline.</p>
+    <p><strong>Iterations four and five: the fade that didn't generalize.</strong> Fading extended moves on its own bled money in every trending regime. Restricting the fades to major levels looked better and even beat the baseline on the full history, but the regime table showed the extra profit came from a handful of months, and the charts showed entries that only worked in one kind of tape. Both rejected. This is where the regime analysis earns its place: it killed a profitable-looking build for the right reason.</p>
+    <p><strong>Iterations six through eight: the dynamic stop.</strong> The third hypothesis was the winner. Widening the stop while the trend is strong and tightening it as chop rises attacked the original problem directly, and it stacked cleanly with disciplined re-entry. Two sweep cycles and one combination pass later, the final build sat at $1.41M with a Sharpe of 2.2 and a maximum drawdown of about $180K.</p>
+    <figure class="post-figure" id="equity-curves">
+      <svg class="equity-chart" viewBox="0 0 760 400" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <line x1="10" y1="347.7" x2="682" y2="347.7" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 5"/><text x="690" y="351.2" font-family="var(--mono)" font-size="10.5" fill="var(--muted)">-600K</text><line x1="10" y1="252.0" x2="682" y2="252.0" stroke="var(--line)" stroke-width="1.2"/><text x="690" y="255.5" font-family="var(--mono)" font-size="10.5" fill="var(--muted)">0</text><line x1="10" y1="172.3" x2="682" y2="172.3" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 5"/><text x="690" y="175.8" font-family="var(--mono)" font-size="10.5" fill="var(--muted)">500K</text><line x1="10" y1="92.6" x2="682" y2="92.6" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 5"/><text x="690" y="96.1" font-family="var(--mono)" font-size="10.5" fill="var(--muted)">1.0M</text><line x1="10" y1="28.8" x2="682" y2="28.8" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 5"/><text x="690" y="32.3" font-family="var(--mono)" font-size="10.5" fill="var(--muted)">1.4M</text>
+  <text x="10" y="392" text-anchor="start" font-family="var(--mono)" font-size="10.5" fill="var(--muted)">0</text><text x="178" y="392" text-anchor="middle" font-family="var(--mono)" font-size="10.5" fill="var(--muted)">6 mo</text><text x="346" y="392" text-anchor="middle" font-family="var(--mono)" font-size="10.5" fill="var(--muted)">12 mo</text><text x="514" y="392" text-anchor="middle" font-family="var(--mono)" font-size="10.5" fill="var(--muted)">18 mo</text><text x="682" y="392" text-anchor="end" font-family="var(--mono)" font-size="10.5" fill="var(--muted)">24 mo</text>
+  <path class="revised" d="M10.0,252.1 L13.7,254.2 L17.5,251.1 L21.2,256.1 L24.9,252.4 L28.7,247.8 L32.4,246.8 L36.1,248.7 L39.9,244.3 L43.6,242.3 L47.3,240.8 L51.1,249.5 L54.8,238.0 L58.5,241.1 L62.3,242.0 L66.0,239.1 L69.7,238.4 L73.5,237.8 L77.2,243.7 L80.9,242.2 L84.7,241.0 L88.4,240.9 L92.1,235.4 L95.9,237.3 L99.6,239.6 L103.3,244.6 L107.1,247.6 L110.8,248.5 L114.5,248.5 L118.3,245.9 L122.0,244.7 L125.7,250.1 L129.5,253.5 L133.2,249.9 L136.9,253.8 L140.7,235.2 L144.4,235.3 L148.1,241.3 L151.9,259.1 L155.6,264.0 L159.3,273.5 L163.1,269.5 L166.8,262.2 L170.5,268.6 L174.3,266.5 L178.0,267.3 L181.7,263.3 L185.5,266.5 L189.2,270.7 L192.9,270.3 L196.7,273.1 L200.4,279.9 L204.1,282.7 L207.9,286.8 L211.6,287.2 L215.3,293.7 L219.1,288.3 L222.8,287.9 L226.5,293.3 L230.3,296.5 L234.0,300.2 L237.7,302.9 L241.5,298.2 L245.2,304.8 L248.9,305.1 L252.7,303.3 L256.4,310.3 L260.1,309.4 L263.9,304.4 L267.6,295.5 L271.3,292.5 L275.1,297.7 L278.8,298.8 L282.5,291.4 L286.3,302.0 L290.0,299.5 L293.7,305.2 L297.5,306.3 L301.2,304.5 L304.9,310.2 L308.7,317.9 L312.4,321.2 L316.1,319.9 L319.9,313.8 L323.6,313.5 L327.3,311.5 L331.1,315.1 L334.8,314.9 L338.5,314.6 L342.3,327.5 L346.0,330.9 L349.7,326.1 L353.5,327.8 L357.2,325.7 L360.9,318.7 L364.7,320.7 L368.4,342.4 L372.1,338.6 L375.9,336.1 L379.6,323.0 L383.3,319.5 L387.1,318.8 L390.8,324.9 L394.5,325.0 L398.3,326.7 L402.0,325.2 L405.7,332.1 L409.5,323.9 L413.2,320.3 L416.9,327.3 L420.7,329.8 L424.4,330.2 L428.1,347.2 L431.9,347.5 L435.6,352.3 L439.3,354.0 L443.1,345.9 L446.8,354.0 L450.5,353.5 L454.3,356.3 L458.0,349.5 L461.7,351.4 L465.5,341.0 L469.2,340.2 L472.9,338.8 L476.7,337.8 L480.4,343.7 L484.1,345.7 L487.9,346.7 L491.6,347.7 L495.3,343.1 L499.1,340.5 L502.8,343.7 L506.5,345.5 L510.3,351.7 L514.0,353.2 L517.7,352.9 L521.5,351.9 L525.2,350.0 L528.9,336.7 L532.7,330.8 L536.4,334.5 L540.1,331.0 L543.9,331.5 L547.6,327.0 L551.3,328.2 L555.1,313.5 L558.8,315.5 L562.5,314.0 L566.3,314.7 L570.0,318.8 L573.7,322.2 L577.5,338.0 L581.2,343.3 L584.9,339.2 L588.7,342.4 L592.4,346.4 L596.1,348.1 L599.9,350.7 L603.6,347.9 L607.3,345.3 L611.1,343.6 L614.8,345.4 L618.5,339.4 L622.3,331.1 L626.0,322.3 L629.7,318.4 L633.5,320.6 L637.2,321.0 L640.9,332.4 L644.7,340.2 L648.4,336.1 L652.1,337.5 L655.9,340.0 L659.6,345.2 L663.3,347.5 L667.1,343.4 L670.8,345.3 L674.5,348.9 L678.3,355.6 L682.0,348.0" fill="none" stroke="#b3574f" stroke-width="1.8" stroke-linejoin="round"/>
+  <path class="revised" d="M10.0,252.0 L13.7,250.2 L17.5,248.6 L21.2,256.9 L24.9,254.9 L28.7,252.4 L32.4,252.6 L36.1,253.1 L39.9,255.0 L43.6,254.4 L47.3,254.9 L51.1,252.2 L54.8,250.1 L58.5,249.2 L62.3,250.0 L66.0,252.8 L69.7,251.5 L73.5,253.4 L77.2,253.7 L80.9,253.9 L84.7,251.3 L88.4,252.6 L92.1,250.6 L95.9,244.2 L99.6,248.5 L103.3,247.6 L107.1,248.7 L110.8,248.2 L114.5,251.7 L118.3,255.2 L122.0,251.1 L125.7,253.8 L129.5,248.7 L133.2,243.8 L136.9,250.4 L140.7,249.0 L144.4,248.0 L148.1,243.5 L151.9,238.9 L155.6,242.4 L159.3,236.8 L163.1,238.7 L166.8,235.9 L170.5,230.0 L174.3,230.9 L178.0,233.0 L181.7,228.6 L185.5,232.8 L189.2,238.6 L192.9,238.4 L196.7,237.3 L200.4,242.5 L204.1,244.9 L207.9,249.2 L211.6,246.9 L215.3,248.7 L219.1,250.7 L222.8,251.1 L226.5,248.8 L230.3,252.9 L234.0,249.6 L237.7,255.2 L241.5,251.4 L245.2,258.0 L248.9,259.0 L252.7,258.2 L256.4,256.2 L260.1,258.3 L263.9,259.4 L267.6,262.1 L271.3,249.7 L275.1,251.5 L278.8,246.1 L282.5,245.7 L286.3,245.6 L290.0,246.2 L293.7,245.2 L297.5,247.5 L301.2,244.0 L304.9,234.4 L308.7,230.4 L312.4,232.5 L316.1,231.5 L319.9,232.0 L323.6,229.9 L327.3,226.3 L331.1,221.5 L334.8,220.6 L338.5,224.6 L342.3,226.8 L346.0,229.1 L349.7,225.7 L353.5,223.3 L357.2,222.7 L360.9,224.6 L364.7,211.1 L368.4,191.8 L372.1,191.9 L375.9,191.4 L379.6,183.5 L383.3,181.4 L387.1,174.1 L390.8,177.1 L394.5,179.4 L398.3,174.9 L402.0,174.1 L405.7,175.3 L409.5,175.5 L413.2,170.8 L416.9,167.7 L420.7,171.4 L424.4,170.3 L428.1,173.0 L431.9,172.1 L435.6,175.0 L439.3,175.5 L443.1,173.7 L446.8,174.7 L450.5,175.6 L454.3,176.4 L458.0,176.1 L461.7,175.8 L465.5,177.4 L469.2,175.2 L472.9,169.2 L476.7,172.8 L480.4,175.3 L484.1,173.1 L487.9,172.0 L491.6,178.5 L495.3,180.8 L499.1,182.5 L502.8,184.3 L506.5,182.7 L510.3,184.7 L514.0,182.2 L517.7,185.1 L521.5,187.4 L525.2,188.4 L528.9,186.6 L532.7,178.1 L536.4,175.5 L540.1,173.3 L543.9,175.2 L547.6,175.1 L551.3,172.8 L555.1,166.6 L558.8,150.1 L562.5,150.4 L566.3,148.7 L570.0,147.8 L573.7,145.2 L577.5,153.2 L581.2,154.2 L584.9,152.0 L588.7,142.6 L592.4,137.1 L596.1,137.3 L599.9,141.7 L603.6,139.0 L607.3,133.3 L611.1,134.0 L614.8,134.5 L618.5,130.8 L622.3,129.2 L626.0,129.7 L629.7,128.0 L633.5,121.3 L637.2,122.8 L640.9,124.4 L644.7,133.0 L648.4,133.4 L652.1,132.1 L655.9,134.1 L659.6,136.8 L663.3,130.6 L667.1,124.8 L670.8,120.1 L674.5,130.6 L678.3,126.9 L682.0,126.9" fill="none" stroke="var(--muted)" stroke-width="1.8" stroke-linejoin="round"/>
+  <path class="revised" d="M10.0,252.0 L13.7,250.4 L17.5,244.8 L21.2,248.5 L24.9,246.2 L28.7,242.1 L32.4,243.9 L36.1,245.7 L39.9,249.4 L43.6,248.0 L47.3,248.0 L51.1,242.4 L54.8,241.0 L58.5,240.2 L62.3,242.0 L66.0,243.3 L69.7,242.8 L73.5,245.6 L77.2,247.1 L80.9,248.2 L84.7,247.9 L88.4,250.4 L92.1,248.8 L95.9,243.1 L99.6,246.0 L103.3,244.4 L107.1,243.6 L110.8,241.5 L114.5,240.0 L118.3,243.8 L122.0,240.6 L125.7,241.9 L129.5,239.0 L133.2,237.7 L136.9,240.1 L140.7,238.0 L144.4,237.4 L148.1,233.2 L151.9,212.3 L155.6,216.4 L159.3,211.7 L163.1,214.0 L166.8,212.8 L170.5,208.1 L174.3,210.0 L178.0,212.3 L181.7,213.4 L185.5,214.9 L189.2,222.4 L192.9,224.8 L196.7,226.3 L200.4,231.5 L204.1,234.4 L207.9,231.0 L211.6,229.4 L215.3,230.7 L219.1,231.0 L222.8,231.6 L226.5,225.8 L230.3,231.4 L234.0,226.3 L237.7,229.6 L241.5,228.3 L245.2,234.7 L248.9,237.8 L252.7,239.5 L256.4,241.9 L260.1,240.2 L263.9,243.2 L267.6,237.0 L271.3,231.0 L275.1,225.4 L278.8,221.5 L282.5,218.3 L286.3,217.5 L290.0,220.7 L293.7,214.3 L297.5,214.4 L301.2,210.5 L304.9,209.5 L308.7,201.6 L312.4,202.1 L316.1,200.3 L319.9,197.8 L323.6,197.7 L327.3,197.6 L331.1,195.0 L334.8,189.7 L338.5,190.2 L342.3,194.3 L346.0,197.0 L349.7,200.1 L353.5,198.1 L357.2,201.4 L360.9,201.7 L364.7,202.6 L368.4,185.5 L372.1,193.2 L375.9,194.0 L379.6,195.0 L383.3,190.3 L387.1,190.8 L390.8,190.5 L394.5,194.8 L398.3,190.5 L402.0,189.1 L405.7,195.4 L409.5,197.4 L413.2,192.8 L416.9,191.3 L420.7,191.1 L424.4,190.6 L428.1,189.1 L431.9,186.6 L435.6,188.9 L439.3,189.8 L443.1,188.0 L446.8,188.2 L450.5,190.4 L454.3,193.2 L458.0,196.8 L461.7,197.7 L465.5,196.9 L469.2,197.5 L472.9,190.8 L476.7,194.3 L480.4,197.2 L484.1,195.8 L487.9,196.8 L491.6,200.2 L495.3,194.4 L499.1,194.0 L502.8,196.4 L506.5,193.2 L510.3,191.9 L514.0,189.1 L517.7,190.6 L521.5,195.0 L525.2,195.0 L528.9,196.6 L532.7,190.6 L536.4,186.1 L540.1,187.0 L543.9,184.4 L547.6,185.6 L551.3,184.0 L555.1,180.1 L558.8,167.3 L562.5,167.9 L566.3,163.1 L570.0,159.2 L573.7,159.5 L577.5,162.1 L581.2,162.7 L584.9,158.7 L588.7,157.1 L592.4,152.8 L596.1,157.1 L599.9,161.4 L603.6,162.5 L607.3,159.6 L611.1,158.1 L614.8,158.3 L618.5,157.0 L622.3,156.4 L626.0,152.0 L629.7,149.3 L633.5,138.8 L637.2,140.8 L640.9,143.3 L644.7,153.3 L648.4,154.4 L652.1,156.2 L655.9,153.4 L659.6,153.6 L663.3,139.3 L667.1,134.4 L670.8,124.1 L674.5,133.0 L678.3,127.6 L682.0,113.6" fill="none" stroke="#6d87a8" stroke-width="1.8" stroke-linejoin="round"/>
+  <path class="revised" d="M10.0,252.0 L13.7,247.2 L17.5,240.0 L21.2,243.7 L24.9,241.6 L28.7,237.7 L32.4,238.5 L36.1,242.1 L39.9,245.8 L43.6,237.2 L47.3,237.4 L51.1,230.5 L54.8,225.6 L58.5,224.3 L62.3,221.8 L66.0,225.2 L69.7,224.7 L73.5,228.6 L77.2,229.1 L80.9,231.2 L84.7,228.3 L88.4,232.8 L92.1,229.4 L95.9,221.5 L99.6,223.9 L103.3,219.2 L107.1,218.3 L110.8,217.5 L114.5,219.4 L118.3,223.0 L122.0,216.6 L125.7,218.4 L129.5,208.6 L133.2,206.0 L136.9,209.8 L140.7,211.0 L144.4,208.2 L148.1,202.7 L151.9,181.6 L155.6,187.2 L159.3,180.9 L163.1,184.0 L166.8,181.2 L170.5,175.2 L174.3,175.6 L178.0,177.3 L181.7,177.5 L185.5,179.3 L189.2,189.7 L192.9,191.6 L196.7,191.0 L200.4,194.9 L204.1,198.1 L207.9,193.0 L211.6,189.0 L215.3,190.7 L219.1,191.5 L222.8,191.6 L226.5,183.6 L230.3,186.4 L234.0,175.5 L237.7,178.8 L241.5,173.8 L245.2,180.5 L248.9,181.2 L252.7,180.9 L256.4,183.9 L260.1,181.0 L263.9,181.4 L267.6,179.0 L271.3,174.1 L275.1,168.3 L278.8,163.3 L282.5,159.7 L286.3,170.7 L290.0,174.2 L293.7,173.6 L297.5,174.8 L301.2,170.7 L304.9,167.9 L308.7,166.5 L312.4,168.4 L316.1,167.3 L319.9,164.1 L323.6,165.3 L327.3,158.8 L331.1,145.3 L334.8,143.2 L338.5,145.4 L342.3,149.4 L346.0,153.2 L349.7,154.1 L353.5,150.8 L357.2,145.6 L360.9,142.6 L364.7,138.0 L368.4,114.7 L372.1,120.7 L375.9,122.3 L379.6,118.9 L383.3,115.2 L387.1,113.4 L390.8,113.5 L394.5,118.3 L398.3,117.8 L402.0,117.7 L405.7,124.8 L409.5,125.9 L413.2,123.4 L416.9,123.6 L420.7,126.9 L424.4,128.3 L428.1,129.7 L431.9,127.1 L435.6,127.0 L439.3,130.3 L443.1,125.9 L446.8,130.2 L450.5,132.9 L454.3,134.2 L458.0,137.3 L461.7,138.2 L465.5,139.9 L469.2,139.2 L472.9,130.9 L476.7,132.9 L480.4,134.6 L484.1,136.7 L487.9,136.8 L491.6,142.1 L495.3,135.3 L499.1,134.2 L502.8,136.9 L506.5,132.7 L510.3,132.9 L514.0,127.3 L517.7,128.4 L521.5,136.0 L525.2,134.3 L528.9,131.8 L532.7,122.8 L536.4,116.6 L540.1,118.3 L543.9,115.8 L547.6,119.6 L551.3,120.2 L555.1,110.1 L558.8,98.9 L562.5,101.6 L566.3,97.7 L570.0,94.6 L573.7,95.0 L577.5,99.9 L581.2,100.4 L584.9,98.4 L588.7,94.1 L592.4,89.0 L596.1,93.4 L599.9,101.4 L603.6,104.7 L607.3,102.9 L611.1,100.3 L614.8,100.7 L618.5,101.9 L622.3,100.3 L626.0,90.4 L629.7,82.4 L633.5,63.3 L637.2,66.2 L640.9,67.1 L644.7,75.7 L648.4,77.2 L652.1,70.2 L655.9,67.5 L659.6,73.1 L663.3,60.4 L667.1,58.0 L670.8,45.1 L674.5,52.5 L678.3,46.1 L682.0,27.2" fill="none" stroke="var(--accent)" stroke-width="2.6" stroke-linejoin="round"/>
+  <line x1="18" y1="20" x2="40" y2="20" stroke="var(--accent)" stroke-width="2.6"/><text x="48" y="24" font-size="12" fill="var(--ink-2)">Final  $1.41M</text><line x1="18" y1="40" x2="40" y2="40" stroke="#6d87a8" stroke-width="1.8"/><text x="48" y="44" font-size="12" fill="var(--ink-2)">Iteration 3  $868K</text><line x1="18" y1="60" x2="40" y2="60" stroke="var(--muted)" stroke-width="1.8"/><text x="48" y="64" font-size="12" fill="var(--ink-2)">Baseline $785K</text><line x1="18" y1="80" x2="40" y2="80" stroke="#b3574f" stroke-width="1.8"/><text x="48" y="84" font-size="12" fill="var(--ink-2)">Iteration 2  -$602K</text>
+</svg>
+      <figcaption><strong>Equity curves.</strong> The line shapes come from cumulative P/L sequences in the original research runs and summarize the progression below.</figcaption>
+    </figure>
+    <p class="chart-context"><strong>Research context.</strong> I chose this example because it makes the iteration process easy to follow. The figures illustrate the research workflow; they are not intended to rank strategies or represent expected live performance. They are in-sample research results, not investment advice. A single strategy can go through long flat or losing periods. A smoother portfolio equity curve usually comes from combining multiple independently validated strategies whose returns are not highly correlated.</p>
+    <p>The full record looks like this:</p>
+    <table class="result">
+      <thead><tr><th>Iteration</th><th>Net P/L</th><th>Sharpe</th><th>Max drawdown</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td>0 · pre-tested baseline</td><td>$785K</td><td>1.6</td><td>-$210K</td><td>the bar to beat</td></tr>
+        <tr><td>1 · tighter stop</td><td>$342K</td><td>0.9</td><td>-$145K</td><td class="no">rejected</td></tr>
+        <tr><td>2 · + naive re-entry</td><td>-$602K</td><td>-0.9</td><td>-$760K</td><td class="no">rejected</td></tr>
+        <tr><td>3 · disciplined re-entry</td><td>$868K</td><td>1.7</td><td>-$220K</td><td>kept</td></tr>
+        <tr><td>4 · fade extended moves</td><td>$214K</td><td>0.4</td><td>-$390K</td><td class="no">rejected</td></tr>
+        <tr><td>5 · fade only at levels</td><td>$912K</td><td>1.8</td><td>-$235K</td><td class="no">rejected</td></tr>
+        <tr><td>6 · dynamic stop, chop-aware</td><td>$1.09M</td><td>1.9</td><td>-$205K</td><td>kept</td></tr>
+        <tr><td>7 · + trend-strength scaling</td><td>$1.22M</td><td>2.0</td><td>-$195K</td><td>kept</td></tr>
+        <tr><td>8 · combined and tuned</td><td>$1.41M</td><td>2.2</td><td>-$180K</td><td>kept</td></tr>
+      </tbody>
+    </table>
+    <p>Eight iterations, four rejections. Iterations are not only additive either: a later pass is free to retune the parameters an earlier one introduced, which is what the final combination pass mostly did. Every row cost one trip around the loop: agents ran the sweeps and wrote the summaries, the regime analysis chose which charts deserved my eyes, and I chose what to keep. The failures stay in the table for the same reason they stay in the registry: they are part of the record, and they are what stop the same idea from coming back next quarter.</p>
+    <p>All of it is the discovery-stage view: full-history comparisons, not live results. From here the strategy enters the walk-forward and cross-engine gates like any other candidate, and the registry records the outcome either way.</p>
+
+    <h2 class="part-head"><span class="part-no">Part 3</span>Seven gates to deployment</h2>
+    <p>Agents can test many ideas quickly. More tests also create more false positives, so each candidate must pass a fixed set of checks:</p>
+    <div class="gate-table-wrap">
+      <table class="gates">
+        <thead>
+          <tr><th>Gate</th><th>Question</th><th>Required artifact</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1 · Static validity</td><td>Is the result structurally possible, with correct data, timing, fills, costs, and implementation?</td><td>Validation checks and a trade log that reconstructs the result</td></tr>
+          <tr><td>2 · Discovery</td><td>Does the rule behave as specified, and does the net result justify a larger test?</td><td>Experiment record, unchanged baseline, and chart audit</td></tr>
+          <tr><td>3 · Rolling validation</td><td>Does the candidate survive chronological walk-forward testing and reproduce on another engine or data path?</td><td>Paired rolling results and cross-engine reconciliation</td></tr>
+          <tr><td>4 · Multiple-testing adjustment</td><td>Does the result remain interesting after accounting for every variant that was tried?</td><td>Experiment registry, trial count, sensitivity checks, and overfitting diagnostics</td></tr>
+          <tr><td>5 · Sealed test</td><td>Does the frozen candidate pass one untouched final holdout?</td><td>Frozen code and rules, preset criteria, and an independent result</td></tr>
+          <tr><td>6 · Prospective shadow execution</td><td>Does it behave correctly on incoming data without placing live orders?</td><td>Shadow logs, execution reconciliation, and monitoring evidence</td></tr>
+          <tr><td>7 · Constrained capital</td><td>Does prospective evidence justify a small allocation under external risk controls?</td><td>Hard limits, monitoring, rollback, kill switch, and human approval</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>This is the same promotion sequence described in detail in <a href="seven-gates-between-idea-and-live-money.html">Seven Gates Between an Idea and Live Money</a>. Gate 1, static validity, is checked before a full backtest.</p>
+
+    <h2>Ending notes</h2>
+    <p>The final decisions in this system stay with me. Inside its sandbox, an agent can write code, run tests, inspect trades, and prepare a proposal. It cannot change the cost model, redefine the baseline, promote its own result, or allocate capital. Nothing in this system can place a trade, and my own decisions go into the same registry as the agents' experiments, because a human cherry-picking results is still cherry-picking.</p>
+    <aside class="closing-note">
+      <p>AI models and agents are getting more powerful, and quickly. But in my experience, they work best when human insight and expertise are combined with an agent's ability to reason and search. An agent on its own will keep grinding through strategy tweaks and, eventually, give up. Many times, with my insight and a bit of direction, the same search found a better path than either of us would have found alone.</p>
+      <p class="team">We make a good team.</p>
+    </aside>
+    <p class="disclaimer">This describes an independent research workflow, not investment advice or a claim of live trading performance.</p>
+
+    <p class="related-posts">Related: <a href="backtest-charts.html">the chart tool for inspecting backtests</a> and <a href="parquet-data-engineering.html">the data engineering behind the research loop</a>.</p>
+    <nav class="post-pagination" aria-label="Post navigation">
+      <a class="post-pagination-link previous" href="timestamp-bug.html">
+        <span class="post-pagination-label">← Previous post</span>
+        <span class="post-pagination-title">How a 15-Second Bar-Labeling Bug Changed Two Years of Backtests</span>
+      </a>
+      <a class="post-pagination-link next" href="seven-gates-between-idea-and-live-money.html">
+        <span class="post-pagination-label">Next post →</span>
+        <span class="post-pagination-title">Seven Gates Between an Idea and Live Money</span>
+      </a>
+    </nav>
+  </article>
+</div>
+
+<footer class="course-foot">
+  <div class="inner">
+    <span>srezwan.huq [at] gmail [dot] com</span>
+    <span><a href="../">sikderhuq.com</a></span>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    const btn = document.getElementById('themeBtn');
+    const moon = document.getElementById('iconMoon');
+    const sun = document.getElementById('iconSun');
+    function apply(t, persist){
+      document.body.classList.remove('light','dark');
+      document.body.classList.add(t);
+      moon.style.display = t === 'light' ? '' : 'none';
+      sun.style.display = t === 'dark' ? '' : 'none';
+      if (persist) localStorage.setItem('v2theme', t);
+    }
+    apply(document.body.classList.contains('dark') ? 'dark' : 'light', false);
+    btn.addEventListener('click', () => apply(document.body.classList.contains('light') ? 'dark' : 'light', true));
+  })();
+</script>
+</body>
+</html>
